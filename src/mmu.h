@@ -58,7 +58,8 @@ class PageDirectory {
 public:
   // Needs to reserve space on the vector
   PageDirectory();
-
+  // Needs to free up all our pte's
+  ~PageDirectory();
   // Add a virtual page into our page table, mapping it to the corresponding
   // physical addr
   bool add_page(virt_addr v_page);

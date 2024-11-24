@@ -1,5 +1,6 @@
 #include "mmu.h"
 #include <cassert>
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -33,6 +34,19 @@ PageDirectory::PageDirectory() {
   this->pte_part = page_idx_mask * 2;
   this->pmd_part = page_idx_mask * 1;
   this->pld_part = page_idx_mask * 0;
+}
+
+PageDirectory::~PageDirectory() {
+  for (uint32_t pte_idx = 1; pte_idx <= page_idx_mask; pte_idx++) {
+    if (this->page_entries[this->pte_part + pte_idx].page_addr == 0)
+      continue;
+    void *page_addr =
+        (void *)(this->page_entries[this->pte_part + pte_idx].page_addr
+                 << page_shift);
+    std::cout << "Off: " << std::hex << this->pte_part + pte_idx << std::endl;
+    std::cout << "Freeing page addr: 0x" << std::hex << page_addr << std::endl;
+    std::free(page_addr);
+  }
 }
 
 static uint32_t get_page_index(virt_addr v_page, byte level) {
