@@ -1,0 +1,16733 @@
+Appendix
+160
+Instruction Set
+MOV  Dm,Dn 
+MOV  Dm,An 
+MOV  Am,Dn 
+MOV  Am,An 
+MOV  SP,An 
+MOV  Am,SP  
+MOV  PSW,Dn 
+MOV  Dm,PSW 
+MOV  MDR,Dn 
+MOV  Dm,MDR 
+MOV  (Am),Dn 
+MOV  (d8,Am),Dn 
+MOV  (d16,Am),Dn 
+MOV  (d32,Am),Dn 
+MOV  (d8,SP),Dn 
+MOV  (d16,SP),Dn 
+MOV  (d32,SP),Dn 
+MOV  (Di,Am),Dn 
+MOV  (abs16),Dn 
+MOV  (abs32),Dn 
+MOV  (Am),An 
+MOV  (d8,Am),An 
+MOV  (d16,Am),An 
+MOV  (d32,Am),An 
+MOV  (d8,SP),An 
+MOV  (d16,SP),An 
+MOV  (d32,SP),An 
+MOV  (Di,Am),An 
+MOV  (abs16),An 
+MOV  (abs32),An 
+MOV  (d8,Am),SP 
+MOV  Dm,(An) 
+MOV  Dm,(d8,An) 
+MOV  Dm,(d16,An) 
+MOV  Dm,(d32,An) 
+MOV  Dm,(d8,SP) 
+MOV  Dm,(d16,SP) 
+MOV  Dm,(d32,SP) 
+MOV  Dm,(Di,An) 
+MOV  Dm,(abs16) 
+MOV  Dm,(abs32) 
+ 
+Dm → Dn 
+Dm → An 
+Am → Dn 
+Am → An 
+SP → An 
+An → SP 
+PSW(zero_ext)  → Dn 
+Dm → PSW 
+MDR → Dn 
+Dm → MDR 
+mem32(Am) →  Dn 
+mem32(d8(sign_ext)+Am)  → Dn 
+mem32(d16(sign_ext)+Am)  → Dn 
+mem32(d32+Am)  → Dn 
+mem32(d8(zero_ext)+SP)  → Dn 
+mem32(d16(zero_ext)+SP) → Dn 
+mem32(d32+SP) → Dn 
+mem32(Di+Am) → Dn 
+mem32(abs16(zero_ext)) → Dn 
+mem32(abs32) → Dn 
+mem32(Am) → An 
+mem32(d8(sign_ext)+Am) → An 
+mem32(d16(sign_ext)+Am) → An 
+mem32(d32+Am) → An 
+mem32(d8(zero_ext)+SP) → An 
+mem32(d16(zero_ext)+SP) → An 
+mem32(d32+SP) → An 
+mem32(Di+Am → An 
+mem32(abs16(zero_ext)) → An 
+mem32(abs32) → An 
+mem32(d8(sign_ext)+Am) → SP 
+Dm → mem32(An) 
+Dm → mem32(d8(sign_ext)+An) 
+Dm → mem32(d16(sign_ext)+An) 
+Dm → mem32(d32+An) 
+Dm → mem32(d8(zero_ext)+SP) 
+Dm → mem32(d16(zero_ext)+SP) 
+Dm → mem32(d32+SP) 
+Dm → mem32(Di+An) 
+Dm → mem32(abs16(zero_ext)) 
+Dm → mem32(abs32) 
+ 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+●  
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+●  
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+●  
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+●  
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+1 
+2 
+2 
+1 
+1 
+2 
+2 
+2 
+2 
+2 
+1 
+3 
+4 
+6 
+2 
+4 
+6 
+2 
+3 
+6 
+2 
+3 
+4 
+6 
+2 
+4 
+6 
+2 
+4 
+6 
+3 
+1 
+3 
+4 
+6 
+2 
+4 
+6 
+2 
+3 
+6
+1 
+1 
+1 
+1 
+1 
+1 
+1 
+1 
+1 
+1 
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+1 
+1 
+2 
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+1 
+1 
+2 
+1 
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+2 
+1 
+2
+S0 
+D0 
+D0 
+S0 
+S0 
+D0 
+D0 
+D0 
+D0 
+D0 
+S0 
+D1 
+D2 
+D4 
+S1 
+D2 
+D4 
+D0 
+S2 
+D4 
+D0 
+D1 
+D2 
+D4 
+S1 
+D2 
+D4 
+D0 
+D2 
+D4 
+D1 
+S0 
+D1 
+D2 
+D4 
+S1 
+D2 
+D4 
+D0 
+S2 
+D4 
+ 
+1 
+ 
+1000 
+1111 
+1111 
+1001 
+0011 
+1111 
+1111 
+1111 
+1111 
+1111 
+0111 
+1111 
+1111 
+1111 
+0101 
+1111 
+1111 
+1111 
+0011 
+1111 
+1111 
+1111 
+1111 
+1111 
+0101 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+0110 
+1111 
+1111 
+1111 
+0100 
+1111 
+1111 
+1111 
+0000 
+1111 
+ 
+2 
+ 
+DmDn 
+0001 
+0001 
+AmAn 
+11An 
+0010 
+0010 
+0010 
+0010 
+0010 
+DnAm 
+1000 
+1010 
+1100 
+10Dn 
+1010 
+1100 
+0011 
+00Dn 
+1100 
+0000 
+1000 
+1010 
+1100 
+11An 
+1010 
+1100 
+0011 
+1010 
+1100 
+1000 
+DmAn 
+1000 
+1010 
+1100 
+Dm10 
+1010 
+1100 
+0011 
+Dm01 
+1100 
+ 
+3 
+ 
+ 
+1110 
+1101 
+ 
+ 
+1111 
+1110 
+1111 
+1110 
+1111 
+ 
+0000 
+0000 
+0000 
+<d8 
+1011 
+1011 
+00Dn 
+<abs16 
+1010 
+0000 
+0010 
+0010 
+0010 
+<d8 
+1011 
+1011 
+10An 
+1010 
+1010 
+1111 
+ 
+0111 
+0001 
+0001 
+<d8 
+1001 
+1001 
+01Dm 
+<abs16 
+1000 
+ 
+4 
+ 
+ 
+DmAn 
+AmDn 
+ 
+ 
+Am00 
+01Dn 
+Dm11 
+00Dn 
+Dm11 
+ 
+DnAm 
+DnAm 
+DnAm 
+....> 
+01Dn 
+01Dn 
+DiAm 
+.... 
+01Dn 
+AnAm 
+AnAm 
+AnAm 
+AnAm 
+....> 
+00An 
+00An 
+DiAm 
+00An 
+00An 
+00Am 
+ 
+DmAn 
+DmAn 
+DmAn 
+....> 
+Dm01 
+Dm01 
+DiAn 
+.... 
+Dm01 
+ 
+5 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<d8. 
+<d16 
+<d32 
+ 
+<d16 
+<d32 
+ 
+.... 
+<abs32 
+ 
+<d8 
+<d16 
+<d32 
+ 
+<d16 
+<d32 
+ 
+<abs16 
+<abs32 
+<d8 
+ 
+<d8 
+<d16 
+<d32 
+ 
+<d16 
+<d32. 
+ 
+.... 
+<abs32. 
+ 
+6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+...> 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+....> 
+ 
+....> 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+....> 
+.... 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page 
+ 
+ 
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+ 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+ 
+.... 
+ 
+8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+ 
+ 
+.... 
+ 
+ 
+....> 
+.... 
+ 
+....> 
+..... 
+ 
+....> 
+.... 
+ 
+ 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+ 
+ 
+.... 
+ 
+9 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+10 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+11 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+12 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+13 14
+MOV
+VF CF NF ZF
+26 
+26 
+26 
+26 
+26 
+26 
+26 
+26 
+26 
+26 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+27 
+28 
+28 
+28 
+28 
+28 
+28 
+28 
+28 
+28 
+28
+ Appendix
+161
+Instruction Set
+MOV  Am,(An) 
+MOV  Am,(d8,An) 
+MOV  Am,(d16,An) 
+MOV  Am,(d32,An) 
+MOV  Am,(d8,SP) 
+MOV  Am,(d16,SP) 
+MOV  Am,(d32,SP) 
+MOV  Am,(Di,An) 
+MOV  Am,(abs16) 
+MOV  Am,(abs32) 
+MOV  SP,(d8,An) 
+MOV  imm8,Dn 
+MOV  imm16,Dn 
+MOV  imm32,Dn 
+MOV  imm8,An 
+MOV  imm16,An 
+MOV  imm32,An 
+MOVBU  (Am),Dn 
+MOVBU  (d8,Am),Dn 
+MOVBU  (d16,Am),Dn 
+MOVBU  (d32,Am),Dn 
+MOVBU  (d8,SP),Dn 
+MOVBU  (d16,SP),Dn 
+MOVBU  (d32,SP),Dn 
+MOVBU  (Di,Am),Dn 
+MOVBU  (abs16),Dn 
+MOVBU  (abs32),Dn 
+MOVBU  Dm,(An) 
+MOVBU  Dm,(d8,An) 
+MOVBU  Dm,(d16,An) 
+MOVBU  Dm,(d32,An) 
+MOVBU  Dm,(d8,SP) 
+MOVBU  Dm,(d16,SP) 
+MOVBU  Dm,(d32,SP) 
+MOVBU  Dm,(Di,An) 
+MOVBU  Dm,(abs16) 
+MOVBU  Dm,(abs32) 
+ 
+ 
+ 
+ 
+Am →  mem32(An) 
+Am →  mem32(d8(sign_ext)+An) 
+Am →  mem32(d16(sign_ext)+An) 
+Am →  mem32(d32+An) 
+Am →  mem32(d8(zero_ext)+SP) 
+Am →  mem32(d16(zero_ext)+SP) 
+Am →  mem32(d32+SP) 
+Am →  mem32(Di+An) 
+Am →  mem32(abs16(zero_ext)) 
+Am →  mem32(abs32) 
+SP →  mem32(d8(sign_ext)+An) 
+imm8(sign_ext) →  Dn 
+imm16(sign_ext) →  Dn 
+imm32 →  Dn 
+imm8(zero_ext] →  An 
+imm16(zero_ext) →  An 
+imm32 →  An 
+mem8(Am)(zero_ext) →  Dn 
+mem8(d8(sign_ext)+Am)(zero_ext) →  Dn 
+mem8(d16(sign_ext)+Am)(zero_ext)  →  Dn  
+mem8(d32+Am)(zero_ext] →  Dn 
+mem8(d8(zero_ext)+SP)(zero_ext)  →  Dn 
+mem8(d16(zero_ext)+SP)(zero_ext)  →  Dn 
+mem8(d32+SP)(zero_ext) →   Dn 
+mem8(Di+Am)(zero_ext)  →  Dn 
+mem8(abs16(zero_ext))(zero_ext] →   Dn 
+mem8(abs32)(zero_ext)  →  Dn 
+Dm →  mem8(An) 
+Dm →  mem8(d8+An) 
+Dm →  mem8(d16+An) 
+Dm →  mem8(d32+An) 
+Dm →  mem8(d8(zero_ext)+SP) 
+Dm →  mem8(d16(zero_ext)+SP) 
+Dm →  mem8(d32+SP) 
+Dm →  mem8(Di+An) 
+Dm →  mem8(abs16(zero_ext)) 
+Dm →  mem8(abs32) 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+2 
+3 
+4 
+6 
+2 
+4 
+6 
+2 
+4 
+6 
+3 
+2 
+3 
+6 
+2 
+3 
+6 
+2 
+3 
+4 
+6 
+3 
+4 
+6 
+2 
+3 
+6 
+2 
+3 
+4 
+6 
+3 
+4 
+6 
+2 
+3 
+6
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+2 
+1 
+2 
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+1 
+1 
+2 
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+2 
+1 
+2
+D0 
+D1 
+D2 
+D4 
+S1 
+D2 
+D4 
+D0 
+D2 
+D4 
+D1 
+S1 
+S2 
+D4 
+S1 
+S2 
+D4 
+D0 
+D1 
+D2 
+D4 
+D1 
+D2 
+D4 
+D0 
+S2 
+D4 
+D0 
+D1 
+D2 
+D4 
+D1 
+D2 
+D4 
+D0 
+S2 
+D4 
+ 
+1 
+ 
+1111 
+1111 
+1111 
+1111 
+0100 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1000 
+0010 
+1111 
+1001 
+0010 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+0011 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+0000 
+1111 
+ 
+ 
+2 
+ 
+0000 
+1000 
+1010 
+1100 
+Am11 
+1010 
+1100 
+0011 
+1010 
+1100 
+1000 
+DnDn 
+11Dn 
+1100 
+AnAn 
+01An 
+1100 
+0000 
+1000 
+1010 
+1100 
+1000 
+1010 
+1100 
+0100 
+01Dn 
+1100 
+0000 
+1000 
+1010 
+1100 
+1000 
+1010 
+1100 
+0100 
+Dm10 
+1100 
+ 
+3 
+ 
+0001 
+0011 
+0011 
+0011 
+<d8 
+1001 
+1001 
+11Am 
+1000 
+1000 
+1111 
+<imm8 
+<imm16 
+1100 
+<imm8 
+<imm16 
+1101 
+0100 
+0100 
+0100 
+0100 
+1011 
+1011 
+1011 
+00Dn 
+<abs16 
+1010 
+0101 
+0101 
+0101 
+0101 
+1001 
+1001 
+1001 
+01Dm 
+<abs16 
+1000 
+ 
+ 
+ 
+ 
+4 
+ 
+AmAn 
+AmAn 
+AmAn 
+AmAn 
+....> 
+Am00 
+Am00 
+DiAn 
+Am00 
+Am00 
+01An 
+...> 
+  .... 
+10Dn 
+....> 
+ .... 
+11An 
+DnAm 
+DnAm 
+DnAm 
+DnAm 
+10Dn 
+10Dn 
+10Dn 
+DiAm 
+.... 
+10Dn 
+DmAn 
+DmAn 
+DmAn 
+DmAn 
+Dm10 
+Dm10 
+Dm10 
+DiAn 
+.... 
+Dm10 
+ 
+5 
+ 
+ 
+<d8 
+<d16 
+<d32 
+ 
+<d16 
+<d32 
+ 
+<abs16 
+<abs32 
+<d8 
+ 
+.... 
+<imm32 
+ 
+.... 
+<imm32 
+ 
+<d8 
+<d16 
+<d32 
+<d8 
+<d16 
+<d32 
+ 
+.... 
+<abs32 
+ 
+<d8 
+<d16 
+<d32 
+<d8 
+<d16 
+<d32 
+ 
+.... 
+<abs32 
+ 
+ 
+6 
+ 
+ 
+....> 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+....> 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+.... 
+....> 
+.... 
+.... 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+.... 
+....> 
+.... 
+.... 
+ 
+....> 
+....
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+ 
+....
+8 
+ 
+ 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+ 
+ 
+.... 
+ 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+ 
+ 
+....
+9 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+....
+10 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+....
+11 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+....
+12 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+....>
+13 14 VF CF NF ZF
+MOV 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+MOVBU
+28 
+28 
+28 
+28 
+28 
+28 
+28 
+28 
+28 
+28 
+28 
+29 
+29 
+29 
+29 
+29 
+29 
+30 
+30 
+30 
+30 
+30 
+30 
+30 
+30 
+30 
+30 
+31 
+31 
+31 
+31 
+31 
+31 
+31 
+31 
+31 
+31 
+ Appendix
+162
+Instruction Set
+MOVB  (Am),Dn 
+MOVB  (d8,Am),Dn 
+MOVB  (d16,Am),Dn 
+MOVB  (d32,Am),Dn 
+MOVB  (d8,SP),Dn 
+MOVB  (d16,SP),Dn 
+MOVB  (d32,SP),Dn 
+MOVB  (Di,Am),Dn 
+MOVB  (abs16),Dn 
+MOVB  (abs32),Dn 
+MOVB  Dm,(An) 
+MOVB  Dm,(d8,An) 
+MOVB  Dm,(d16,An) 
+MOVB  Dm,(d32,An) 
+MOVB  Dm,(d8,SP) 
+MOVB  Dm,(d16,SP) 
+MOVB  Dm,(d32,SP) 
+MOVB  Dm,(Di,An) 
+MOVB  Dm,(abs16) 
+MOVB  Dm,(abs32) 
+MOVHU  (Am),Dn 
+MOVHU  (d8,Am),Dn 
+MOVHU  (d16,Am),Dn 
+MOVHU  (d32,Am),Dn 
+MOVHU  (d8,SP),Dn 
+MOVHU  (d16,SP),Dn 
+MOVHU  (d32,SP),Dn 
+MOVHU  (Di,Am),Dn 
+MOVHU  (abs16),Dn 
+MOVHU  (abs32),Dn 
+MOVHU  Dm,(An) 
+MOVHU  Dm,(d8,An) 
+MOVHU  Dm,(d16,An) 
+MOVHU  Dm,(d32,An) 
+MOVHU  Dm,(d8,SP) 
+MOVHU  Dm,(d16,SP) 
+MOVHU  Dm,(d32,SP) 
+MOVHU  Dm,(Di,An) 
+MOVHU  Dm,(abs16) 
+MOVHU  Dm,(abs32)
+mem8(Am)(sign_ext) → Dn 
+mem8(d8(sign_ext)+Am)(sign_ext) → Dn 
+mem8(d16(sign_ext)+Am)(sign_ext)  →  Dn 
+mem8(d32+Am)(sign_ext) → Dn 
+mem8(d8(zero_ext)+SP)(sign_ext) → Dn 
+mem8(d16(zero_ext)+SP)(sign_ext)  → Dn 
+mem8(d32+SP)(sign_ext)  → Dn 
+mem8(Di+Am)(sign_ext)  → Dn 
+mem8(abs16(zero_ext))(sign_ext)  → Dn 
+mem8(abs32)(sign_ext)  → Dn 
+Dm →  mem8(An) 
+Dm → mem8(d8(sign_ext)+An) 
+Dm → mem8(d16(sign_ext)+An) 
+Dm → mem8(d32+An) 
+Dm → mem8(d8(zero_ext)+SP) 
+Dm → mem8(d16(zero_ext)+SP) 
+Dm → mem8(d32+SP) 
+Dm → mem8(Di+An) 
+Dm → mem8(abs16(zero_ext)) 
+Dm → mem8(abs32) 
+mem16(Am)(zero_ext)  → Dn 
+mem16(d8(sign_ext)+Am)(zero_ext)  → Dn 
+mem16(d16(sign_ext)+Am)(zero_ext)  →  Dn 
+mem16(d32+Am)(zero_ext)  → Dn 
+mem16(d8(zero_ext)+SP)(zero_ext)  → Dn 
+mem16(d16(zero_ext)+SP)(zero_ext) →  Dn 
+mem16(d32+SP)(zero_ext)  →  Dn 
+mem16(Di+Am)(zero_ext)  → Dn 
+mem16(abs16(zero_ext))(zero_ext)  → Dn 
+mem16(abs32)(zero_ext)  → Dn 
+Dm → mem16(An) 
+Dm → mem16(d8(sign_ext)+An) 
+Dm → mem16(d16(sign_ext)+An) 
+Dm → mem16(d32+An) 
+Dm → mem16(d8(zero_ext)+SP) 
+Dm → mem16(d16(zero_ext)+SP) 
+Dm → mem16(d32+SP) 
+Dm → mem16(Di+An) 
+Dm → mem16(abs16(zero_ext)) 
+Dm → mem16(abs32)
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+ 
+3 
+4 
+5 
+7 
+4 
+5 
+7 
+3 
+4 
+7 
+2 
+3 
+4 
+6 
+3 
+4 
+6 
+2 
+3 
+6 
+2 
+3 
+4 
+6 
+3 
+4 
+6 
+2 
+3 
+6 
+2 
+3 
+4 
+6 
+3 
+4 
+6 
+2 
+3 
+6
+2 
+2 
+2 
+3 
+2 
+2 
+3 
+2 
+2 
+3 
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+2 
+1 
+2 
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+1 
+1 
+2 
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+2 
+1 
+2
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+D0 
+D1 
+D2 
+D4 
+D1 
+D2 
+D4 
+D0 
+S2 
+D4 
+D0 
+D1 
+D2 
+D4 
+D1 
+D2 
+D4 
+D0 
+S2 
+D4
+1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+0011 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+0000 
+1111 
+ 
+ 
+2 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+0000 
+1000 
+1010 
+1100 
+1000 
+1010 
+1100 
+0100 
+10Dn 
+1100 
+0000 
+1000 
+1010 
+1100 
+1000 
+1010 
+1100 
+0100 
+Dm11 
+1100
+3 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+0110 
+0110 
+0110 
+0110 
+1011 
+1011 
+1011 
+10Dn 
+<abs16 
+1010 
+0111 
+0111 
+0111 
+0111 
+1001 
+1001 
+1001 
+11Dm 
+<abs16 
+1000
+4 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+DnAm 
+DnAm 
+DnAm 
+DnAm 
+11Dn 
+11Dn 
+11Dn 
+DiAm 
+.... 
+11Dn 
+DmAn 
+DmAn 
+DmAn 
+DmAn 
+Dm11 
+Dm11 
+Dm11 
+DiAn 
+.... 
+Dm11 
+ 
+ 
+5 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<d8 
+<d16 
+<d32 
+<d8 
+<d16 
+<d32 
+ 
+.... 
+<abs32 
+ 
+<d8 
+<d16 
+<d32 
+<d8 
+<d16 
+<d32 
+ 
+.... 
+<abs32
+6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+.... 
+.... 
+....> 
+.... 
+.... 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+.... 
+....> 
+.... 
+.... 
+ 
+....> 
+.... 
+ 
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+ 
+.... 
+ 
+8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+ 
+ 
+.... 
+ 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+ 
+ 
+.... 
+ 
+9 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+10 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+11 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+12 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+13 14 VF CF NF ZF
+MOVB 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+MOVHU
+32 
+32 
+32 
+32 
+32 
+32 
+32 
+32 
+32 
+32 
+33 
+33 
+33 
+33 
+33 
+33 
+33 
+33 
+33 
+33 
+34 
+34 
+34 
+34 
+34 
+34 
+34 
+34 
+34 
+34 
+35 
+35 
+35 
+35 
+35 
+35 
+35 
+35 
+35 
+35Appendix
+163
+Instruction Set
+MOVH  (Am),Dn 
+MOVH  (d8,Am),Dn 
+MOVH  (d16,Am),Dn 
+MOVH  (d32,Am),Dn 
+MOVH  (d8,SP),Dn 
+MOVH  (d16,SP),Dn 
+MOVH  (d32,SP),Dn 
+MOVH  (Di,Am),Dn 
+MOVH  (abs16),Dn 
+MOVH  (abs32),Dn 
+MOVH  Dm,(An) 
+MOVH  Dm,(d8,An) 
+MOVH  Dm,(d16,An) 
+MOVH  Dm,(d32,An) 
+MOVH  Dm,(d8,SP) 
+MOVH  Dm,(d16,SP) 
+MOVH  Dm,(d32,SP) 
+MOVH  Dm,(Di,An) 
+MOVH  Dm,(abs16) 
+MOVH  Dm,(abs32) 
+MOVM  (SP),[reg1,.,regn]
+mem16(Am)(sign_ext)  →  Dn 
+mem16(d8(sign_ext)+Am)(sign_ext)  →  Dn 
+mem16(d16(sign_ext)+Am)(sign_ext)  →  Dn 
+mem16(d32+Am)(sign_ext)   →  Dn 
+mem16(d8(zero_ext)+SP)(sign_ext)  →  Dn 
+mem16(d16(zero_ext)+SP)(sign_ext)  →  Dn 
+mem16(d32+SP)(sign_ext)  →  Dn 
+mem16(Di+Am)(sign_ext) →   Dn 
+mem16(abs16(zero_ext))(sign_ext)  →   Dn 
+mem16(abs32)(sign_ext)  →  Dn 
+Dm →   mem16(An) 
+Dm  →  mem16(d8(sign_ext)+An) 
+Dm →  mem16(d16(sign_ext)+An) 
+Dm  →  mem16(d32+An) 
+Dm  →  mem16(d8(zero_ext)+SP) 
+Dm →  mem16(d16(zero_ext)+SP) 
+Dm →  mem16(d32+SP) 
+Dm →  mem16(Di+An) 
+Dm →  mem16(abs16(zero_ext)) 
+Dm →  mem16(abs32) 
+PC+2 →  PC 
+mem32(SP) →  reg,SP+4  →  SP 
+mem32(SP+4) →  reg1,mem32(SP) →   reg2, 
+SP+8 →  SP 
+mem32(SP+8) →  reg1,mem32(SP+4) →  reg2, 
+mem32(SP) →  reg3,SP+12 →  SP 
+mem32(SP+12) → D2,mem32(SP+8) → D3, 
+mem32(SP+4) →  A2,mem32(SP) →  A3, 
+SP+16 →  SP 
+mem32(SP+28) → D0,mem32(SP+24) →  D1, 
+mem32(SP+20) →  A0,mem32(SP+16) →  A1, 
+mem32(SP+12) →  MDR,mem32(SP+8) → LIR, 
+mem32(SP+4) →  LAR,SP+32 → SP 
+mem32(SP+32) → reg,mem32(SP+28) →  D0, 
+mem32(SP+24) →D1,mem32(SP+20) →A0, 
+mem32(SP+16) →A1,mem32(SP+12) →MDR, 
+mem32(SP+8) →LIR,mem32(SP+4) →LAR, 
+SP+36 →SP 
+mem32(SP+36)→reg1, mem32(SP+32)→reg2, 
+mem32(SP+28)→D0,mem32(SP+24)→D1, 
+mem32(SP+20)→A0,mem32(SP+16)→A1, 
+mem32(SP+12)→MDR,mem32(SP+8)→LIR, 
+mem32(SP+4)→LAR,SP+40 →SP 
+ 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+- 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+3 
+4 
+5 
+7 
+4 
+5 
+7 
+3 
+4 
+7 
+2 
+3 
+4 
+6 
+3 
+4 
+6 
+2 
+3 
+6 
+2 
+2 
+2 
+ 
+2 
+ 
+2 
+ 
+ 
+2 
+ 
+ 
+ 
+2 
+ 
+ 
+ 
+ 
+2
+2 
+2 
+2 
+3 
+2 
+2 
+3 
+2 
+2 
+3 
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+2 
+1 
+2 
+1 
+2 
+3 
+ 
+4 
+ 
+5 
+ 
+ 
+8 
+ 
+ 
+ 
+9 
+ 
+ 
+ 
+ 
+10
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+S1
+1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1100 
+2 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1110 
+ 
+3 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<regs
+4 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....>
+5 
+ 
+ 
+6 
+ 
+ 
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+8 
+ 
+ 
+9 
+ 
+ 
+10 
+ 
+ 
+11 
+ 
+ 
+12 
+ 
+ 
+13 14 VF CF NF ZF
+MOVH 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+MOVM
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+registers specified with regs = 0 
+registers specified with regs = 1 
+registers specified with regs = 2(*1) 
+ 
+registers specified with regs = 3(*1) 
+ 
+registers specified with regs = =4(*1) 
+ 
+ 
+registers specified with regs = 7 
+ 
+ 
+ 
+registers specified with regs = 8 
+ 
+ 
+ 
+ 
+registers specified with regs = 9(*1) 
+ 
+ 
+ 
+*1: registers specified with regn are returned in the order; D2, D3, A2 and A3 no matter when the assembler srites these  
+registers. Skip the registers which is not specified.
+36 
+36 
+36 
+36 
+36 
+36 
+36 
+36 
+36 
+36 
+37 
+37 
+37 
+37 
+37 
+37 
+37 
+37 
+37 
+37 
+38 
+38 
+38 
+ 
+38 
+ 
+38 
+ 
+ 
+38 
+ 
+ 
+ 
+38 
+ 
+ 
+ 
+ 
+38 
+ 
+ 
+ 
+ 
+ Appendix
+164
+Instruction Set
+MOVM  (SP),[reg1,.,regn] 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+MOVM  [reg1,.,regn],(SP)
+mem32(SP+40)→reg1,mem32(SP+36)→reg2, 
+mem32(SP+32)→reg3,mem32(SP+28)→D0, 
+mem32(SP+24)→D1,mem32(SP+20)→A0, 
+mem32(SP+16)→A1,mem32(SP+12)→MDR, 
+mem32(SP+8)→LIR,mem32(SP+4)→LAR, 
+SP+44→SP 
+mem32(SP+44)→D2,mem32(SP+40)→D3, 
+mem32(SP+36)→A2,mem32(SP+32)→A3, 
+mem32(SP+28)→D0,mem32(SP+24)→D1, 
+mem32(SP+20)→A0,mem32(SP+16)→A1, 
+mem32(SP+12)→MDR,mem32(SP+8)→LIR, 
+mem32(SP+4)→LAR,SP+48→SP 
+PC+2→PC 
+reg→mem32(SP-4),SP-4→SP 
+reg1→mem32(SP-4),reg2→mem32(SP-8), 
+SP-8→SP 
+reg1→mem32(SP-4),reg2→mem32(SP-8), 
+reg3→mem32(SP-12),SP-12→SP 
+D2→mem32(SP-4),D3→mem32(SP-8), 
+A2→mem32(SP-12),A3→mem32(SP-16), 
+SP-16→SP 
+D0→mem32(SP-4),D1→mem32(SP-8), 
+A0→mem32(SP-12),A1→mem32(SP-16), 
+MDR→mem32(SP-20),LIR→mem32(SP-24), 
+LAR→mem32(SP-28),SP-32→SP 
+reg→mem32(SP-4),D0→mem32(SP-8), 
+D1→mem32(SP-12),A0→mem32(SP-16), 
+A1→mem32(SP-20),MDR→mem32(SP-24), 
+LIR→mem32(SP-28),LAR→mem32(SP-32), 
+SP-36→SP 
+reg1→mem32(SP-4),reg2→mem32(SP-8), 
+D0→mem32(SP-12),D1→mem32(SP-16), 
+A0→mem32(SP-20),A1→mem32(SP-24), 
+MDR→mem32(SP-28),LIR→mem32(SP-32), 
+LAR→mem32(SP-36),SP-40→SP 
+reg1→mem32(SP-4),reg2→mem32(SP-8), 
+reg3→mem32(SP-12),D0→mem32(SP-16), 
+D1→mem32(SP-20),A0→mem32(SP-24), 
+A1→mem32(SP-28),MDR→mem32(SP-32), 
+LIR→mem32(SP-36),LAR→mem32(SP-40),, 
+SP-44→SP 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+- 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+- 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+- 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+- 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+2 
+ 
+ 
+ 
+ 
+ 
+2 
+ 
+ 
+ 
+ 
+ 
+2 
+2 
+2 
+ 
+2 
+ 
+2 
+ 
+ 
+2 
+ 
+ 
+ 
+2 
+ 
+ 
+ 
+ 
+2 
+ 
+ 
+ 
+ 
+2
+11 
+ 
+ 
+ 
+ 
+ 
+12 
+ 
+ 
+ 
+ 
+ 
+1 
+1 
+2 
+ 
+3 
+ 
+4 
+ 
+ 
+8 
+ 
+ 
+ 
+9 
+ 
+ 
+ 
+ 
+10 
+ 
+ 
+ 
+ 
+11
+S1 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+S1
+1 
+ 
+1100 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1100
+2 
+ 
+1110 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1111 
+ 
+3 
+ 
+<regs 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<regs
+4 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....>
+5 
+ 
+ 
+6 
+ 
+ 
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+8 
+ 
+ 
+9 
+ 
+10 
+ 
+ 
+11 
+ 
+ 
+12 
+ 
+ 
+13 14 VF CF NF ZF
+MOVM   registers specified with regs=10(*1) 
+ 
+ 
+ 
+ 
+ 
+rregisters specified with regs=11 
+ 
+ 
+ 
+ 
+ 
+registers specified with regs =0 
+registers specified with regs=1  
+registers specified with regs= 2(*2) 
+ 
+registers specified with regs= 3(*2) 
+ 
+registers specified with regs= 4 
+ 
+ 
+registers specified with regs= 7 
+ 
+ 
+ 
+registers specified with regs= 8(*2) 
+ 
+ 
+ 
+ 
+registers specified with regs= 9(*2) 
+ 
+ 
+ 
+ 
+registers specified with regs= 10(*2) 
+ 
+*1: Registers specified with regn are returned in the order; D2, D3, A2 and A3 no matter when the assembler writes theses 
+registers.  Skip the registers which is not specified
+*2: Registers specified with regn are saved in the order; D2, D3, A2 and A3 no matter when the assembler write these 
+registers.  Skip the registers which is not specified.
+38 
+ 
+ 
+ 
+ 
+ 
+38 
+ 
+ 
+ 
+ 
+ 
+39 
+39 
+39 
+ 
+39 
+ 
+39 
+ 
+ 
+39 
+ 
+ 
+ 
+39 
+ 
+ 
+ 
+ 
+39 
+ 
+ 
+ 
+ 
+39Appendix
+165
+Instruction Set
+MOVM  regs,(SP) 
+ 
+ 
+ 
+ 
+ 
+EXT  Dn 
+ 
+EXTB  Dn 
+ 
+EXTBU  Dn 
+EXTH  Dn 
+ 
+EXTHU  Dn 
+CLR  Dn 
+ 
+ADD  Dm,Dn 
+ADD  Dm,An 
+ADD  Am,Dn 
+ADD  Am,An 
+ADD  imm8,Dn 
+ADD  imm16,Dn 
+ADD  imm32,Dn 
+ADD  imm8,An 
+ADD  imm16,An 
+ADD  imm32,An 
+ADD  imm8,SP 
+ADD  imm16,SP 
+ADD  imm32,SP 
+ADDC  Dm,Dn 
+SUB  Dm,Dn 
+SUB  Dm,An 
+SUB  Am,Dn 
+SUB  Am,An 
+SUB  imm32,Dn 
+SUB  imm32,An 
+SUBC  Dm,Dn 
+MUL  Dm,Dn
+D2 → mem32(SP-4),D3 → mem32(SP-8) 
+A2 → mem32(SP-12),A3 → mem32(SP-16) 
+D0 → mem32(SP-20),D1 → mem32(SP-24) 
+A0 → mem32(SP-28),A1 → mem32(SP-32) 
+MDR → mem32(SP-36),LIR → mem32(SP-40) 
+LAR → mem32(SP-44),SP-48 → SP 
+IF (Dn.bp31=0), 0x00000000  → MDR 
+IF (Dn.bp31=1), 0xFFFFFFFF  → MDR 
+IF (Dn.bp7=0), Dn & 0x000000FF  → Dn 
+IF (Dn.bp7=1), Dn | 0xFFFFFF00  → Dn 
+Dn & 0x000000FF  → Dn   
+IF (Dn.bp15=0), Dn & 0x0000FFFF  → Dn 
+IF (Dn.bp15=1), Dn | 0xFFFF0000  → Dn 
+Dn & 0x0000FFFF  → Dn 
+0  → Dn 
+ 
+Dm + Dn  → Dn 
+Dm + An  → An 
+Am + Dn  → Dn 
+Am + An  → An 
+imm8(sign_ext) + Dn  → Dn 
+imm16(sign_ext) + Dn  → Dn 
+imm32 + Dn  → Dn 
+imm8(sign_ext) + An  → An 
+imm16(sign_ext) + An  → An 
+imm32 + An  → An 
+imm8(sign_ext) + SP  → SP 
+imm16(sign_ext) + SP  → SP 
+imm32 + SP  → SP 
+Dm + Dn + CF  → Dn 
+Dn - Dm  → Dn 
+An - Dm  → An 
+Dn - Am  → Dn 
+An - Am  → An 
+Dn - imm32  → Dn 
+An - imm32  → An 
+Dn - Dm - CF  → Dn 
+(Dn* Dn)  → { MDR , Dn } 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+- 
+ 
+- 
+- 
+ 
+- 
+0 
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+- 
+- 
+- 
+●
+●
+●
+●
+●
+●
+●
+●
+?
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+- 
+ 
+- 
+- 
+ 
+- 
+0 
+ 
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●  
+- 
+- 
+- 
+●
+●
+●
+●
+●
+●
+●
+●
+?
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+- 
+ 
+- 
+- 
+ 
+- 
+ 0 
+ 
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●  
+- 
+- 
+- 
+●
+●
+●
+●
+●
+●
+●
+●
+●
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+- 
+ 
+- 
+- 
+ 
+- 
+1 
+ 
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+- 
+- 
+- 
+●
+●
+●
+●
+●
+●
+●
+●
+●
+2 
+ 
+ 
+ 
+ 
+ 
+2 
+ 
+1 
+ 
+1 
+1 
+ 
+1 
+1 
+ 
+1 
+2 
+2 
+2 
+2 
+4 
+6 
+2 
+4 
+6 
+3 
+4 
+6 
+2 
+2 
+2 
+2 
+2 
+6 
+6 
+2 
+2
+12 
+ 
+ 
+ 
+ 
+ 
+1 
+ 
+1 
+ 
+1 
+1 
+ 
+1 
+1 
+ 
+1 
+1 
+1 
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+1 
+1 
+2 
+1 
+1 
+1 
+1 
+1 
+2 
+2 
+1 
+3 
+13 
+21 
+29 
+34
+S1 
+ 
+ 
+ 
+ 
+ 
+D0 
+ 
+S0 
+ 
+S0 
+S0 
+ 
+S0 
+S0 
+ 
+S0 
+D0 
+D0 
+D0 
+S1 
+D2 
+D4 
+S1 
+D2 
+D4 
+D1 
+D2 
+D4 
+D0 
+D0 
+D0 
+D0 
+D0 
+D4 
+D4 
+D0 
+D0
+1 
+ 
+1100 
+ 
+ 
+ 
+ 
+ 
+1111 
+ 
+0001 
+ 
+0001 
+0001 
+ 
+0001 
+0000 
+ 
+1110 
+1111 
+1111 
+1111 
+0010 
+1111 
+1111  
+0010  
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111
+2 
+ 
+1111 
+ 
+ 
+ 
+ 
+ 
+0010 
+ 
+00Dn 
+ 
+01Dn 
+10Dn 
+ 
+11Dn 
+Dn00 
+ 
+DmDn 
+0001 
+0001 
+0001 
+10Dn 
+1010 
+1100 
+00An 
+1010 
+1100 
+1000 
+1010 
+1100 
+0001 
+0001 
+0001 
+0001 
+0001 
+1100 
+1100 
+0001 
+0010
+3 
+ 
+<regs 
+ 
+ 
+ 
+ 
+ 
+1101 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+0101 
+0110 
+0111 
+<imm8 
+1100 
+1100 
+<imm8 
+1101 
+1101 
+1111 
+1111 
+1111 
+0100 
+0000 
+0010 
+0001 
+0011 
+1100 
+1101 
+1000 
+0100 
+ 
+ 
+ 
+ 
+ 
+4 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+00Dn 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+AmDn 
+DmAn 
+AmAn 
+....> 
+00Dn 
+00Dn 
+....> 
+00An 
+00An 
+1110 
+1110 
+1110 
+DmDn 
+DmDn 
+DmAn 
+AmDn 
+AmAn 
+10Dn 
+01An 
+DmDn 
+DmDn
+5 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<imm16 
+<imm32 
+ 
+<imm16 
+<imm32 
+<imm8 
+<imm16 
+<imm32 
+ 
+ 
+ 
+ 
+ 
+<imm32.... 
+<imm32.... 
+ 
+ 
+6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+....> 
+.... 
+....
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+ 
+ 
+ 
+ 
+.... 
+....
+8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+ 
+ 
+ 
+ 
+ 
+.... 
+....
+9 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+.... 
+....
+10 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+.... 
+....
+11 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+.... 
+....
+12 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+....> 
+....>
+13 14 VF CF NF ZF
+MOVM 
+ 
+ 
+ 
+ 
+ 
+EXT 
+ 
+EXTB 
+ 
+EXTBU 
+EXTH 
+ 
+EXTHU 
+CLR 
+Arithmetic Operation Instructions 
+ADD 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ADDC 
+SUB 
+ 
+ 
+ 
+ 
+ 
+SUBC 
+MUL
+ 
+ 
+Registers specified with regs =11 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Dn =0 
+Dn =value by 1 byte  
+Dn =value by 2-byte  
+Dn =value by 3-byte  
+Dn =value by 4-byte  
+ 
+39 
+ 
+ 
+ 
+ 
+ 
+40 
+ 
+41 
+ 
+42 
+43 
+ 
+44 
+45 
+ 
+46 
+46 
+46 
+46 
+47 
+47 
+47 
+47 
+47 
+47 
+47 
+47 
+47 
+48 
+49 
+49 
+49 
+49 
+50 
+50 
+51 
+52 
+52 
+52 
+52 
+52Appendix
+166
+Instruction Set
+MULU  Dm,Dn 
+ 
+ 
+ 
+ 
+DIV  Dm,Dn 
+ 
+ 
+ 
+ 
+DIVU Dm,Dn 
+ 
+ 
+ 
+ 
+INC  Dn 
+INC  An 
+INC4  An 
+ 
+CMP  Dm,Dn 
+CMP  Dm,An 
+CMP  Am,Dn 
+CMP  Am,An 
+CMP  imm8,Dn 
+CMP  imm16,Dn 
+CMP  imm32,Dn 
+CMP  imm8,An 
+CMP  imm16,An 
+CMP  imm32,An 
+ 
+AND  Dm,Dn 
+AND  imm8,Dn 
+AND  imm16,Dn 
+AND  imm32,Dn 
+AND  imm16,PSW 
+OR  Dm,Dn 
+OR  imm8,Dn 
+OR  imm16,Dn 
+OR  imm32,Dn 
+OR  imm16,PSW 
+ 
+(Dn* Dn) → { MDR , Dn } 
+ 
+ 
+ 
+ 
+((MDR<< 32) & 0xFFFFFFFF00000000 + Dn)  
+ / Dm  → Dn 
+((MDR<< 32) & 0xFFFFFFFF00000000 + Dn)  
+% Dm  → MDR 
+ 
+((MDR<< 32) & 0xFFFFFFFF00000000 + Dn)  
+/ Dm  → Dn 
+((MDR<< 32) & 0xFFFFFFFF00000000+ Dn)  
+% Dm  → MDR 
+ 
+Dn + 1  → Dn 
+An + 1  → An 
+An + 4  → An 
+ 
+Dn - Dm : PSW 
+An - Dm : PSW 
+Dn - Am : PSW 
+An - Am : PSW 
+Dn - imm8(sign_ext) : PSW 
+Dn - imm16(sign_ext) : PSW 
+Dn - imm32 : PSW 
+An - imm8(zero_ext) : PSW 
+An - imm16(zero_ext) : PSW 
+An - imm32 : PSW 
+ 
+Dm &  Dn  → Dn 
+imm8(zero_ext) & Dn  → Dn 
+imm16(zero_ext) & Dn  → Dn 
+imm32 & Dn  → Dn 
+imm16(zero_ext) & PSW  → PSW 
+Dm | Dn  → Dn 
+imm8(zero_ext) | Dn  → Dn 
+imm16(zero_ext) | Dn  → Dn 
+imm32 | Dn  → Dn 
+imm16(zero_ext) | PSW  → PSW 
+ 
+? 
+ 
+ 
+ 
+ 
+0/1 
+ 
+ 
+ 
+ 
+0/1 
+ 
+ 
+ 
+ 
+●  
+- 
+- 
+ 
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●  
+ 
+0 
+0 
+0 
+0 
+●  
+0 
+0 
+0 
+0 
+●
+? 
+ 
+ 
+ 
+ 
+?/? 
+ 
+ 
+ 
+ 
+?/? 
+ 
+ 
+ 
+ 
+●  
+- 
+- 
+ 
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+ 
+0 
+0 
+0 
+0 
+●  
+0 
+0 
+0 
+0 
+●
+●  
+ 
+ 
+ 
+ 
+● /? 
+ 
+ 
+ 
+ 
+● /? 
+ 
+ 
+ 
+ 
+●  
+- 
+- 
+ 
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●  
+ 
+ 
+ 
+ 
+● /? 
+ 
+ 
+ 
+ 
+● /? 
+ 
+ 
+ 
+ 
+●  
+- 
+- 
+ 
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+2 
+ 
+ 
+ 
+ 
+2 
+ 
+ 
+ 
+ 
+2 
+ 
+ 
+ 
+ 
+1 
+1 
+1 
+ 
+1 
+2 
+2 
+1 
+2 
+4 
+6 
+2 
+4 
+6 
+ 
+2 
+3 
+4 
+6 
+4 
+2 
+3 
+4 
+6 
+4
+3 
+13 
+21 
+29 
+34 
+4 
+14 
+22 
+30 
+38 
+4 
+14 
+22 
+30 
+38 
+1 
+1 
+1 
+ 
+1 
+1 
+1 
+1 
+1 
+1 
+2 
+1 
+1 
+2 
+ 
+1 
+1 
+1 
+2 
+1 
+1 
+1 
+1 
+2 
+1
+D0 
+ 
+ 
+ 
+ 
+D0 
+ 
+ 
+ 
+ 
+D0 
+ 
+ 
+ 
+ 
+S0 
+S0 
+S0 
+ 
+S0 
+D0 
+D0 
+S0 
+S1 
+D2 
+D4 
+S1 
+D2 
+D4 
+ 
+D0 
+D1 
+D2 
+D4 
+D2 
+D0 
+D1 
+D2 
+D4 
+D2 
+ 
+1 
+ 
+1111 
+ 
+ 
+ 
+ 
+1111 
+ 
+ 
+ 
+ 
+1111 
+ 
+ 
+ 
+ 
+0100 
+0100  
+0101  
+ 
+1010  
+1111 
+1111 
+1011 
+1010 
+1111 
+1111 
+1011 
+1111 
+1111  
+ 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111  
+ 
+2 
+ 
+0010 
+ 
+ 
+ 
+ 
+0010 
+ 
+ 
+ 
+ 
+0010 
+ 
+ 
+ 
+ 
+Dn00 
+An01 
+00An 
+ 
+DmDn 
+0001 
+0001 
+AmAn 
+DnDn 
+1010 
+1100 
+AnAn 
+1010 
+1100 
+ 
+0010 
+1000 
+1010 
+1100 
+1010 
+0010 
+1000 
+1010 
+1100 
+1010
+3 
+ 
+0101 
+ 
+ 
+ 
+ 
+0110 
+ 
+ 
+ 
+ 
+0111 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1010 
+1001 
+ 
+<imm8 
+1100 
+1100 
+<imm8 
+1101 
+1101 
+ 
+0000 
+1110 
+1110 
+1110 
+1111 
+0001 
+1110 
+1110 
+1110 
+1111 
+4 
+ 
+DmDn 
+ 
+ 
+ 
+ 
+DmDn 
+ 
+ 
+ 
+ 
+DmDn 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+DmAn 
+AmDn 
+ 
+....> 
+10Dn 
+10Dn 
+....> 
+10An 
+10An 
+ 
+ 
+00Dn 
+00Dn 
+00Dn 
+1100 
+DmDn 
+01Dn 
+01Dn 
+0 Dn 
+1101 
+ 
+5 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<imm16 
+<imm32 
+ 
+<imm16 
+<imm32 
+ 
+ 
+<imm8 
+<imm16 
+<imm32 
+<imm16 
+ 
+<imm8 
+<imm16 
+<imm32 
+<imm16
+6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  .... 
+  .... 
+ 
+  .... 
+  .... 
+ 
+ 
+....> 
+  .... 
+  .... 
+  .... 
+ 
+....> 
+ .... 
+ .... 
+ .... 
+ 
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+ 
+.... 
+.... 
+ 
+ 
+ 
+.... 
+.... 
+.... 
+ 
+ 
+.... 
+.... 
+.... 
+ 
+8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+.... 
+ 
+....> 
+.... 
+ 
+ 
+ 
+....> 
+.... 
+....> 
+ 
+ 
+....> 
+.... 
+....> 
+ 
+9 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+10 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+11 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+12 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+....> 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+ 
+....> 
+ 
+13 14
+ 
+VF CF NF ZF
+MULU 
+ 
+ 
+ 
+ 
+DIV 
+ 
+ 
+ 
+ 
+DIVU 
+ 
+ 
+ 
+ 
+INC 
+ 
+INC4 
+Comparative Instructions 
+CMP 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Logical Operation Instructions 
+AND 
+ 
+ 
+ 
+ 
+OR
+  Dn = 0 
+Dn = value by 1 byte 
+Dn = value by 2-byte 
+Dn = value by 3-byte 
+Dn = value by 4-byte 
+{MDR,Dn} = 0 
+{MDR,Dn}= value by 1 byte 
+{MDR,Dn} = value by  2- byte 
+{MDR,Dn} = value by  3-byte 
+{MDR,Dn} = value by  4- byte or more 
+{MDR,Dn} = 0 
+{MDR,Dn} = value by 1 byte 
+{MDR,Dn} = value by 2- byte 
+{MDR,Dn} = value by 3-byte 
+{MDR,Dn} = value by 4- byte or more 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+53 
+53 
+53 
+53 
+53 
+54 
+54 
+54 
+54 
+54 
+55 
+55 
+55 
+55 
+55 
+56 
+56 
+57 
+ 
+58 
+58 
+58 
+58 
+58 
+58 
+58 
+58 
+58 
+58 
+ 
+59 
+59 
+59 
+59 
+60 
+61 
+61 
+61 
+61 
+62Appendix
+167
+Instruction Set
+XOR  Dm,Dn 
+XOR  imm16,Dn 
+XOR  imm32,Dn 
+NOT  Dn 
+ 
+BTST  imm8,Dn 
+BTST  imm16,Dn 
+BTST  imm32,Dn2 
+BTST  imm8,(d8,An) 
+ 
+BTST  imm8,(abs16) 
+ 
+BTST  imm8,(abs32) 
+ 
+BSET  Dm,(An) 
+ 
+BSET  imm8,(d8,An) 
+ 
+ 
+ 
+BSET  imm8,(abs16) 
+ 
+ 
+ 
+BSET  imm8,(abs32) 
+ 
+ 
+BCLR  Dm,(An) 
+ 
+ 
+BCLR  imm8,(d8,An) 
+ 
+ 
+ 
+BCLR  imm8,(abs16) 
+ 
+ 
+ 
+BCLR  imm8,(abs32)
+Dm ^ Dn → Dn 
+imm16(zero_ext) ^ Dn → Dn 
+imm32 ^ Dn → Dn 
+Dn ^ 0xFFFFFFFF  → Dn 
+ 
+imm8(zero_ext) & Dn : PSW 
+imm16(zero_ext) & Dn : PSW 
+imm32 & Dn : PSW 
+imm8(zero_ext) &  
+  mem8(d8(sign_ext)+An)(zero_ext) : PSW 
+imm8(zero_ext) & 
+  mem8(abs16(zero_ext))(zero_ext) : PSW 
+imm8(zero_ext) & mem8(abs32)(zero_ext)  
+                                                              : PSW 
+mem8(An)(zero_ext) → temp, 
+temp & Dm : PSW, temp | Dm →  mem8(An) 
+mem8(d8(sign_ext) + An)(zero_ext) → temp, 
+temp & imm8(zero_ext): PSW,  
+temp | imm8(zero_ext) →  
+                               mem8(d8(sign_ext) + An) 
+mem8(abs16(zero_ext))(zero_ext) → temp ,  
+temp & imm8(zero_ext) : PSW,  
+temp | imm8(zero_ext) →  
+                mem8(abs16(zero_ext)) 
+mem8(abs32)(zero_ext) → temp ,  
+      temp & imm8(zero_ext) : PSW,  
+temp | imm8(zero_ext) → mem8(abs32) 
+mem8(An)(zero_ext) → temp ,  
+                      temp & Dm : PSW, 
+temp & (Dm ^ 0xFFFFFFFF) → mem8(An) 
+mem(d8(sign_ext) + An)(zero_ext) → temp,  
+temp & imm8(zero_ext) : PSW, 
+temp & (imm8(zero_ext) ^ 0xFFFFFFFF) →  
+   mem8(d8(sign_ext) + An) 
+mem8(abs16(zero_ext))(zero_ext) → temp ,  
+     temp & imm8(zero_ext) : PSW, 
+temp & (imm8(zero_ext) ^ 0xFFFFFFFF) →  
+               mem8(abs16(zero_ext)) 
+mem8(abs32)(zero_ext) → temp ,  
+      temp & imm8(zero_ext) : PSW, 
+temp & (imm8(zero_ext) ^ 0xFFFFFFFF) →  
+               mem8(abs32)
+Group 
+ 
+Mnemonic Operation Page
+MN1030/MN103S SERIES INSTRUCTION SET
+XOR 
+ 
+ 
+NOT 
+Bit Instructions 
+BTST 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+BSET 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+BCLR
+0 
+0 
+0 
+0 
+ 
+0 
+0 
+0 
+0 
+ 
+0 
+ 
+0 
+ 
+0 
+ 
+0 
+ 
+ 
+ 
+0 
+ 
+ 
+ 
+0 
+ 
+ 
+0 
+ 
+ 
+0 
+ 
+ 
+ 
+0 
+ 
+ 
+ 
+0
+0 
+0 
+0 
+0 
+ 
+0 
+0 
+0 
+0 
+ 
+0 
+ 
+0 
+ 
+0 
+ 
+0 
+ 
+ 
+ 
+0 
+ 
+ 
+ 
+0 
+ 
+ 
+0 
+ 
+ 
+0 
+ 
+ 
+ 
+0 
+ 
+ 
+ 
+0
+●  
+●  
+●  
+●  
+ 
+●  
+●  
+●  
+0 
+ 
+0 
+ 
+0 
+ 
+0 
+ 
+0 
+ 
+ 
+ 
+0 
+ 
+ 
+ 
+0 
+ 
+ 
+0 
+ 
+ 
+0 
+ 
+ 
+ 
+0 
+ 
+ 
+ 
+0
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+2 
+4 
+6 
+2 
+ 
+3 
+4 
+6 
+4 
+ 
+5 
+ 
+7 
+ 
+2 
+ 
+4 
+ 
+ 
+ 
+5 
+ 
+ 
+ 
+7 
+ 
+ 
+2 
+ 
+ 
+4 
+ 
+ 
+ 
+5 
+ 
+ 
+ 
+7
+1 
+1 
+2 
+1 
+ 
+1 
+1 
+2 
+4 
+ 
+4 
+ 
+5 
+ 
+5 
+ 
+5 
+ 
+ 
+ 
+5 
+ 
+ 
+ 
+6 
+ 
+ 
+5 
+ 
+ 
+5 
+ 
+ 
+ 
+5 
+ 
+ 
+ 
+6
+D0 
+D2 
+D4 
+D0 
+ 
+D1 
+D2 
+D4 
+D2 
+ 
+D3 
+ 
+D5 
+ 
+D0 
+ 
+D2 
+ 
+ 
+ 
+D3 
+ 
+ 
+ 
+D5 
+ 
+ 
+D0 
+ 
+ 
+D2 
+ 
+ 
+ 
+D3 
+ 
+ 
+ 
+D5
+1 
+ 
+1111 
+1111 
+1111 
+1111 
+ 
+1111  
+1111  
+1111  
+1111 
+ 
+1111 
+ 
+1111 
+ 
+1111 
+ 
+1111 
+ 
+ 
+ 
+1111 
+ 
+ 
+ 
+1111 
+ 
+ 
+1111 
+ 
+ 
+1111 
+ 
+ 
+ 
+1111 
+ 
+ 
+ 
+1111
+2 
+ 
+0010 
+1010 
+1100 
+0010 
+ 
+1000 
+1010 
+1100 
+1010 
+ 
+1110 
+ 
+1110 
+ 
+0000 
+ 
+1010 
+ 
+ 
+ 
+1110 
+ 
+ 
+ 
+1110 
+ 
+ 
+0000 
+ 
+ 
+1010 
+ 
+ 
+ 
+1110 
+ 
+ 
+ 
+1110
+3 
+ 
+0010 
+1110 
+1110 
+0011 
+ 
+1110 
+1110 
+1110 
+1111 
+ 
+1000 
+ 
+0000 
+ 
+1000 
+ 
+1111 
+ 
+ 
+ 
+1000 
+ 
+ 
+ 
+0000 
+ 
+ 
+1001 
+ 
+ 
+1111 
+ 
+ 
+ 
+1000 
+ 
+ 
+ 
+0000
+4 
+ 
+DmDn 
+10Dn 
+10Dn 
+00Dn 
+ 
+11Dn 
+11Dn 
+11Dn 
+10An 
+ 
+0010 
+ 
+0010 
+ 
+DmAn 
+ 
+00An 
+ 
+ 
+ 
+0000 
+ 
+ 
+ 
+0000 
+ 
+ 
+DmAn 
+ 
+ 
+01An 
+ 
+ 
+ 
+0001 
+ 
+ 
+ 
+0001
+5 
+ 
+ 
+<imm16 
+<imm32 
+ 
+ 
+<imm8 
+<imm16 
+<imm32 
+<d8 
+ 
+<abs16 
+ 
+<abs32 
+ 
+ 
+ 
+<d8 
+ 
+ 
+ 
+<abs16 
+ 
+ 
+ 
+<abs32 
+ 
+ 
+ 
+ 
+ 
+<d8 
+ 
+ 
+ 
+<abs16 
+ 
+ 
+ 
+<abs32 
+ 
+6 
+ 
+ 
+ .... 
+ .... 
+ 
+ 
+....> 
+ .... 
+ .... 
+....> 
+ 
+.... 
+ 
+.... 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+Machine Code Flag Code 
+Size
+Cycle
+For 
+ -mat 7 
+ 
+ 
+.... 
+.... 
+ 
+ 
+ 
+.... 
+.... 
+<imm8 
+ 
+.... 
+ 
+.... 
+ 
+ 
+ 
+<imm8 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+<imm8 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+....
+8 
+ 
+ 
+....> 
+.... 
+ 
+ 
+ 
+....> 
+.... 
+....> 
+ 
+....> 
+ 
+.... 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+....
+9 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+<imm8 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<imm8 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<imm8 
+ 
+ 
+ 
+....
+10 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+....> 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+.... 
+ 
+11 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....
+12 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....>
+13 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<imm8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<imm8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<imm8
+14 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....>
+VF CF NF ZF
+  63 
+63 
+63 
+64 
+ 
+65 
+65 
+65 
+65 
+ 
+65 
+ 
+65 
+ 
+66 
+ 
+67 
+ 
+ 
+ 
+67 
+ 
+ 
+ 
+67 
+ 
+ 
+68 
+ 
+ 
+69 
+ 
+ 
+ 
+69 
+ 
+ 
+ 
+69
+Notes
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Not used for AM30/AM31 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Not used for AM30/AM31 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Not used for AM30/AM31 
+ 
+ 
+ 
+ Appendix
+168
+Instruction Set
+ASR  Dm,Dn 
+ 
+ 
+ASR  imm8,Dn 
+ 
+ 
+ASR  Dn 
+LSR  Dm,Dn 
+ 
+ 
+LSR  imm8,Dn 
+ 
+ 
+LSR  Dn 
+ASL  Dm,Dn 
+ 
+ 
+ASL  imm8,Dn 
+ 
+ 
+ASL2  Dn 
+ROR  Dn 
+ 
+ROL  Dn 
+ 
+IF ((Dm&0x0000001F) ≠ 0) , Dn.lsb → CF,  
+(Dn >> (Dm & 0x0000001F))(sign_ext) → Dn 
+IF ((Dm&0x0000001F)=0),PC + 2 → PC 
+IF ((imm8 & 0x1F) ≠0) , Dn.lsb → CF, 
+ (Dn >> (imm8 & 0x1F))(sign_ext) → Dn 
+IF ((imm8 & 0x1F)=0) , PC + 3 → PC 
+Dn.lsb → CF, (Dn >> 1)(sign_ext) → Dn 
+IF ((Dm&0x0000001F) ≠ 0),Dn.lsb → CF, 
+ (Dn >> (Dm & 0x0000001F))(zero_ext) → Dn 
+IF ((Dm&0x0000001F)=0), PC + 2 → PC 
+IF ((imm8 & 0x1F) ≠ 0),Dn.lsb → CF, 
+ (Dn >> (imm8 & 0x1F))(zero_ext) → Dn 
+IF ((imm8 & 0x1F)=0), PC + 3 → PC 
+Dn.lsb → CF, (Dn >> 1)(zero_ext) → Dn 
+IF ((Dm & 0x0000001F) ≠ 0), 
+ Dn << (Dm & 0x0000001F) → Dn 
+IF ((Dm & 0x0000001F)=0), PC + 2 → PC 
+IF ((imm8 & 0x1F) ≠0),  
+  Dn << (imm8 & 0x1F) → Dn 
+IF ((imm8 & 0x1F)=0), PC + 3 → PC 
+(Dn << 2 ) & 0xFFFFFFFC → Dn 
+CF << 31 → temp, Dn.lsb →  CF,  
+(Dn >> 1)(zero_ext) | temp → Dn 
+CF →   temp, Dn.msb →  CF,  
+(Dn << 1) | temp →  Dn 
+ 
+Group 
+ 
+Mnemonic Operation Page
+MN1030/MN103S SERIES INSTRUCTION SET
+Shift Instructions 
+ASR 
+ 
+ 
+ 
+ 
+ 
+ 
+LSR 
+ 
+ 
+ 
+ 
+ 
+ 
+ASL 
+ 
+ 
+ 
+ 
+ 
+ASL2 
+ROR 
+ 
+ROL 
+ 
+? 
+ 
+? 
+? 
+ 
+? 
+? 
+? 
+ 
+? 
+? 
+ 
+? 
+? 
+? 
+ 
+ 
+? 
+ 
+ 
+? 
+0 
+ 
+0 
+ 
+●
+? 
+●  
+ 
+? 
+●  
+●  
+ 
+? 
+●  
+ 
+? 
+●  
+? 
+ 
+ 
+? 
+ 
+ 
+? 
+●  
+ 
+●  
+ 
+ 
+●  
+ 
+●  
+●  
+ 
+●  
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+●
+2 
+ 
+ 
+3 
+ 
+ 
+3 
+2 
+ 
+ 
+3 
+ 
+ 
+3 
+2 
+ 
+ 
+3 
+ 
+ 
+1 
+2 
+ 
+2 
+ 
+1 
+ 
+ 
+1 
+ 
+ 
+1 
+1 
+ 
+ 
+1 
+ 
+ 
+1 
+1 
+ 
+ 
+1 
+ 
+ 
+1 
+1 
+ 
+1 
+ 
+D0 
+ 
+ 
+D1 
+ 
+ 
+ 
+D0 
+ 
+ 
+D1 
+ 
+ 
+ 
+D0 
+ 
+ 
+D1 
+ 
+ 
+S0 
+D0 
+ 
+D0 
+ 
+1 
+ 
+1111 
+ 
+ 
+1111 
+ 
+ 
+ 
+1111 
+ 
+ 
+1111 
+ 
+ 
+ 
+1111 
+ 
+ 
+1111 
+ 
+ 
+0101 
+1111 
+ 
+1111 
+ 
+ 
+ 
+2 
+ 
+0010 
+ 
+ 
+1000 
+ 
+ 
+ 
+0010 
+ 
+ 
+1000 
+ 
+ 
+ 
+0010 
+ 
+ 
+1000 
+ 
+ 
+01Dn 
+0010 
+ 
+0010
+3 
+ 
+1011 
+ 
+ 
+1100 
+ 
+ 
+ 
+1010 
+ 
+ 
+1100 
+ 
+ 
+ 
+1001 
+ 
+ 
+1100 
+ 
+ 
+ 
+1000 
+ 
+1000
+4 
+ 
+DmDn 
+ 
+ 
+10Dn 
+ 
+ 
+ 
+DmDn 
+ 
+ 
+01Dn 
+ 
+ 
+ 
+DmDn 
+ 
+ 
+00Dn 
+ 
+ 
+ 
+01Dn 
+ 
+00Dn
+5 
+ 
+ 
+ 
+ 
+<imm8 
+ 
+ 
+ 
+ 
+ 
+ 
+<imm8 
+ 
+ 
+ 
+ 
+ 
+ 
+<imm8 
+ 
+6 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+....>
+ 
+ 
+Machine Code Flag Code 
+Size
+Cycle
+For 
+ -mat 7 
+ 
+ 
+8 
+ 
+ 
+9 
+ 
+ 
+10 
+ 
+11 
+ 
+ 
+12 
+ 
+ 
+13 
+ 
+ 
+14 
+ 
+ 
+VF CF NF ZF
+70 
+ 
+ 
+71 
+ 
+ 
+72 
+73 
+ 
+ 
+74 
+ 
+ 
+75 
+76 
+ 
+ 
+77 
+ 
+ 
+78 
+79 
+ 
+80
+NotesAppendix
+169
+Instruction Set
+BEQ  (d8,PC) 
+ 
+BNE  (d8,PC) 
+ 
+BGT  (d8,PC) 
+ 
+BGE  (d8,PC) 
+ 
+BLE  (d8,PC) 
+ 
+BLT  (d8,PC) 
+ 
+BHI  (d8,PC) 
+ 
+BCC  (d8,PC) 
+ 
+BLS  (d8,PC) 
+ 
+BCS  (d8,PC) 
+ 
+BVC  (d8,PC) 
+ 
+BVS  (d8,PC) 
+ 
+BNC  (d8,PC) 
+ 
+BNS  (d8,PC) 
+ 
+BRA  (d8,PC) 
+LEQ 
+ 
+LNE 
+ 
+ 
+IF (ZF=1), PC + d8(sign_ext)→ PC 
+IF (ZF=0),PC + 2 → PC 
+IF (ZF=0), PC + d8(sign_ext) → PC 
+IF (ZF=1), PC + 2 → PC 
+IF ((ZF | (NF^VF))=0),PC + d8(sign_ext) → PC 
+IF ((ZF | (NF^VF))=1),PC + 2  → PC 
+IF ((NF ^ VF)=0),PC + d8(sign_ext) → PC 
+IF ((NF ^ VF)=1),PC + 2 → PC 
+IF ((ZF | (NF^VF))=1),PC + d8(sign_ext) → PC 
+IF ((ZF | (NF^VF))=0),PC + 2 → PC 
+IF ((NF ^ VF)=1),PC + d8(sign_ext) →PC 
+IF ((NF ^ VF)=0),PC + 2 → PC 
+IF ((CF | ZF)=0),PC + d8(sign_ext) → PC 
+IF ((CF | ZF)=1),PC + 2 →PC 
+IF (CF = 0),PC + d8(sign_ext) → PC 
+IF (CF = 1),PC + 2 → PC 
+IF ((CF | ZF)=1),PC + d8(sign_ext) → PC 
+IF ((CF | ZF)=0),PC + 2 → PC 
+IF (CF = 1),PC + d8(sign_ext) → PC 
+IF (CF = 0),PC + 2 → PC 
+IF (VF = 0),PC + d8(sign_ext) → PC 
+IF (VF = 1),PC + 3 → PC 
+IF (VF = 1),PC + d8(sign_ext) → PC 
+IF (VF = 0),PC + 3 → PC 
+IF (NF = 0),PC + d8(sign_ext) → PC 
+IF (NF = 1),PC + 3 → PC 
+IF (NF = 1),PC + d8(sign_ext) → PC 
+IF (NF = 0),PC + 3 → PC 
+PC + d8(sign_ext) →PC 
+IF (ZF=1), LAR - 4 →PC 
+IF (ZF=0),PC + 1 →PC 
+IF (ZF=0), LAR - 4 →PC 
+IF (ZF=1), PC + 1 →PC 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+- 
+ 
+-
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+- 
+ 
+-
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+- 
+ 
+-
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+- 
+ 
+-
+2 
+ 
+2 
+ 
+2 
+ 
+2 
+ 
+2 
+ 
+2 
+ 
+2 
+ 
+2 
+ 
+2 
+ 
+2 
+ 
+3 
+ 
+3 
+ 
+3 
+ 
+3 
+ 
+2 
+1 
+ 
+1
+3/1* 
+ 
+3/1* 
+ 
+3/1* 
+ 
+3/1* 
+ 
+3/1* 
+ 
+3/1* 
+ 
+3/1* 
+ 
+3/1* 
+ 
+3/1* 
+ 
+3/1* 
+ 
+4/2* 
+ 
+4/2* 
+ 
+4/2* 
+ 
+4/2* 
+ 
+3 
+1/2* 
+ 
+1/2*
+S1 
+ 
+S1 
+ 
+S1 
+ 
+S1 
+ 
+S1 
+ 
+S1 
+ 
+S1 
+ 
+S1 
+ 
+S1 
+ 
+S1 
+ 
+D1 
+ 
+D1 
+ 
+D1 
+ 
+D1 
+ 
+S1 
+S0 
+ 
+S0 
+ 
+ 
+1 
+ 
+1100 
+ 
+1100 
+ 
+1100 
+ 
+1100 
+ 
+1100 
+ 
+1100 
+ 
+1100 
+ 
+1100 
+ 
+1100 
+ 
+1100 
+ 
+1111 
+ 
+1111 
+ 
+1111 
+ 
+1111 
+ 
+1100 
+1101 
+ 
+1101 
+ 
+ 
+2 
+ 
+1000 
+ 
+1001 
+ 
+0001 
+ 
+0010 
+ 
+0011 
+ 
+0000 
+ 
+0101 
+ 
+0110 
+ 
+0111 
+ 
+0100 
+ 
+1000 
+ 
+1000 
+ 
+1000 
+ 
+1000 
+ 
+1010 
+1000 
+ 
+1001
+3 
+ 
+<d8 
+ 
+<d8 
+ 
+<d8 
+ 
+<d8 
+ 
+<d8 
+ 
+<d8 
+ 
+<d8 
+ 
+<d8 
+ 
+<d8 
+ 
+<d8 
+ 
+1110 
+ 
+1110 
+ 
+1110 
+ 
+1110 
+ 
+<d8
+4 
+ 
+....> 
+ 
+....> 
+ 
+....> 
+ 
+....> 
+ 
+....> 
+ 
+....> 
+ 
+....> 
+ 
+....> 
+ 
+....> 
+ 
+....> 
+ 
+1000 
+ 
+1001 
+ 
+1010 
+ 
+1011 
+ 
+....>
+5 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<d8 
+ 
+<d8 
+ 
+<d8 
+ 
+<d8
+6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+....> 
+ 
+....> 
+ 
+....>
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+8 
+ 
+ 
+9 
+ 
+ 
+10 11 
+ 
+ 
+12 
+ 
+ 
+13 14 VF CF NF ZF
+Branch Instructions 
+Bcc 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Lcc
+  Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+  *:Depends on the status of Instruction queue.
+81 
+ 
+81 
+ 
+81 
+ 
+81 
+ 
+81 
+ 
+81 
+ 
+81 
+ 
+81 
+ 
+81 
+ 
+81 
+ 
+81 
+ 
+81 
+ 
+81 
+ 
+81 
+ 
+81 
+82 
+ 
+82Appendix
+170
+Instruction Set
+LGT 
+ 
+LGE 
+ 
+LLE 
+ 
+LLT 
+ 
+LHI 
+ 
+LCC   
+ 
+LLS   
+ 
+LCS   
+ 
+LRA 
+SETLB 
+ 
+JMP  (An) 
+JMP  label 
+ 
+CALL  label
+IF ((ZF | (NF^VF))=0), LAR - 4  → PC 
+IF ((ZF | (NF^VF))=1),PC + 1 →PC 
+IF ((NF ^ VF)=0), LAR - 4  →PC 
+IF ((NF ^ VF)=1),PC + 1 →PC 
+IF ((ZF | (NF ^ VF))=1),LAR - 4  →PC 
+IF ((ZF | (NF ^ VF))=0),PC + 1 →PC 
+IF ((NF ^ VF)=1),LAR - 4 →PC 
+IF ((NF ^ VF)=0),PC + 1 →PC 
+IF ((CF | ZF)=0), LAR - 4 →PC 
+IF ((CF | ZF)=1),PC + 1 →PC 
+IF (CF = 0), LAR - 4 →PC 
+IF (CF = 1),PC + 1 → PC 
+IF ((CF | ZF)=1), LAR - 4 →PC 
+IF ((CF | ZF)=0),PC + 1 →PC 
+IF (CF = 1), LAR - 4 →PC 
+IF (CF = 0),PC + 1 →PC 
+LAR - 4 →PC  
+mem32 ( PC + 1) →LIR ,  
+PC + 5 →LAR 
+An → PC 
+IF (label = (d16,PC)),PC + d16(sign_ext) →PC 
+IF (label = (d32,PC)),PC + d32 →PC 
+PC + 5 →mem32(SP), 
+SP - imm8(zero_ext) →SP,PC + 5 →MDR, 
+PC + d16(sign_ext) →PC 
+PC + 5 →mem32(SP),reg1 →mem32(SP-4), 
+SP - imm8(zero_ext) →SP,PC + 5 →MDR, 
+PC + d16(sign_ext) →PC 
+PC + 5 →mem32(SP),reg1→mem32(SP-4), 
+reg2→mem32(SP),SP - imm8(zero_ext) →SP, 
+PC + 5 →MDR,PC + d16(sign_ext) →PC 
+PC + 5 →mem32(SP),reg1→mem32(SP-4), 
+reg2→mem32(SP-8),reg3→mem32(SP), 
+SP - imm8(zero_ext) →SP,PC + 5 →MDR, 
+PC + d16(sign_ext) →PC 
+PC + 5 →mem32(SP),D2→mem32(SP-4), 
+D3→mem32(SP-8),A2→mem32(SP-12), 
+A3→mem32(SP-16), 
+SP - imm8(zero_ext) →SP,PC + 5 →MDR, 
+PC + d16(sign_ext) →PC 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+- 
+ 
+- 
+- 
+- 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+-
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+- 
+ 
+- 
+- 
+- 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+-
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+- 
+ 
+- 
+- 
+- 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+-
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+- 
+ 
+- 
+- 
+- 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+-
+1 
+ 
+1 
+ 
+1 
+ 
+1 
+ 
+1 
+ 
+1 
+ 
+1 
+ 
+1 
+ 
+1 
+1 
+ 
+2 
+3 
+5 
+5 
+ 
+ 
+5 
+ 
+ 
+5 
+ 
+ 
+5 
+ 
+ 
+ 
+5
+1/2* 
+ 
+1/2* 
+ 
+1/2* 
+ 
+1/2* 
+ 
+1/2* 
+ 
+1/2* 
+ 
+1/2* 
+ 
+1/2* 
+ 
+1 
+1 
+ 
+3 
+2 
+3** 
+2 
+ 
+ 
+3 
+ 
+ 
+4 
+ 
+ 
+5 
+ 
+ 
+ 
+6
+S0 
+ 
+S0 
+ 
+S0 
+ 
+S0 
+ 
+S0 
+ 
+S0 
+ 
+S0 
+ 
+S0 
+ 
+S0 
+S0 
+ 
+D0 
+S2 
+S4 
+S4
+1 
+ 
+1101 
+ 
+1101 
+ 
+1101 
+ 
+1101 
+ 
+1101 
+ 
+1101 
+ 
+1101 
+ 
+1101 
+ 
+1101 
+1101 
+ 
+1111 
+1100 
+1101 
+1100    
+ 
+2 
+ 
+0001 
+ 
+0010 
+ 
+0011 
+ 
+0000 
+ 
+0101 
+ 
+0110 
+ 
+0111 
+ 
+1001 
+ 
+1010 
+1011 
+ 
+0000 
+1100 
+1100 
+1101
+3 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1111 
+<d16. 
+<d32 
+<d16.
+4 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+01An 
+.... 
+.... 
+....
+5 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+.... 
+ 
+6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+.... 
+....> 
+ 
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+<regs
+8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+....>
+9 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+<imm8 
+ 
+ 
+10 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+....>
+11 
+ 
+ 
+12 
+ 
+ 
+13 14 VF CF NF ZF
+ 
+Lcc 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SETLB 
+ 
+JMP 
+ 
+ 
+CALL 
+ 
+  Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+Branch enable/disable 
+ 
+ 
+ 
+ 
+ 
+ 
+**4 cycyes for AM30 
+If label = (d16,PC), 
+registers specified with regs = 0 
+ 
+If label = (d16,PC), 
+registers specified with regs = 1 
+ 
+If label = (d16,PC), 
+registers specified with regs  = 2 
+ 
+If label = (d16,PC), 
+registers specified with regs = 3 
+ 
+ 
+If label = (d16,PC), 
+registers specified with regs  = 4 
+ 
+ 
+ 
+ 
+ 
+ 
+*: Depends on the status of Instruction queue.
+82 
+ 
+82 
+ 
+82 
+ 
+82 
+ 
+82 
+ 
+82 
+ 
+82 
+ 
+82 
+ 
+82 
+83 
+ 
+84 
+84 
+84 
+85 
+ 
+ 
+85 
+ 
+ 
+85 
+ 
+ 
+85 
+ 
+ 
+ 
+85
+ Appendix
+171
+Instruction Set
+CALL  label PC + 5 → mem32(SP),D0 → mem32(SP-4), 
+D1→ mem32(SP-8),A0→ mem32(SP-12), 
+A1→ mem32(SP-16),MDR→ mem32(SP-20), 
+LIR→ mem32(SP-24),LAR→ mem32(SP-28), 
+SP - imm8(zero_ext) → SP,PC + 5 → MDR, 
+PC + d16(sign_ext) → PC 
+PC + 5 → mem32(SP),reg1→ mem32(SP-4), 
+D0→ mem32(SP-8),D1→ mem32(SP-12), 
+A0→ mem32(SP-16),A1→ mem32(SP-20), 
+MDR→ mem32(SP-24),LIR→ mem32(SP-28), 
+LAR→ mem32(SP-32), 
+SP - imm8(zero_ext) → SP,PC + 5 → MDR, 
+PC + d16(sign_ext) → PC 
+PC + 5 → mem32,(SP)reg1→ mem32(SP-4), 
+reg2 → mem32(SP-8),D0→ mem32(SP-12), 
+D1→ mem32(SP-16),A0→ mem32(SP-20), 
+A1→ mem32(SP-24),MDR→ mem32(SP-28), 
+LIR→ mem32(SP-32),LAR→ mem32(SP-36), 
+SP - imm8(zero_ext) → SP,PC + 5 → MDR, 
+PC + d16(sign_ext) → PC 
+PC + 5 → mem32(SP),reg1→ mem32(SP-4), 
+reg2→ mem32(SP-8),reg3→ mem32(SP-12), 
+D0→ mem32(SP-16),D1→ mem32(SP-20), 
+A0→ mem32(SP-24),A1→ mem32(SP-28), 
+MDR→ mem32(SP-32),LIR→ mem32(SP-36), 
+LAR→ mem32(SP-40), 
+SP - imm8(zero_ext) →  SP,PC + 5 → MDR, 
+PC + d16(sign_ext) → PC 
+PC + 5 →mem32(SP),D2→ mem32(SP-4), 
+D3→ mem32(SP-8),A2→ mem32(SP-12), 
+A3→ mem32(SP-16),D0→ mem32(SP-20), 
+D1→ mem32(SP-24),A0→ mem32(SP-28), 
+A1→ mem32(SP-32),MDR→ mem32(SP-36), 
+LIR→ mem32(SP-40),LAR→ mem32(SP-44) 
+SP - imm8(zero_ext) → SP,PC + 5 → MDR, 
+PC+d16(sign_ext) → PC, 
+PC+7 → mem32(SP), 
+SP - imm8(zero_ext) → SP,PC + 7 → MDR, 
+PC + d32 → PC 
+PC + 7 → mem32(SP),reg1 → mem32(SP-4), 
+SP - imm8(zero_ext) → SP,PC + 7 → MDR, 
+PC + d32 → PC 
+ 
+ 
+Group 
+ 
+Mnemonic Operation Notes Page
+MN1030/MN103S SERIES INSTRUCTION SET
+CALL - 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+5 
+ 
+ 
+ 
+ 
+ 
+5 
+ 
+ 
+ 
+ 
+ 
+ 
+5 
+ 
+ 
+ 
+ 
+ 
+ 
+5 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+5 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+7 
+ 
+ 
+7
+9 
+ 
+ 
+ 
+ 
+ 
+10 
+ 
+ 
+ 
+ 
+ 
+ 
+11 
+ 
+ 
+ 
+ 
+ 
+ 
+12 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+13 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+4* 
+ 
+ 
+4*
+S4 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+S6
+1 
+ 
+1100  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1101
+2 
+ 
+1101  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1101
+3 
+ 
+<d16.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<d32 
+ 
+4 
+ 
+....  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....
+5 
+ 
+....  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....
+6 
+ 
+....>  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+ 
+ 
+Machine Code Flag Code 
+Size
+Cycle
+For 
+ -mat 7 
+ 
+<regs  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....
+8 
+ 
+....>  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....
+9 
+ 
+<imm8  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+10 
+ 
+....>  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....>
+11 
+    
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<regs
+12 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....>
+13 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<imm8
+14 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....>
+VF CF NF ZF
+  If label = (d16,PC), 
+registers specified with regs = 7 
+ 
+ 
+ 
+ 
+If label = (d16,PC), 
+registers specified with regs  = 8 
+ 
+ 
+ 
+ 
+ 
+If label = (d16,PC), 
+registers specified with regs  = 9 
+ 
+ 
+ 
+ 
+ 
+If label = (d16,PC), 
+registers specifiied with regs = 10 
+ 
+ 
+ 
+ 
+ 
+ 
+If label = (d16,PC), 
+registers specified with regs = 11 
+ 
+ 
+ 
+ 
+ 
+ 
+If label = (d32,PC), 
+registers  specified with regs = 0 
+*: 5 cycyles for AM30 
+If label = (d32,PC), 
+register specified with regs  = 1 
+*: 5 cycles for AM30 
+ 
+ 
+ 
+85 
+ 
+ 
+ 
+ 
+ 
+85 
+ 
+ 
+ 
+ 
+ 
+ 
+85 
+ 
+ 
+ 
+ 
+ 
+ 
+85 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+85 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+85 
+ 
+ 
+85
+ Appendix
+172
+Instruction Set
+CALL  label PC + 7 → mem32(SP),reg1→ mem32(SP-4), 
+reg2→ mem32(SP),SP - imm8(zero_ext) → SP, 
+PC + 7 → MDR,PC + d32 → PC 
+PC + 7 → mem32(SP), 
+reg1→ mem32(SP-4),reg2→ mem32(SP-8), 
+reg3→ mem32(SP),SP - imm8(zero_ext) → SP, 
+PC + 7 → MDR,PC + d32 → PC 
+PC + 7 → mem32(SP),D2→ mem32(SP-4), 
+D3→ mem32(SP-8),A2→ mem32(SP-12), 
+A3→ mem32(SP-16), 
+SP - imm8(zero_ext) → SP,PC + 7 → MDR, 
+PC + d32 → PC 
+PC + 7 → mem32(SP),D0→ mem32(SP-4), 
+D1→ mem32(SP-8),A0→ mem32(SP-12), 
+A1→ mem32(SP-16),MDR→ mem32(SP-20), 
+LIR→ mem32(SP-24),LAR→ mem32(SP-28), 
+SP - imm8(zero_ext) → SP,PC + 7 → MDR, 
+PC + d32 → PC 
+PC + 7 → mem32(SP),reg1→ mem32(SP-4), 
+D0→ mem32(SP-8),D1→ mem32(SP-12), 
+A0→ mem32(SP-16),A1→ mem32(SP-20), 
+MDR→ mem32(SP-24),LIR→ mem32(SP-28), 
+LAR→ mem32(SP-32), 
+SP - imm8(zero_ext) → SP,PC + 7 → MDR, 
+PC + d32 → PC 
+PC + 7 → mem32(SP),reg1→ mem32(SP-4), 
+reg2 → mem32(SP-8),D0→ mem32(SP-12), 
+D1→ mem32(SP-16),A0→ mem32(SP-20), 
+A1→ mem32(SP-24),MDR→ mem32(SP-28), 
+LIR→ mem32(SP-32),LAR→ mem32(SP-36), 
+SP - imm8(zero_ext) → SP,PC + 7 → MDR, 
+PC + d32 → PC 
+PC + 7 → mem32(SP),reg1→ mem32(SP-4), 
+reg2→ mem32(SP-8),reg3→ mem32(SP-12), 
+D0→ mem32(SP-16),D1→ mem32(SP-20), 
+A0→ mem32(SP-24),A1→ mem32(SP-28), 
+MDR→ mem32(SP-32),LIR→ mem32(SP-36), 
+LAR→ mem32(SP-40), 
+SP - imm8(zero_ext) → SP,PC + 7 → MDR, 
+PC + d32 → PC 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+-
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+-
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+-
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+-
+7 
+ 
+ 
+7 
+ 
+ 
+ 
+7 
+ 
+ 
+ 
+ 
+7 
+ 
+ 
+ 
+ 
+ 
+7 
+ 
+ 
+ 
+ 
+ 
+ 
+7 
+ 
+ 
+ 
+ 
+ 
+ 
+7
+5* 
+ 
+ 
+6* 
+ 
+ 
+ 
+7* 
+ 
+ 
+ 
+ 
+10* 
+ 
+ 
+ 
+ 
+ 
+11* 
+ 
+ 
+ 
+ 
+ 
+ 
+12* 
+ 
+ 
+ 
+ 
+ 
+ 
+13*
+S6
+1 
+ 
+1101
+2 
+ 
+1101
+3 
+ 
+<d32
+4 
+ 
+....
+5 
+ 
+....
+6 
+ 
+....
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+....
+8 
+ 
+....
+9 
+ 
+....
+10 
+ 
+....>
+11 
+ 
+<regs
+12 
+ 
+....>
+13 
+ 
+<imm8
+14 
+ 
+....>
+VF CF NF ZF
+CALL   If label = (d32,PC),  
+registers specified with regs  = 2 
+*: 6 cycyles for AM30 
+If label = (d32,PC), 
+registers specified wtih regs  = 3 
+*: 7 cycles for AM30  
+ 
+If label = (d32,PC), 
+registers specified with regs = 4 
+*: 8 cycles for AM30 
+ 
+ 
+If label = (d32,PC), 
+registers specified with regs = 7 
+*: 11 cycles for  AM30 
+ 
+ 
+ 
+If label = (d32,PC), 
+registers specified with regs = 8 
+*: 12 cycles for AM30 
+ 
+ 
+ 
+ 
+If label = (d32,PC), 
+registers specified with regs  = 9 
+*: 13 cycles for AM30 
+ 
+ 
+ 
+ 
+If label = (d32,PC), 
+registers specified with regs =10 
+* 14 cycles for AM30 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+85 
+ 
+ 
+85 
+ 
+ 
+ 
+85 
+ 
+ 
+ 
+ 
+85 
+ 
+ 
+ 
+ 
+ 
+85 
+ 
+ 
+ 
+ 
+ 
+ 
+85 
+ 
+ 
+ 
+ 
+ 
+ 
+85 
+ 
+ 
+ 
+ 
+ 
+ 
+ Appendix
+173
+Instruction Set
+CALL  label 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CALLS  (An) 
+ 
+CALLS  label 
+ 
+ 
+ 
+RET
+PC + 7 → mem32(SP),D2→ mem32(SP-4), 
+D3→ mem32(SP-8),A2→ mem32(SP-12), 
+A3→ mem32(SP-16),D0→ mem32(SP-20), 
+D1→ mem32(SP-24),A0→ mem32(SP-28), 
+A1→ mem32(SP-32),MDR→ mem32(SP-36), 
+LIR→ mem32(SP-40),LAR→ mem32(SP-44) 
+SP - imm8(zero_ext) → SP,PC + 7 → MDR, 
+PC + d32 → PC 
+PC + 2 → mem32(SP),PC + 2  →  MDR, 
+An → PC 
+IF (label = (d16,PC)), PC + 4 → mem32(SP), 
+     PC + 4 → MDR, PC +d16 (sign_ext) → PC 
+IF ((label = (d32,PC)), PC + 6 → mem32(SP), 
+     PC + 6 → MDR, PC + d32 → PC 
+SP + imm8(zero_ext) → SP,mem32(SP) → PC 
+ 
+SP + imm8(zero_ext) → SP, 
+mem32(SP-4)→ reg, mem32(SP) → PC 
+SP + imm8(zero_ext) → SP, 
+mem32(SP-4)→ reg1,mem32(SP-8)→ reg2, 
+mem32(SP) → PC 
+SP + imm8(zero_ext) → SP, 
+mem32(SP-4)→ reg1,mem32(SP-8)→ reg2, 
+mem32(SP-12)→ reg3,mem32(SP) → PC 
+SP + imm8(zero_ext) → SP, 
+mem32(SP-4)→ D2,mem32(SP-8)→ D3, 
+mem32(SP-12)→ A2,mem32(SP-16)→ A3, 
+mem32(SP) → PC 
+SP + imm8(zero_ext) → SP, 
+mem32(SP-4)→ D0,mem32(SP-8)→ D1, 
+mem32(SP-12)→ A0,mem32(SP-16)→ A1, 
+mem32(SP-20)→ MDR,mem32(SP-24)→ LIR, 
+mem32(SP-28)→ LAR,mem32(SP) → PC 
+SP + imm8(zero_ext) → SP, 
+mem32(SP-4)→ reg1,mem32(SP-8)→ D0, 
+mem32(SP-12)→ D1,mem32(SP-16)→ A0, 
+mem32(SP-20)→ A1,mem32(SP-24)→ MDR, 
+mem32(SP-28)→ LIR,mem32(SP-32)→ LAR, 
+mem32(SP) → PC 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+7 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+2 
+ 
+4 
+ 
+6 
+ 
+3 
+ 
+3 
+ 
+3 
+ 
+ 
+3 
+ 
+ 
+3 
+ 
+ 
+ 
+3 
+ 
+ 
+ 
+ 
+3
+14* 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+3 
+ 
+3 
+ 
+3* 
+ 
+5* 
+ 
+5* 
+ 
+5* 
+ 
+ 
+5* 
+ 
+ 
+5 
+ 
+ 
+ 
+8 
+ 
+ 
+ 
+ 
+9 
+ 
+ 
+ 
+ 
+S6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+D0 
+ 
+D2 
+ 
+D4 
+ 
+S2
+1 
+ 
+1101 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1111 
+ 
+1111 
+ 
+1111 
+ 
+1101
+2 
+ 
+1101 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+0000 
+ 
+1010 
+ 
+1100 
+ 
+1111
+3 
+ 
+<d32 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1111 
+ 
+1111 
+ 
+1111 
+ 
+<regs
+4 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+00An 
+ 
+1111 
+ 
+1111 
+ 
+....>
+5 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<d16 
+ 
+<d32 
+ 
+<imm8
+6 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+.... 
+ 
+....>
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+ 
+....
+8 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+ 
+.... 
+ 
+9 
+ 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....
+10 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....
+11 
+ 
+<regs 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....
+12 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....>
+13 
+ 
+<imm8
+14 
+ 
+....>
+VF CF NF ZF
+CALL 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CALLS 
+ 
+ 
+ 
+ 
+ 
+RET
+ 
+ 
+If label = (d32,PC), 
+registersspecified with regs =11 
+*: 5 cycles for AM30 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+*: 4 cycles for AM30 
+ 
+registers specified with regs =0 
+*:4 cycles for AM30 
+registers specified with regs =1 
+*:4 cycles for AM30 
+registers specified with regs =2 
+*:4 cycles for AM30 
+registers specified with regs =3 
+*:4 cycles for AM30 
+ 
+registers specified with regs  =4 
+ 
+ 
+registers specified with regs =7 
+ 
+ 
+ 
+registers specified with regs  =8 
+ 
+85 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+87 
+ 
+88 
+ 
+88 
+ 
+89 
+ 
+89 
+ 
+89 
+ 
+ 
+89 
+ 
+ 
+89 
+ 
+ 
+ 
+89 
+ 
+ 
+ 
+ 
+89 
+ 
+ Appendix
+174
+Instruction Set
+RET 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+RETF
+SP + imm8(zero_ext) → SP, 
+mem32(SP-4)→ reg1,mem32(SP-8)→ reg2, 
+mem32(SP-12)→ D0,mem32(SP-16)→ D1, 
+mem32(SP-20)→ A0,mem32(SP-24)→ A1, 
+mem32(SP-28)→ MDR,mem32(SP-32)→ LIR, 
+mem32(SP-36)→ LAR,mem32(SP) → PC 
+SP + imm8(zero_ext) → SP, 
+mem32(SP-4)→ reg1,mem32(SP-8)→ reg2, 
+mem32(SP-12)→ reg3,mem32(SP-16)→ D0, 
+mem32(SP-20)→ D1,mem32(SP-24)→ A0, 
+mem32(SP-28)→ A1,mem32(SP-32)→ MDR, 
+mem32(SP-36)→ LIR,mem32(SP-40)→ LAR, 
+mem32(SP) → PC 
+SP + imm8(zero_ext) → SP, 
+mem32(SP-4)→ D2,mem32(SP-8)→ D3, 
+mem32(SP-12)→ A2,mem32(SP-16)→ A3, 
+mem32(SP-20)→ D0,mem32(SP-24)→ D1, 
+mem32(SP-28)→ A0,mem32(SP-32)→ A1, 
+mem32(SP-36)→ MDR,mem32(SP-40)→ LIR, 
+mem32(SP-44)→ LAR,mem32(SP) → PC 
+SP + imm8(zero_ext) → SP,MDR → PC, 
+SP + imm8(zero_ext) → SP,MDR → PC, 
+mem32(SP-4)→ reg 
+SP + imm8(zero_ext) → SP,MDR → PC, 
+mem32(SP-4)→ reg1,mem32(SP-8)→ reg2, 
+SP + imm8(zero_ext) → SP,MDR → PC, 
+mem32(SP-4)→ reg1,mem32(SP-8)→ reg2, 
+mem32(SP-12)→ reg3 
+SP + imm8(zero_ext) → SP,MDR → PC, 
+mem32(SP-4)→ D2,mem32(SP-8)→ D3, 
+mem32(SP-12)→ A2,mem32(SP-16)→ A3, 
+SP + imm8(zero_ext) → SP,MDR → PC, 
+mem32(SP-4)→ D0,mem32(SP-8)→ D1, 
+mem32(SP-12)→ A0,mem32(SP-16)→ A1, 
+mem32(SP-20)→ MDR,mem32(SP-24)→ LIR, 
+mem32(SP-28)→ LAR 
+SP + imm8(zero_ext) → SP,MDR → PC, 
+mem32(SP-4)→ reg1,mem32(SP-8)→ D0, 
+mem32(SP-12)→ D1,mem32(SP-16)→ → A0, 
+mem32(SP-20)→ A1,mem32(SP-24)→ MDR, 
+mem32(SP-28)→ LIR,mem32(SP-32)→ LAR, 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+- 
+ 
+- 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+-
+3 
+ 
+ 
+ 
+ 
+ 
+3 
+ 
+ 
+ 
+ 
+ 
+ 
+3 
+ 
+ 
+ 
+ 
+ 
+ 
+3 
+3 
+ 
+3 
+ 
+3 
+ 
+ 
+3 
+ 
+ 
+3 
+ 
+ 
+ 
+ 
+3
+10 
+ 
+ 
+ 
+ 
+ 
+11 
+ 
+ 
+ 
+ 
+ 
+ 
+12 
+ 
+ 
+ 
+ 
+ 
+ 
+2 
+2 
+ 
+3 
+ 
+4 
+ 
+ 
+5 
+ 
+ 
+8 
+ 
+ 
+ 
+ 
+9
+S2 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+S2
+1 
+ 
+1101 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1101
+2 
+ 
+1111 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1110
+3 
+ 
+<regs 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<regs
+4 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....>
+5 
+ 
+<imm8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<imm8
+6 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....>
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+8 
+ 
+ 
+9 
+ 
+ 
+10 
+ 
+ 
+11 
+ 
+ 
+12 
+ 
+13 14 VF CF NF ZF
+RET 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+RETF
+  registers specified with regs  = 9 
+ 
+ 
+ 
+ 
+ 
+registers specified with regs= 10 
+ 
+ 
+ 
+ 
+ 
+ 
+registers specified with regs= 11 
+ 
+ 
+ 
+ 
+ 
+ 
+register specified with regs = 0 
+register specified with regs= 1 
+ 
+registers specified with regs = 2 
+ 
+registers specified with regs= 3 
+ 
+ 
+registers specified with regs= 4 
+ 
+ 
+registers specified with regs = 7 
+ 
+ 
+ 
+ 
+registers specified with regs = 8
+ 
+89 
+ 
+ 
+ 
+ 
+ 
+89 
+ 
+ 
+ 
+ 
+ 
+ 
+89 
+ 
+ 
+ 
+ 
+ 
+ 
+90 
+90 
+ 
+90 
+ 
+90 
+ 
+ 
+90 
+ 
+ 
+90 
+ 
+ 
+ 
+ 
+90Appendix
+175
+Instruction Set
+RETF 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+RETS 
+JSR  (An) 
+ 
+ 
+ 
+JSR  label 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+RTS 
+RTI 
+ 
+TRAP 
+NOP 
+ 
+SP + imm8(zero_ext) → SP,MDR → PC, 
+mem32(SP-4)→ reg1,mem32(SP-8)→ reg2, 
+mem32(SP-12)→ D0,mem32(SP-16)→ D1, 
+mem32(SP-20)→ A0,mem32(SP-24)→ A1, 
+mem32(SP-28)→ MDR,mem32(SP-32)→ LIR, 
+mem32(SP-36)→ LAR 
+SP + imm8(zero_ext) → SP,MDR → PC, 
+mem32(SP-4)→ reg1,mem32(SP-8)→ reg2, 
+mem32(SP-12)→ reg3,mem32(SP-16)→ D0, 
+mem32(SP-20)→ D1,mem32(SP-24)→ A0, 
+mem32(SP-28)→ A1,mem32(SP-32)→ MDR, 
+mem32(SP-36)→ LIR,mem32(SP-40)→ LAR, 
+SP + imm8(zero_ext) → SP,MDR → PC, 
+mem32(SP-4)→ D2,mem32(SP-8)→ D3, 
+mem32(SP-12)→ A2,mem32(SP-16)→ A3, 
+mem32(SP-20)→ D0,mem32(SP-24)→ D1, 
+mem32(SP-28)→ A0,mem32(SP-32)→ A1, 
+mem32(SP-36)→ MDR,mem32(SP-40)→ LIR, 
+mem32(SP-44)→ LAR 
+mem32(SP) → PC 
+SP - 4 → SP,PC + 2 → mem32(SP) 
+PC + 2 → MDR,An → PC, 
+      (execute subroutine) 
+SP + 4 → SP 
+IF ( label = (d16,PC)), 
+SP - 4 → SP,PC + 4 → mem32(SP), 
+PC + 4 → MDR,PC + d16 (sign_ext) → PC 
+      (execute subroutine) 
+SP+4 → SP 
+IF ( label = (d32,PC)), 
+SP - 4 → SP,PC + 6 → (SP+3), 
+PC + 6 → MDR,PC + d32 → PC 
+      (execute subroutine) 
+SP+4 → SP 
+mem32(SP) → PC 
+mem16(SP)  → PSW,mem32(SP+4) → PC, 
+SP + 8 → SP 
+PC + 2 → mem32(SP),0x40000010 → PC 
+PC + 1 → PC 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+●
+●
+●
+-
+●
+ 
+- 
+-
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+●
+●
+●
+-
+●
+ 
+- 
+-
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+●
+●
+●
+- 
+●
+ 
+- 
+-
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+- 
+ 
+ 
+ 
+ 
+ 
+ 
+- 
+●
+●
+●
+-
+●
+ 
+- 
+-
+3 
+ 
+ 
+ 
+ 
+ 
+3 
+ 
+ 
+ 
+ 
+ 
+3 
+ 
+ 
+ 
+ 
+ 
+ 
+2 
+8 
+ 
+ 
+ 
+10 
+ 
+ 
+ 
+ 
+12 
+ 
+ 
+ 
+ 
+2 
+2 
+ 
+2 
+1 
+ 
+ 
+10 
+ 
+ 
+ 
+ 
+ 
+11 
+ 
+ 
+ 
+ 
+ 
+10 
+ 
+ 
+ 
+ 
+ 
+ 
+5* 
+5 
+ 
+ 
+ 
+5 
+ 
+ 
+ 
+ 
+5* 
+ 
+ 
+ 
+ 
+4 
+4 
+ 
+4 
+1
+S2 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+D0 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+D0 
+ 
+ 
+D0 
+S0 
+ 
+ 
+1 
+ 
+1101 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1111 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1111 
+ 
+ 
+1111 
+1100 
+ 
+2 
+ 
+1110 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+0000 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+0000 
+ 
+ 
+0000 
+1011 
+ 
+3 
+ 
+<regs 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1111 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1111 
+ 
+ 
+1111 
+ 
+ 
+4 
+ 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1100 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1101 
+ 
+ 
+1110 
+ 
+5 
+ 
+<imm8
+6 
+ 
+....>
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+8 
+ 
+ 
+9 
+ 
+ 
+10 
+ 
+ 
+11 
+ 
+12 
+ 
+13 14 VF CF NF ZF
+RETF 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+RETS 
+JSR 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+RTS 
+RTI 
+ 
+TRAP 
+NOP 
+ 
+  registers specified with regs = 9 
+ 
+ 
+ 
+ 
+ 
+registers specified with regs= 10 
+ 
+ 
+ 
+ 
+ 
+registers specified with regs= 11 
+ 
+ 
+ 
+ 
+ 
+ 
+*: 4 cycles for AM30 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+*: 6 cycles for AM30
+90 
+ 
+ 
+ 
+ 
+ 
+90 
+ 
+ 
+ 
+ 
+ 
+90 
+ 
+ 
+ 
+ 
+ 
+ 
+91 
+92 
+ 
+ 
+ 
+93 
+ 
+ 
+ 
+ 
+93 
+ 
+ 
+ 
+ 
+94 
+95 
+ 
+96 
+97Appendix
+176
+Instruction Set
+UDF00  Dm,Dn 
+UDF01  Dm,Dn 
+UDF02  Dm,Dn 
+UDF03  Dm,Dn 
+UDF04  Dm,Dn 
+UDF05  Dm,Dn 
+UDF06  Dm,Dn 
+UDF07  Dm,Dn 
+UDF08  Dm,Dn 
+UDF09  Dm,Dn 
+UDF10  Dm,Dn 
+UDF11  Dm,Dn 
+UDF12  Dm,Dn 
+UDF13  Dm,Dn 
+UDF14  Dm,Dn 
+UDF15  Dm,Dn 
+UDF20  Dm,Dn 
+UDF21  Dm,Dn 
+UDF22  Dm,Dn 
+UDF23  Dm,Dn 
+UDF24  Dm,Dn 
+UDF25  Dm,Dn 
+UDF26  Dm,Dn 
+UDF27  Dm,Dn 
+UDF28  Dm,Dn 
+UDF29  Dm,Dn 
+UDF30  Dm,Dn 
+UDF31  Dm,Dn 
+UDF32  Dm,Dn 
+UDF33  Dm,Dn 
+UDF34  Dm,Dn 
+UDF35  Dm,Dn 
+UDF00  imm8,Dn 
+UDF01  imm8,Dn 
+UDF02  imm8,Dn 
+UDF03  imm8,Dn 
+UDF04  imm8,Dn 
+UDF05  imm8,Dn 
+UDF06  imm8,Dn
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn  → Dn  
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+Dm op Dn 
+imm8(sign_ext) op Dn  → Dn  
+imm8(sign_ext) op Dn  → Dn 
+imm8(sign_ext) op Dn  → Dn 
+imm8(sign_ext) op Dn  → Dn 
+imm8(sign_ext) op Dn  → Dn 
+imm8(sign_ext) op Dn  → Dn 
+imm8(sign_ext) op Dn  → Dn 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+2 
+3 
+3 
+3 
+3 
+3 
+3 
+3
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D0 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1
+1 
+ 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+ 
+ 
+2 
+ 
+0110 
+0110 
+0110 
+0110 
+0110 
+0110 
+0110 
+0110 
+0110 
+0110 
+0110 
+0110 
+0110 
+0110 
+0110 
+0110 
+0101 
+0101 
+0101 
+0101 
+0101 
+0101 
+0101 
+0101 
+0101 
+0101 
+0101 
+0101 
+0101 
+0101 
+0101 
+0101 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001
+3 
+ 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110
+4 
+ 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+DmDn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn
+5 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8
+6 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+ 
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+8 
+ 
+ 
+9 
+ 
+ 
+10 
+ 
+ 
+11 
+ 
+12 
+ 
+13 14 VF CF NF ZF
+Extension Instructions 
+UDF  
+ 
+ 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+98 
+99 
+99 
+99 
+99 
+99 
+99 
+99Appendix
+177
+Instruction Set
+UDF07  imm8,Dn 
+UDF08  imm8,Dn 
+UDF09  imm8,Dn 
+UDF10  imm8,Dn 
+UDF11  imm8,Dn 
+UDF12  imm8,Dn 
+UDF13  imm8,Dn 
+UDF14  imm8,Dn 
+UDF15  imm8,Dn 
+UDF20  imm8,Dn 
+UDF21  imm8,Dn 
+UDF22  imm8,Dn 
+UDF23  imm8,Dn 
+UDF24  imm8,Dn 
+UDF25  imm8,Dn 
+UDF26  imm8,Dn 
+UDF27  imm8,Dn 
+UDF28  imm8,Dn 
+UDF29  imm8,Dn 
+UDF30  imm8,Dn 
+UDF31  imm8,Dn 
+UDF32  imm8,Dn 
+UDF33  imm8,Dn 
+UDF34  imm8,Dn 
+UDF35  imm8,Dn 
+UDF00  imm16,Dn 
+UDF01  imm16,Dn 
+UDF02  imm16,Dn 
+UDF03  imm16,Dn 
+UDF04  imm16,Dn 
+UDF05  imm16,Dn 
+UDF06  imm16,Dn 
+UDF07  imm16,Dn 
+UDF08  imm16,Dn 
+UDF09  imm16,Dn 
+UDF10  imm16,Dn 
+UDF11  imm16,Dn 
+UDF12  imm16,Dn 
+UDF13  imm16,Dn 
+UDF14  imm16,Dn 
+UDF15  imm16,Dn 
+ 
+imm8(sign_ext) op Dn → Dn  
+imm8(sign_ext) op Dn → Dn  
+imm8(sign_ext) op Dn → Dn  
+imm8(sign_ext) op Dn → Dn  
+imm8(sign_ext) op Dn → Dn  
+imm8(sign_ext) op Dn → Dn  
+imm8(sign_ext) op Dn → Dn  
+imm8(sign_ext) op Dn → Dn  
+imm8(sign_ext) op Dn → Dn  
+imm8(sign_ext) op Dn  
+imm8(sign_ext) op Dn  
+imm8(sign_ext) op Dn  
+imm8(sign_ext) op Dn 
+imm8(sign_ext) op Dn 
+imm8(sign_ext) op Dn 
+imm8(sign_ext) op Dn 
+imm8(sign_ext) op Dn 
+imm8(sign_ext) op Dn 
+imm8(sign_ext) op Dn 
+imm8(sign_ext) op Dn 
+imm8(sign_ext) op Dn 
+imm8(sign_ext) op Dn 
+imm8(sign_ext) op Dn 
+imm8(sign_ext) op Dn 
+imm8(sign_ext) op Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+imm16(sign_ext) op Dn → Dn 
+ 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2
+1 
+ 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+ 
+2 
+ 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011
+3 
+ 
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111
+4 
+ 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn
+5 
+ 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+ 
+6 
+ 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+....
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+....
+8 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....>
+9 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+10 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+11 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+12 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+13 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+14 VF CF NF ZF
+UDFnn   99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+ Appendix
+178
+Instruction Set
+UDF20  imm16,Dn 
+UDF21  imm16,Dn 
+UDF22  imm16,Dn 
+UDF23  imm16,Dn 
+UDF24  imm16,Dn 
+UDF25  imm16,Dn 
+UDF26  imm16,Dn 
+UDF27  imm16,Dn 
+UDF28  imm16,Dn 
+UDF29  imm16,Dn 
+UDF30  imm16,Dn 
+UDF31  imm16,Dn 
+UDF32  imm16,Dn 
+UDF33  imm16,Dn 
+UDF34  imm16,Dn 
+UDF35  imm16,Dn 
+UDF00  imm32,Dn 
+UDF01  imm32,Dn 
+UDF02  imm32,Dn 
+UDF03  imm32,Dn 
+UDF04  imm32,Dn 
+UDF05  imm32,Dn 
+UDF06  imm32,Dn 
+UDF07  imm32,Dn 
+UDF08  imm32,Dn 
+UDF09  imm32,Dn 
+UDF10  imm32,Dn 
+UDF11  imm32,Dn 
+UDF12  imm32,Dn 
+UDF13  imm32,Dn 
+UDF14  imm32,Dn 
+UDF15  imm32,Dn 
+UDF20  imm32,Dn 
+UDF21  imm32,Dn 
+UDF22  imm32,Dn 
+UDF23  imm32,Dn 
+UDF24  imm32,Dn 
+UDF25  imm32,Dn 
+UDF26  imm32,Dn 
+UDF27  imm32,Dn 
+ 
+ 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm16(sign_ext) op Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+ 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4
+1 
+ 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111
+2 
+ 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101
+3 
+ 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111
+4 
+ 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+00Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn
+5 
+ 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32
+6 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+....
+8 
+ 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+....
+9 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+....
+10 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+11 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+..... 
+ 
+12 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+ 
+13 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+14 VF CF NF ZF
+UDFnn   99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+99
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+ 
+ Appendix
+179
+Instruction Set
+UDF28  imm32,Dn 
+UDF29  imm32,Dn 
+UDF30  imm32,Dn 
+UDF31  imm32,Dn 
+UDF32  imm32,Dn 
+UDF33  imm32,Dn 
+UDF34  imm32,Dn 
+UDF35  imm32,Dn 
+UDFU00  imm8,Dn 
+UDFU01  imm8,Dn 
+UDFU02  imm8,Dn 
+UDFU03  imm8,Dn 
+UDFU04  imm8,Dn 
+UDFU05  imm8,Dn 
+UDFU06  imm8,Dn 
+UDFU07  imm8,Dn 
+UDFU08  imm8,Dn 
+UDFU09  imm8,Dn 
+UDFU10  imm8,Dn 
+UDFU11  imm8,Dn 
+UDFU12  imm8,Dn 
+UDFU13  imm8,Dn 
+UDFU14  imm8,Dn 
+UDFU15  imm8,Dn 
+UDFU20  imm8,Dn 
+UDFU21  imm8,Dn 
+UDFU22  imm8,Dn 
+UDFU23  imm8,Dn 
+UDFU24  imm8,Dn 
+UDFU25  imm8,Dn 
+UDFU26  imm8,Dn 
+UDFU27  imm8,Dn 
+UDFU28  imm8,Dn 
+UDFU29  imm8,Dn 
+UDFU30  imm8,Dn 
+UDFU31  imm8,Dn 
+UDFU32  imm8,Dn 
+UDFU33  imm8,Dn 
+UDFU34  imm8,Dn 
+UDFU35  imm8,Dn 
+ 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn →Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn 
+imm8(zero_ext) op Dn
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+ 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3 
+3
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+ 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+D1 
+ 
+1 
+ 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111
+2 
+ 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+1001 
+ 
+3 
+ 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111
+4 
+ 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+10Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn
+5 
+ 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+<imm8 
+ 
+6 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+ 
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+8 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+9 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+10 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+11 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+12 
+ 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+13 14 VF CF NF ZF
+UDFnn 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+UDFUnn
+  99 
+99 
+99 
+99 
+99 
+99 
+99 
+99 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+ Appendix
+180
+Instruction Set
+UDFU00  imm16,Dn 
+UDFU01  imm16,Dn 
+UDFU02  imm16,Dn 
+UDFU03  imm16,Dn 
+UDFU04  imm16,Dn 
+UDFU05  imm16,Dn 
+UDFU06  imm16,Dn 
+UDFU07  imm16,Dn 
+UDFU08  imm16,Dn 
+UDFU09  imm16,Dn 
+UDFU10  imm16,Dn 
+UDFU11  imm16,Dn 
+UDFU12  imm16,Dn 
+UDFU13  imm16,Dn 
+UDFU14  imm16,Dn 
+UDFU15  imm16,Dn 
+UDFU20  imm16,Dn 
+UDFU21  imm16,Dn 
+UDFU22  imm16,Dn 
+UDFU23  imm16,Dn 
+UDFU24  imm16,Dn 
+UDFU25  imm16,Dn 
+UDFU26  imm16,Dn 
+UDFU27  imm16,Dn 
+UDFU28  imm16,Dn 
+UDFU29  imm16,Dn 
+UDFU30  imm16,Dn 
+UDFU31  imm16,Dn 
+UDFU32  imm16,Dn 
+UDFU33  imm16,Dn 
+UDFU34  imm16,Dn 
+UDFU35  imm16,Dn 
+UDFU00  imm32,Dn 
+UDFU01  imm32,Dn 
+UDFU02  imm32,Dn 
+UDFU03  imm32,Dn 
+UDFU04  imm32,Dn 
+UDFU05  imm32,Dn 
+UDFU06  imm32,Dn 
+UDFU07  imm32,Dn
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn → Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm16(zero_ext) op Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+4 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+ 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D2 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4
+1 
+ 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+ 
+ 
+2 
+ 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1011 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101
+3 
+ 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111
+4 
+ 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+ 
+5 
+ 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm16 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+ 
+6 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+....
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+....
+8 
+ 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+....
+9 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+....
+10 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+....
+11 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+....
+12 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....>
+13 14 VF CF NF ZF
+UDFUnn   100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+ UDFU08  imm32,Dn 
+UDFU09  imm32,Dn 
+UDFU10  imm32,Dn 
+UDFU11  imm32,Dn 
+UDFU12  imm32,Dn 
+UDFU13  imm32,Dn 
+UDFU14  imm32,Dn 
+UDFU15  imm32,Dn 
+UDFU20  imm32,Dn 
+UDFU21  imm32,Dn 
+UDFU22  imm32,Dn 
+UDFU23  imm32,Dn 
+UDFU24  imm32,Dn 
+UDFU25  imm32,Dn 
+UDFU26  imm32,Dn 
+UDFU27  imm32,Dn 
+UDFU28  imm32,Dn 
+UDFU29  imm32,Dn 
+UDFU30  imm32,Dn 
+UDFU31  imm32,Dn 
+UDFU32  imm32,Dn 
+UDFU33  imm32,Dn 
+UDFU34  imm32,Dn 
+UDFU35  imm32,Dn
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn → Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn 
+imm32 op Dn
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+-
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6 
+6
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+ 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4 
+D4
+1 
+ 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+1111 
+ 
+ 
+ 
+2 
+ 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+1101 
+ 
+ 
+3 
+ 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111 
+0000 
+0001 
+0010 
+0011 
+0100 
+0101 
+0110 
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111
+4 
+ 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+01Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+11Dn 
+ 
+ 
+5 
+ 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+<imm32 
+ 
+6 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+ 
+ 
+Group 
+ 
+Mnemonic Operation Machine Code Notes Page
+Flag Code 
+Size
+Cycle
+For 
+ -mat
+MN1030/MN103S SERIES INSTRUCTION SET
+7 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+8 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+9 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+10 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+11 
+ 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+.... 
+ 
+12 
+ 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+....> 
+ 
+13 14 VF CF NF ZF
+UDFUnn  
+ 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100 
+100
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 
+Not used for AM30 

@@ -1,7 +1,7 @@
 #include "registers.h"
 // Default, all registers 0
 
-Reg::Reg() {}
+Reg::Reg() : registers{0} {}
 
 reg_type Reg::get(RegTypes reg) {
   if (reg > reg_usable || reg < 0)
@@ -15,3 +15,6 @@ bool Reg::set(RegTypes reg, reg_type val) {
   registers[reg] = val;
   return true;
 }
+
+reg_type Reg::get_pc() { return get(PC); }
+void Reg::set_pc(reg_type pc) { set(PC, pc); }

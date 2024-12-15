@@ -9,13 +9,18 @@ struct Instruction {
   inst_op op;
   // May end up being 0 or more bytes depending on size of inst
   inst_data args[6];
-};
+} typedef Instruction;
 
-// We have 11 possible formats
-enum InsFormat {
+// Key:
+// - Camelcase m before register name: dereference of ptr in reg
+// - Instruction name after: We prolly had a duplicate so just naming it
+// something else lol. We have 11 possible formats
+enum class InsFormat {
   // D0 is moreso an umbrella, basically everything after the 5th bit may change
   // but the 5th will always be 0 for D0.
   D0 = 0b11110000,
+  D0_1 = 0b11110010,
+  D0_2 = 0b11110011,
   D1 = 0b11111000,
   D2 = 0b11111010,
   D4 = 0b11111100,
@@ -23,6 +28,52 @@ enum InsFormat {
   // D5 and D3 both share the same opcode format byte, and are differentiated
   // based on what comes after.
   D3 = 0b11111110,
+
+  // Whereas Dn all start with 1111, Sn is anything thats doesnt. Also, Sn
+  // format only has the first 4 bits as an opcode. This kinda sucks cuz it
+  // means documenting it in a enum is kinda
+  // ass but we ball.
+  //
+  // S0 and variations
+  //
+  //// S0 Mov
+  S0_DmDn_MOV = 0b1000,
+  S0_AmAn = 0b1001,
+  S0_SpAn = 0b0011,
+  // Deref of Am
+  S0_mAmDn = 0b0111,
+  // Deref of An
+  S0_Dm_mAn = 0b0111,
+  S0_Dn = 0b0001,
+  //// End S0 Mov
+  // Only ever used for clr'ing Dn I believe
+  S0_Dn_CLR = 0b0000,
+  //// S0 Add
+  S0_DmDn_ADD = 0b1110,
+  //// S0 INC
+  // All inc share S0 and share the same opcode, so just gotta read after the
+  // opcode.
+  S0_Dn_INC = 0b0100,
+  //// S0 INC4
+  S0_An_INC4 = 0b0101,
+  //// S0 CMP
+  S0_DmDn_CMP = 0b1010,
+  S0_AmAn_CMP = 0b1011,
+  //// S0 ASL2
+  // Same as INC4, but differentiated based on what comes
+  // after. INC4 has 00 bits, we have 01.
+  S0_Dn_ASL2 = 0b0101,
+  //// S0 Lcc
+  // For LEQ last 4 bits are 1000, for LNE its 1001.
+  S0_Lcc = 0b1101,
+  //// S0 SETLB, last nib is 1011
+  S0_SETLB = 0b1101,
+  //// S0 NOP
+  S0_NOP = 0b1100,
+
+  //
+  // S1 and variations
+  //
 
 };
 

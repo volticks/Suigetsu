@@ -27,9 +27,9 @@ constexpr op_array op_arr = [] {
   // Am, Dn
   opcodes[0b0001] = InsnType::SUB;
   // Dm, An
-  opcodes[0b0001] = InsnType::SUB;
+  opcodes[0b0010] = InsnType::SUB;
   // Am, An
-  opcodes[0b0001] = InsnType::SUB;
+  opcodes[0b0011] = InsnType::SUB;
   return opcodes;
 }();
 

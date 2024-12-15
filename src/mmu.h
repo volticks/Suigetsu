@@ -115,5 +115,5 @@ public:
   // TODO: may end up writing more here with different read/write granularity,
 
 private:
-  std::vector<page_entry> page_directory;
+  PageDirectory page_directory;
 };
