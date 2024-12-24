@@ -11,7 +11,11 @@ bool Emulator::emu_loop(const Instructions &insns) {
 
   while (it < end) {
     // TODO: actually do stuff here
-    Instruction ins = decoder.decode_inst(it.base());
+    Instruction ins = decoder.decode_inst(it.base(), end.base());
+
+    // Instruction decoding would go OOB, or decoding failed stop execution
+    if (ins.sz == 0)
+      break;
 
     execute_insn(ins);
 

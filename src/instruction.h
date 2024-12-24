@@ -74,6 +74,48 @@ enum class InsFormat {
   //
   // S1 and variations
   //
+  S2_i16_Dn_ADD = 0b001010,
+  S2_i16_An_ADD = 0b001000,
+
+  //
+  // S2 and variations
+  //
+  S2_i16_Dn_MOV = 0b001011,
+  S2_i16_An_MOV = 0b001001,
+
+  //
+  // S4 and variations
+  //
+
+  //
+  // S6 and variations
+  //
+
+  //
+  // D0 and variations
+  //
+  // Adds:
+  D0_DmAn_ADD = 0b00010101,
+
+  //
+  // D1 and variations
+  //
+
+  //
+  // D2 and variations
+  //
+
+  //
+  // D3 and variations
+  //
+
+  //
+  // D4 and variations
+  //
+
+  //
+  // D5 and variations
+  //
 
 };
 
@@ -150,4 +192,9 @@ enum InsnType {
   UDFnn,
   UDFUnn,
 
+  // Undefined instruction or reserved.
+  NONE,
+  // If opcode & 0xf == 0, it will either be CLR or a MOV variation. Idk how i
+  // gonna do this anymo lol.
+  CLR_OR_MOV_S0,
 };
