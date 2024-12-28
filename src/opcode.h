@@ -18,6 +18,7 @@ namespace Opcodes {
 constexpr op_array op_arr = [] {
   op_array opcodes{0};
 
+  opcodes[0] = InsnType::CLR_OR_MOV_S0;
   // Movs:
   //
 

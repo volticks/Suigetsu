@@ -1,15 +1,84 @@
 #pragma once
+#include "registers.h"
 #include <cstdint>
+#include <cstdio>
 typedef uint8_t inst_data;
 typedef uint8_t inst_op;
+
+// TODO: add Dn aswell
+enum InsSzSn {
+  S0 = 1,
+  S1 = 2,
+  S2 = 3,
+  S3 = 4,
+  S4 = 5,
+  S5 = 6, // Dont think this exists?
+  S6 = 7,
+};
+
+// Non-zero ArgKind in an instruction == populated.
+// Otherwise we reached end of args.
+enum class ArgKind {
+  D0 = 1,
+  D1,
+  D2,
+  D3,
+  A0,
+  A1,
+  A2,
+  A3,
+  PC,
+  SP,
+  MDR,
+  PSW,
+  LIR,
+  LAR,
+
+  imm8,
+  imm16,
+  imm32,
+  imm40,
+  imm48,
+
+  // Absolute values, exclusively used for memory related stuff
+  abs16,
+  abs32,
+
+  // Displacements, used for relative jumps and stuff.
+  d8,
+  d16,
+  d32,
+};
 
 struct Instruction {
   // Size of the current instruction in bytes.
   uint8_t sz;
   inst_op op;
-  // May end up being 0 or more bytes depending on size of inst
+  // Specifies the kinds of arguments, in order.
+  ArgKind kinds[3];
+  // May end up being 0 or more bytes depending on size of inst. This is mainly
+  // here so we can store the imm/abs/displacment values
   inst_data args[6];
-} typedef Instruction;
+
+  uint8_t curr = 0;
+  // Some helpers
+  // Appending an argument to the array. Can have up to 6 bytes of arguments so
+  // wanted a way to manage this. This needs to be in here for some reason,
+  // putting it in an external cc file aint workin.
+  bool arg_add(const inst_data *const arg, uint32_t len) {
+    if (this->curr + len >= sizeof(this->args))
+      return false;
+
+    for (int i = 0; i < len; i++) {
+      this->args[curr + i] = arg[i];
+    }
+
+    this->curr += len;
+    return true;
+  }
+  void log() { fprintf(stdout, "ARGS: %s\n", this->args); }
+
+}; // typedef Instruction;
 
 // Key:
 // - Camelcase m before register name: dereference of ptr in reg
