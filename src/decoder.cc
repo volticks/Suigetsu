@@ -40,8 +40,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       // Then need to store it on the instruction.
       std::cout << "Decoder::decode_sn_op instruction is CLR" << std::endl;
       ins_out.op = InsnType::CLR;
-      ins_out.sz = (int)InsSzSn::S0;
-      ins_out.sz = 1;
+      ins_out.sz = InsSzSn::S0;
       return;
     }
 
@@ -50,6 +49,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     const inst_data movbu_sn_upper = 0xe;
     const inst_data mov_sn_upper = 0xd;
 
+    ins_out.kinds[1] = ArgKind::abs16;
     ins_out.sz = InsSzSn::S2;
 
     if ((movhu_sn_upper - op) % 0x4 == 0) {
@@ -69,9 +69,46 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     // Need +1 to skip past the opcode
     data++;
     ins_out.arg_add(data, 2);
-    ins_out.log();
-    return;
+  } else if (op_nib_up < 2) {
+    // TODO: BIG: Test decoding these instructions branches below.
+    InsnType types[] = {EXTB, EXTBU, EXTH, EXTHU};
+    // Handles EXTB/BU/H/HU variants
+    ins_out.sz = InsSzSn::S0;
+    // Didnt feel like sketching out a whole ass if else chain.
+    // Will be max 3
+    ins_out.op = types[op_nib_low >> 2];
+    ArgKind reg = dn_registers[op_nib_low & 0b0011];
+    ins_out.kinds[0] = reg;
+  } else if (op_nib_up < 3) {
+    // Mov or add variation with a imm8 or imm16
+    InsnType types[] = {ADD, MOV};
+    ins_out.op = types[op_nib_low & 1];
+    std::cout << "Decoder::decode_sn_op instruction is ";
+    if (ins_out.op == MOV) {
+      std::cout << "\"MOV imm16, ";
+      ins_out.kinds[0] = ArgKind::imm16;
+      ins_out.sz = InsSzSn::S2;
+    } else {
+      std::cout << "\"ADD imm8, ";
+      ins_out.kinds[0] = ArgKind::imm8;
+      ins_out.sz = InsSzSn::S1;
+    }
+
+    bool use_d = op_nib_low & 0b10;
+    ArgKind reg;
+    uint8_t idx = (op_nib_low & 0b1100) >> 2;
+    if (use_d) {
+      std::cout << "d" << (int)idx << std::endl;
+      reg = dn_registers[idx];
+    } else {
+      std::cout << "a" << (int)idx << std::endl;
+      reg = an_registers[idx];
+    }
+    ins_out.kinds[1] = reg;
+    data++;
+    ins_out.arg_add(data, (op_nib_low & 1) + 1);
   }
+  ins_out.log();
 }
 // Lotta possibilities here.
 void Decoder::decode_dn_op(const inst_data *data, Instruction &ins_out) {}

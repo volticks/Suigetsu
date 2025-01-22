@@ -198,6 +198,7 @@ enum InsnType {
 
   EXT,
   EXTB,
+  EXTBU,
   EXTH,
   EXTHU,
 
