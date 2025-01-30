@@ -48,6 +48,18 @@ enum class ArgKind {
   d8,
   d16,
   d32,
+
+  // Memory versions of the registers.
+  MA0,
+  MA1,
+  MA2,
+  MA3,
+  //// Dont believe Dn has the same but just in case
+  MD0,
+  MD1,
+  MD2,
+  MD3,
+
 };
 
 struct Instruction {

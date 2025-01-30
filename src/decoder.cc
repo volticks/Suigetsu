@@ -26,14 +26,175 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
   inst_op op = *data;
   inst_op op_nib_up = nib_up(op);
   inst_op op_nib_low = nib_low(op);
+  ArgKind reg;
+  bool use_d;
+  uint8_t idx;
+  bool add_args = false;
+  uint8_t arg_sz = 0;
+  // TODO: use this
+  const uint8_t dn_idx = 1;
+  const uint8_t an_idx = 0;
+  const ArgKind *regs[] = {an_registers, dn_registers};
 
-  if (op_nib_up < 1) {
+  //  if (op_nib_up < 1) {
+  //    std::cout << "Decoder::decode_sn_op entering op_nib_up < 1 branch"
+  //              << std::endl;
+  //    // For Sn, this will either be a CLR or a mov variation with the Dn
+  //    // registers. Lets eliminate the former first.
+  //    const inst_op mask_clr = 0b1100;
+  //    reg = dn_registers[(op_nib_low & mask_clr) >> 2];
+  //    ins_out.kinds[0] = reg;
+  //    if ((mask_clr ^ op_nib_low) == 0) {
+  //      // Issa CLR. We know it'll be on one of the Dn registers
+  //      // Then need to store it on the instruction.
+  //      std::cout << "Decoder::decode_sn_op instruction is CLR" << std::endl;
+  //      ins_out.op = InsnType::CLR;
+  //      ins_out.sz = InsSzSn::S0;
+  //      return;
+  //    }
+  //
+  //    // mov/hu/bu Dn,(abs16)
+  //    const inst_data movhu_sn_upper = 0xf;
+  //    const inst_data movbu_sn_upper = 0xe;
+  //    const inst_data mov_sn_upper = 0xd;
+  //
+  //    ins_out.kinds[1] = ArgKind::abs16;
+  //    ins_out.sz = InsSzSn::S2;
+  //
+  //    if ((movhu_sn_upper - op) % 0x4 == 0) {
+  //      // Probably a movhu inst
+  //      std::cout << "Decoder::decode_sn_op instruction is MOVHU" <<
+  //      std::endl; ins_out.op = InsnType::MOVHU;
+  //    } else if ((movbu_sn_upper - op) % 0x4 == 0) {
+  //      // Probably a movbu
+  //      std::cout << "Decoder::decode_sn_op instruction is MOVBU" <<
+  //      std::endl; ins_out.op = InsnType::MOVBU;
+  //    } else {
+  //      // Gotta be a plain mov
+  //      std::cout << "Decoder::decode_sn_op instruction is MOV" << std::endl;
+  //      ins_out.op = InsnType::MOV;
+  //    }
+  //    // All the above have abs16 for second.
+  //    // Need +1 to skip past the opcode
+  //    add_args = true;
+  //    arg_sz = 2;
+  //  } else if (op_nib_up < 2) {
+  //    // TODO: BIG: Test decoding these instructions branches below.
+  //    InsnType types[] = {EXTB, EXTBU, EXTH, EXTHU};
+  //    // Handles EXTB/BU/H/HU variants
+  //    ins_out.sz = InsSzSn::S0;
+  //    // Didnt feel like sketching out a whole ass if else chain.
+  //    // Will be max 3
+  //    ins_out.op = types[op_nib_low >> 2];
+  //    ArgKind reg = dn_registers[op_nib_low & 0b0011];
+  //    ins_out.kinds[0] = reg;
+  //  } else if (op_nib_up < 3) {
+  //    // Mov or add variation with a imm8 or imm16
+  //    InsnType types[] = {ADD, MOV};
+  //    ins_out.op = types[op_nib_low & 1];
+  //    std::cout << "Decoder::decode_sn_op instruction is ";
+  //    if (ins_out.op == MOV) {
+  //      std::cout << "\"MOV imm16, ";
+  //      ins_out.kinds[0] = ArgKind::imm16;
+  //      ins_out.sz = InsSzSn::S2;
+  //    } else {
+  //      std::cout << "\"ADD imm8, ";
+  //      ins_out.kinds[0] = ArgKind::imm8;
+  //      ins_out.sz = InsSzSn::S1;
+  //    }
+  //
+  //    use_d = op_nib_low & 0b10;
+  //    idx = (op_nib_low & 0b1100) >> 2;
+  //    if (use_d) {
+  //      std::cout << "d" << (int)idx << "\"" << std::endl;
+  //      reg = dn_registers[idx];
+  //    } else {
+  //      std::cout << "a" << (int)idx << std::endl;
+  //      reg = an_registers[idx];
+  //    }
+  //    ins_out.kinds[1] = reg;
+  //    add_args = true;
+  //    arg_sz = (op_nib_low & 1) + 1;
+  //  } else if (op_nib_up < 4) {
+  //    // TODO: Test
+  //    // Mov/b/hu variation with either SP or abs16
+  //    InsnType types[] = {MOV, MOVBU, MOVHU, MOV};
+  //    idx = op_nib_low & 0b11;
+  //    ins_out.op = types[idx];
+  //    if (idx < 3) {
+  //      reg = dn_registers[idx];
+  //      ins_out.kinds[0] = ArgKind::abs16;
+  //      add_args = true;
+  //      arg_sz = 2;
+  //      ins_out.sz = InsSzSn::S3;
+  //    } else {
+  //      reg = an_registers[idx];
+  //      ins_out.kinds[0] = ArgKind::SP;
+  //      ins_out.sz = InsSzSn::S0;
+  //    }
+  //    ins_out.kinds[1] = reg;
+  //  } else if (op_nib_up < 5) {
+  //    // TODO: Test
+  //    // Inc or mov variation
+  //    InsnType types[] = {INC, INC, MOV, MOV};
+  //    idx = op_nib_low & 0b11;
+  //
+  //    ins_out.op = types[idx];
+  //    use_d = !(idx & 0b01);
+  //    ins_out.kinds[0] = regs[use_d][idx];
+  //    if (idx & 0b10) {
+  //      // Need to set kinds[1] and set size
+  //      // MOV (D|A)n,(d8,SP)
+  //      ins_out.kinds[1] = ArgKind::d8;
+  //      ins_out.kinds[2] = ArgKind::SP;
+  //      ins_out.sz = InsSzSn::S1;
+  //    } else {
+  //      ins_out.sz = InsSzSn::S0;
+  //    }
+  //  } else if (op_nib_up < 0x6) {
+  //    // TODO: Test
+  //    // INC, ASL, or mov variation
+  //    InsnType types[] = {INC4, ASL2, MOV, MOV};
+  //    idx = op_nib_low >> 2;
+  //    ins_out.op = types[idx];
+  //
+  //    use_d = (op_nib_low % 0x8) < 4;
+  //    if (op_nib_low > 0x7) {
+  //      ins_out.kinds[0] = regs[use_d][op_nib_low % 4];
+  //      ins_out.kinds[1] = ArgKind::d8;
+  //      ins_out.kinds[2] = ArgKind::SP;
+  //      ins_out.sz = InsSzSn::S1;
+  //      add_args = true;
+  //      arg_sz = 1;
+  //    } else {
+  //      ins_out.kinds[0] = regs[(!use_d)][op_nib_low % 4];
+  //      ins_out.sz = InsSzSn::S0;
+  //    }
+  //  } else if (op_nib_up < 0x7) {
+  //    // TODO: Test
+  //    // TODO: Need some way to
+  //    // This is all mov dm, (an)
+  //    ins_out.op = MOV;
+  //    ins_out.sz = InsSzSn::S0;
+  //    ins_out.kinds[0] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+  //    ins_out.kinds[1] = regs[an_idx][(op_nib_low & 0b0011) + mem_id];
+  //  } else if (op_nib_up < 0x8) {
+  //    // TODO: Test
+  //    // This is all mov (am), dn
+  //    ins_out.op = MOV;
+  //    ins_out.sz = InsSzSn::S0;
+  //    ins_out.kinds[0] = regs[an_idx][(op_nib_low & 0b0011) + mem_id];
+  //    ins_out.kinds[1] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+  //  }
+
+  switch (op_nib_up) {
+  case 0x0: {
     std::cout << "Decoder::decode_sn_op entering op_nib_up < 1 branch"
               << std::endl;
     // For Sn, this will either be a CLR or a mov variation with the Dn
     // registers. Lets eliminate the former first.
     const inst_op mask_clr = 0b1100;
-    ArgKind reg = dn_registers[(op_nib_low & mask_clr) >> 2];
+    reg = dn_registers[(op_nib_low & mask_clr) >> 2];
     ins_out.kinds[0] = reg;
     if ((mask_clr ^ op_nib_low) == 0) {
       // Issa CLR. We know it'll be on one of the Dn registers
@@ -67,9 +228,12 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     }
     // All the above have abs16 for second.
     // Need +1 to skip past the opcode
-    data++;
-    ins_out.arg_add(data, 2);
-  } else if (op_nib_up < 2) {
+    add_args = true;
+    arg_sz = 2;
+
+    break;
+  }
+  case 0x1: {
     // TODO: BIG: Test decoding these instructions branches below.
     InsnType types[] = {EXTB, EXTBU, EXTH, EXTHU};
     // Handles EXTB/BU/H/HU variants
@@ -79,7 +243,10 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     ins_out.op = types[op_nib_low >> 2];
     ArgKind reg = dn_registers[op_nib_low & 0b0011];
     ins_out.kinds[0] = reg;
-  } else if (op_nib_up < 3) {
+
+    break;
+  }
+  case 0x2: {
     // Mov or add variation with a imm8 or imm16
     InsnType types[] = {ADD, MOV};
     ins_out.op = types[op_nib_low & 1];
@@ -94,20 +261,149 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       ins_out.sz = InsSzSn::S1;
     }
 
-    bool use_d = op_nib_low & 0b10;
-    ArgKind reg;
-    uint8_t idx = (op_nib_low & 0b1100) >> 2;
+    use_d = op_nib_low & 0b10;
+    idx = (op_nib_low & 0b1100) >> 2;
     if (use_d) {
-      std::cout << "d" << (int)idx << std::endl;
+      std::cout << "d" << (int)idx << "\"" << std::endl;
       reg = dn_registers[idx];
     } else {
       std::cout << "a" << (int)idx << std::endl;
       reg = an_registers[idx];
     }
     ins_out.kinds[1] = reg;
-    data++;
-    ins_out.arg_add(data, (op_nib_low & 1) + 1);
+    add_args = true;
+    // arg_sz = (op_nib_low & 1);
+    arg_sz = (op_nib_low & 1) + 1;
+
+    break;
   }
+  case 0x3: {
+    // TODO: Test
+    // Mov/b/hu variation with either SP or abs16
+    InsnType types[] = {MOV, MOVBU, MOVHU, MOV};
+    idx = op_nib_low & 0b11;
+    ins_out.op = types[idx];
+    if (idx < 3) {
+      reg = dn_registers[idx];
+      ins_out.kinds[0] = ArgKind::abs16;
+      add_args = true;
+      arg_sz = 2;
+      ins_out.sz = InsSzSn::S3;
+    } else {
+      reg = an_registers[idx];
+      ins_out.kinds[0] = ArgKind::SP;
+      ins_out.sz = InsSzSn::S0;
+    }
+    ins_out.kinds[1] = reg;
+
+    break;
+  }
+  case 0x4: {
+    // TODO: Test
+    // Inc or mov variation
+    InsnType types[] = {INC, INC, MOV, MOV};
+    idx = op_nib_low & 0b11;
+
+    ins_out.op = types[idx];
+    use_d = !(idx & 0b01);
+    ins_out.kinds[0] = regs[use_d][idx];
+    if (idx & 0b10) {
+      // Need to set kinds[1] and set size
+      // MOV (D|A)n,(d8,SP)
+      ins_out.kinds[1] = ArgKind::d8;
+      ins_out.kinds[2] = ArgKind::SP;
+      ins_out.sz = InsSzSn::S1;
+    } else {
+      ins_out.sz = InsSzSn::S0;
+    }
+    break;
+  }
+  case 0x5: {
+    // TODO: Test
+    // INC, ASL, or mov variation
+    InsnType types[] = {INC4, ASL2, MOV, MOV};
+    idx = op_nib_low >> 2;
+    ins_out.op = types[idx];
+
+    use_d = (op_nib_low % 0x8) < 4;
+    if (op_nib_low > 0x7) {
+      ins_out.kinds[0] = regs[use_d][op_nib_low % 4];
+      ins_out.kinds[1] = ArgKind::d8;
+      ins_out.kinds[2] = ArgKind::SP;
+      ins_out.sz = InsSzSn::S1;
+      add_args = true;
+      arg_sz = 1;
+    } else {
+      ins_out.kinds[0] = regs[(!use_d)][op_nib_low % 4];
+      ins_out.sz = InsSzSn::S0;
+    }
+    break;
+  }
+  case 0x6:
+    // TODO: Test
+    // TODO: Need some way to
+    // This is all mov dm, (an)
+    ins_out.op = MOV;
+    ins_out.sz = InsSzSn::S0;
+    ins_out.kinds[0] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+    ins_out.kinds[1] = regs[an_idx][(op_nib_low & 0b0011) + mem_id];
+
+    break;
+  case 0x7: {
+    // TODO: Test
+    // This is all mov (am), dn
+    ins_out.op = MOV;
+    ins_out.sz = InsSzSn::S0;
+    ins_out.kinds[0] = regs[an_idx][(op_nib_low & 0b0011) + mem_id];
+    ins_out.kinds[1] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+    break;
+  }
+  case 0x8: {
+    // TODO: Test
+    // Mov Dm, Dn
+    ins_out.op = MOV;
+    ins_out.sz = InsSzSn::S0;
+    ins_out.kinds[0] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+    ins_out.kinds[1] = regs[dn_idx][op_nib_low & 0b0011];
+    break;
+  }
+  case 0x9: {
+    // TODO: Test
+    // Mov Am, An
+    ins_out.op = MOV;
+    ins_out.sz = InsSzSn::S0;
+    ins_out.kinds[0] = regs[an_idx][op_nib_low & 0b1100 >> 2];
+    ins_out.kinds[1] = regs[an_idx][op_nib_low & 0b0011];
+    break;
+  }
+  case 0xa: {
+    break;
+  }
+  case 0xb: {
+    break;
+  }
+  case 0xc: {
+    break;
+  }
+  case 0xd: {
+    break;
+  }
+  case 0xe: {
+    break;
+  }
+  case 0xf: {
+    break;
+  }
+  default:
+    std::cerr << "Decoder::decode_sn_op wtf opcode, upper nib: " << op_nib_up
+              << std::endl;
+    break;
+  }
+  if (add_args && arg_sz) {
+    data++;
+    ins_out.arg_add(data, arg_sz);
+  }
+
   ins_out.log();
 }
 // Lotta possibilities here.
