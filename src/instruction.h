@@ -1,7 +1,9 @@
 #pragma once
+#include "instruction.h"
 #include "registers.h"
 #include <cstdint>
 #include <cstdio>
+#include <iostream>
 typedef uint8_t inst_data;
 typedef uint8_t inst_op;
 
@@ -19,7 +21,8 @@ enum InsSzSn {
 // Non-zero ArgKind in an instruction == populated.
 // Otherwise we reached end of args.
 enum class ArgKind {
-  D0 = 1,
+  NONE = 0,
+  D0, // = 1,
   D1,
   D2,
   D3,
@@ -39,6 +42,9 @@ enum class ArgKind {
   imm32,
   imm40,
   imm48,
+
+  // 8 bit value representing a collection of registers?
+  regs,
 
   // Absolute values, exclusively used for memory related stuff
   abs16,
@@ -61,37 +67,6 @@ enum class ArgKind {
   MD3,
 
 };
-
-struct Instruction {
-  // Size of the current instruction in bytes.
-  uint8_t sz;
-  inst_op op;
-  // Specifies the kinds of arguments, in order.
-  ArgKind kinds[3];
-  // May end up being 0 or more bytes depending on size of inst. This is mainly
-  // here so we can store the imm/abs/displacment values
-  inst_data args[6];
-
-  uint8_t curr = 0;
-  // Some helpers
-  // Appending an argument to the array. Can have up to 6 bytes of arguments so
-  // wanted a way to manage this. This needs to be in here for some reason,
-  // putting it in an external cc file aint workin.
-  bool arg_add(const inst_data *const arg, uint32_t len) {
-    if (this->curr + len >= sizeof(this->args))
-      return false;
-
-    for (int i = 0; i < len; i++) {
-      this->args[curr + i] = arg[i];
-    }
-
-    this->curr += len;
-    return true;
-  }
-  void log() { fprintf(stdout, "ARGS: %s\n", this->args); }
-
-}; // typedef Instruction;
-
 // Key:
 // - Camelcase m before register name: dereference of ptr in reg
 // - Instruction name after: We prolly had a duplicate so just naming it
@@ -203,9 +178,7 @@ enum class InsFormat {
 enum InsnType {
   MOV,
   MOVBU,
-  MOVB_1,
   MOVHU,
-  MOVH_1,
   MOVM,
 
   EXT,
@@ -256,7 +229,6 @@ enum InsnType {
   Lcc,
   JMP,
 
-  SETLB,
   JSR_1,
 
   CALL,
@@ -279,4 +251,78 @@ enum InsnType {
   // If opcode & 0xf == 0, it will either be CLR or a MOV variation. Idk how i
   // gonna do this anymo lol.
   CLR_OR_MOV_S0,
+
+  // Branch variants - order is important
+  BLT,
+  BGT,
+  BGE,
+  BLE,
+  BCS,
+  BHI,
+  BCC,
+  BLS,
+  BEQ,
+  BNE,
+  BRA,
+
+  // Loop instruction execution instructions
+  // - order important
+  LLT,
+  LGT,
+  LGE,
+  LLE,
+  LCS,
+  LHI,
+  LCC,
+  LLS,
+  LEQ,
+  LNE,
+  LRA,
+  SETLB,
+
 };
+
+// Convert parts of the instruction type enum to a string
+const char *insn_to_str(InsnType type);
+// Converts arg kind enum to string
+const char *arg_kind_to_str(ArgKind arg);
+
+struct Instruction {
+  // Size of the current instruction in bytes.
+  uint8_t sz;
+  inst_op op;
+  // Specifies the kinds of arguments, in order.
+  ArgKind kinds[3];
+  // May end up being 0 or more bytes depending on size of inst. This is mainly
+  // here so we can store the imm/abs/displacment values
+  inst_data args[6];
+
+  uint8_t curr = 0;
+  // Some helpers
+  // Appending an argument to the array. Can have up to 6 bytes of arguments so
+  // wanted a way to manage this. This needs to be in here for some reason,
+  // putting it in an external cc file aint workin.
+  bool arg_add(const inst_data *const arg, uint32_t len) {
+    if (this->curr + len >= sizeof(this->args))
+      return false;
+
+    for (int i = 0; i < len; i++) {
+      this->args[curr + i] = arg[i];
+    }
+
+    this->curr += len;
+    return true;
+  }
+  void log() {
+
+    std::cout << insn_to_str((InsnType)this->op) << " ";
+    if (this->kinds[0] != ArgKind::NONE)
+      std::cout << arg_kind_to_str(this->kinds[0]);
+    if (this->kinds[1] != ArgKind::NONE)
+      std::cout << " " << arg_kind_to_str(this->kinds[1]);
+    std::cout << std::endl;
+
+    fprintf(stdout, "ARGS: %s\n", this->args);
+  }
+
+}; // typedef Instruction;

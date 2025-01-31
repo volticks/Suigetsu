@@ -23,6 +23,8 @@ enum RegTypes {
   LIR,
   LAR
 };
+// Convert reg enum to string
+const char *reg_to_str(RegTypes reg);
 
 class Reg {
 public:
