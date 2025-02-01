@@ -370,145 +370,9 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
 
   ins_out.log();
 }
-// Lotta possibilities here.
-void Decoder::decode_dn_op(const inst_data *data, Instruction &ins_out) {
-  inst_op op = *data;
-  this->add_args = false;
-  this->arg_sz = 0;
-  // TODO: use this
-
-  // This is going to be absolutely monsterous.
-  switch (op) {
-  case 0xF0:
-    decode_dn_op_F0(data, ins_out);
-    break;
-  case 0xF1:
-    decode_dn_op_F1(data, ins_out);
-    break;
-  case 0xF2:
-    decode_dn_op_F2(data, ins_out);
-    break;
-  case 0xF3:
-    decode_dn_op_F3(data, ins_out);
-    break;
-  case 0xF4:
-    decode_dn_op_F4(data, ins_out);
-    break;
-  case 0xF5:
-    decode_dn_op_F5(data, ins_out);
-    break;
-  case 0xF6:
-    decode_dn_op_F6(data, ins_out);
-    break;
-  case 0xF7:
-    decode_dn_op_F7(data, ins_out);
-    break;
-  case 0xF8:
-    decode_dn_op_F8(data, ins_out);
-    break;
-  case 0xF9:
-    decode_dn_op_F9(data, ins_out);
-    break;
-  case 0xFA:
-    decode_dn_op_FA(data, ins_out);
-    break;
-  case 0xFB:
-    decode_dn_op_FB(data, ins_out);
-    break;
-  case 0xFC:
-    decode_dn_op_FC(data, ins_out);
-    break;
-  case 0xFD:
-    decode_dn_op_FD(data, ins_out);
-    break;
-  case 0xFE:
-    decode_dn_op_FE(data, ins_out);
-    break;
-  case 0xFF:
-    decode_dn_op_FF(data, ins_out);
-    break;
-  }
-
-  if (add_args && arg_sz) {
-    data++;
-    ins_out.arg_add(data, arg_sz);
-  }
-
-  ins_out.log();
-}
-
-void Decoder::decode_inst(const inst_data *curr_data, const inst_data *end,
-                          Instruction &ins) {
-
-  // TODO: Actually decode stuff
-  ins.op = InsnType::NOP;
-  ins.sz = 0;
-  ins.curr = 0;
-  // Dont forget to
-  memset(&ins.args, 0, sizeof(ins.args));
-  memset(&ins.kinds, 0, sizeof(ins.kinds));
-
-  if (curr_data >= end)
-    return;
-
-  inst_data opcode = *curr_data;
-  std::cout << "Decoder::decode_inst opcode data: 0x" << std::hex << (int)opcode
-            << std::endl;
-
-  // Go over possible opcodes to determine size
-  switch (opcode) {
-  case 0xF5:
-  case 0xF6:
-    // F5 and F6 is exclusively UDF
-    ins.op = InsnType::UDFnn;
-  case 0xF1:
-  case 0xF2:
-  case 0xF3:
-  case 0xF4:
-    ins.sz = 4;
-    break;
-  case 0xF8:
-  case 0xF9:
-    ins.sz = 3;
-    break;
-  case 0xFA:
-  case 0xFB:
-    ins.sz = 4;
-    break;
-  case 0xFC:
-  case 0xFD:
-    ins.sz = 6;
-    break;
-  case 0xFE:
-    // Could be 5 or 7, will try to determine that for sure later.
-    ins.sz = 5;
-    break;
-  default:
-    // This handles unexpected opcodes, 0xF7, as well as Sn opcodes, so we will
-    // assume S0 and 1 byte size until we get more info.
-    std::cout << "Decoder::decode_inst opcode: " << (int)opcode << std::endl;
-    ins.op = InsnType::NONE;
-    ins.sz = 1;
-    break;
-  }
-
-  // Cant decode reserved instructions.
-  if (ins.op == InsnType::NONE && opcode == 0xF7) {
-    ins.sz = 0;
-    return;
-  }
-
-  if (opcode < 0xF0) {
-    this->decode_sn_op(curr_data, ins);
-  } else {
-    this->decode_dn_op(curr_data, ins);
-  }
-
-  return;
-}
 // Believe for some reason the memory operand always comes last
 // Could also be that Dn always comes before the An register encoding
-void decode_dn_op_F0(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -654,7 +518,7 @@ void decode_dn_op_F0(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_F1(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_F1(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -714,7 +578,7 @@ void decode_dn_op_F1(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_F2(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_F2(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -774,7 +638,7 @@ void decode_dn_op_F2(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_F3(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_F3(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -834,7 +698,7 @@ void decode_dn_op_F3(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_F4(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_F4(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -894,7 +758,7 @@ void decode_dn_op_F4(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_F5(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_F5(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -954,7 +818,7 @@ void decode_dn_op_F5(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_F6(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_F6(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1014,7 +878,7 @@ void decode_dn_op_F6(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_F7(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_F7(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1074,7 +938,7 @@ void decode_dn_op_F7(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_F8(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1134,7 +998,7 @@ void decode_dn_op_F8(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_F9(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_F9(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1194,7 +1058,7 @@ void decode_dn_op_F9(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_FA(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_FA(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1254,7 +1118,7 @@ void decode_dn_op_FA(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_FB(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_FB(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1314,7 +1178,7 @@ void decode_dn_op_FB(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_FC(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_FC(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1374,7 +1238,7 @@ void decode_dn_op_FC(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_FD(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_FD(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1434,7 +1298,7 @@ void decode_dn_op_FD(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_FE(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_FE(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1494,7 +1358,7 @@ void decode_dn_op_FE(const inst_data *data, Instruction &ins) {
   }
 }
 
-void decode_dn_op_FF(const inst_data *data, Instruction &ins) {
+void Decoder::decode_dn_op_FF(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1552,4 +1416,140 @@ void decode_dn_op_FF(const inst_data *data, Instruction &ins) {
     break;
   }
   }
+}
+// Lotta possibilities here.
+void Decoder::decode_dn_op(const inst_data *data, Instruction &ins_out) {
+  inst_op op = *data;
+  this->add_args = false;
+  this->arg_sz = 0;
+  // TODO: use this
+
+  // This is going to be absolutely monsterous.
+  switch (op) {
+  case 0xF0:
+    decode_dn_op_F0(data, ins_out);
+    break;
+  case 0xF1:
+    decode_dn_op_F1(data, ins_out);
+    break;
+  case 0xF2:
+    decode_dn_op_F2(data, ins_out);
+    break;
+  case 0xF3:
+    decode_dn_op_F3(data, ins_out);
+    break;
+  case 0xF4:
+    decode_dn_op_F4(data, ins_out);
+    break;
+  case 0xF5:
+    decode_dn_op_F5(data, ins_out);
+    break;
+  case 0xF6:
+    decode_dn_op_F6(data, ins_out);
+    break;
+  case 0xF7:
+    decode_dn_op_F7(data, ins_out);
+    break;
+  case 0xF8:
+    decode_dn_op_F8(data, ins_out);
+    break;
+  case 0xF9:
+    decode_dn_op_F9(data, ins_out);
+    break;
+  case 0xFA:
+    decode_dn_op_FA(data, ins_out);
+    break;
+  case 0xFB:
+    decode_dn_op_FB(data, ins_out);
+    break;
+  case 0xFC:
+    decode_dn_op_FC(data, ins_out);
+    break;
+  case 0xFD:
+    decode_dn_op_FD(data, ins_out);
+    break;
+  case 0xFE:
+    decode_dn_op_FE(data, ins_out);
+    break;
+  case 0xFF:
+    decode_dn_op_FF(data, ins_out);
+    break;
+  }
+
+  if (add_args && arg_sz) {
+    data++;
+    ins_out.arg_add(data, arg_sz);
+  }
+
+  ins_out.log();
+}
+
+void Decoder::decode_inst(const inst_data *curr_data, const inst_data *end,
+                          Instruction &ins) {
+
+  // TODO: Actually decode stuff
+  ins.op = InsnType::NOP;
+  ins.sz = 0;
+  ins.curr = 0;
+  // Dont forget to
+  memset(&ins.args, 0, sizeof(ins.args));
+  memset(&ins.kinds, 0, sizeof(ins.kinds));
+
+  if (curr_data >= end)
+    return;
+
+  inst_data opcode = *curr_data;
+  std::cout << "Decoder::decode_inst opcode data: 0x" << std::hex << (int)opcode
+            << std::endl;
+
+  // Go over possible opcodes to determine size
+  switch (opcode) {
+  case 0xF5:
+  case 0xF6:
+    // F5 and F6 is exclusively UDF
+    ins.op = InsnType::UDFnn;
+  case 0xF1:
+  case 0xF2:
+  case 0xF3:
+  case 0xF4:
+    ins.sz = 4;
+    break;
+  case 0xF8:
+  case 0xF9:
+    ins.sz = 3;
+    break;
+  case 0xFA:
+  case 0xFB:
+    ins.sz = 4;
+    break;
+  case 0xFC:
+  case 0xFD:
+    ins.sz = 6;
+    break;
+  case 0xFE:
+    // Could be 5 or 7, will try to determine that for sure later.
+    ins.sz = 5;
+    break;
+  default:
+    // This handles unexpected opcodes, 0xF7, as well as Sn opcodes, so we will
+    // assume S0 and 1 byte size until we get more info.
+    std::cout << "Decoder::decode_inst opcode: " << (int)opcode << std::endl;
+    ins.op = InsnType::NONE;
+    ins.sz = 1;
+    break;
+  }
+
+  // Cant decode reserved instructions.
+  if (ins.op == InsnType::NONE && opcode == 0xF7) {
+    ins.sz = 0;
+    return;
+  }
+
+  if (opcode < 0xF0) {
+    this->decode_sn_op(curr_data, ins);
+  } else {
+    this->decode_dn_op(curr_data, ins);
+  }
+
+  return;
 }
