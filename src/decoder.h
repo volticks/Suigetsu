@@ -14,13 +14,32 @@ const ArgKind an_registers[] = {ArgKind::A0,  ArgKind::A1,  ArgKind::A2,
                                 ArgKind::MA2, ArgKind::MA3};
 
 class Decoder {
-
 public:
   void decode_inst(const inst_data *curr_data, const inst_data *end,
                    Instruction &ins);
+  // For adding and maintaining arguments
+  bool add_args = false;
+  uint8_t arg_sz = 0;
 
 private:
   // For decoding the specific S* or D* ops.
   void decode_sn_op(const inst_data *inst_data, Instruction &ins_out);
   void decode_dn_op(const inst_data *inst_data, Instruction &ins_out);
+  // Individual Dn decoders
+  void decode_dn_op_F0(const inst_data *data, Instruction &ins);
+  void decode_dn_op_F1(const inst_data *data, Instruction &ins);
+  void decode_dn_op_F2(const inst_data *data, Instruction &ins);
+  void decode_dn_op_F3(const inst_data *data, Instruction &ins);
+  void decode_dn_op_F4(const inst_data *data, Instruction &ins);
+  void decode_dn_op_F5(const inst_data *data, Instruction &ins);
+  void decode_dn_op_F6(const inst_data *data, Instruction &ins);
+  void decode_dn_op_F7(const inst_data *data, Instruction &ins);
+  void decode_dn_op_F8(const inst_data *data, Instruction &ins);
+  void decode_dn_op_F9(const inst_data *data, Instruction &ins);
+  void decode_dn_op_FA(const inst_data *data, Instruction &ins);
+  void decode_dn_op_FB(const inst_data *data, Instruction &ins);
+  void decode_dn_op_FC(const inst_data *data, Instruction &ins);
+  void decode_dn_op_FD(const inst_data *data, Instruction &ins);
+  void decode_dn_op_FE(const inst_data *data, Instruction &ins);
+  void decode_dn_op_FF(const inst_data *data, Instruction &ins);
 };

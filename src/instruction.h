@@ -18,6 +18,15 @@ enum InsSzSn {
   S6 = 7,
 };
 
+enum InsSzDn {
+  D0s = 2,
+  D1s = 3,
+  D2s = 4,
+  D3s = 5,
+  D4s = 6,
+  D5s = 7,
+};
+
 // Non-zero ArgKind in an instruction == populated.
 // Otherwise we reached end of args.
 enum class ArgKind {
