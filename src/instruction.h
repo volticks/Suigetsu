@@ -230,6 +230,8 @@ enum InsnType {
   LSR_2,
   ASL,
   ASL2,
+  ASR,
+  LSR,
 
   ROR,
   ROL,

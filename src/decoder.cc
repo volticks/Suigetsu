@@ -519,59 +519,70 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_F1(const inst_data *data, Instruction &ins) {
+  // TODO: Test this
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
   const inst_op op_nib_low = nib_low(op);
-  ArgKind reg;
   bool use_d;
-  uint8_t idx;
+  uint8_t i_r0;
+  uint8_t i_r1;
+
+  ins.sz = InsSzDn::D0s;
+  const uint8_t reg_low = ((op_nib_low & 0b1100) >> 2);
+  const uint8_t reg_high = ((op_nib_low & 0b0011));
+  // Order is
+  // Dm, Dn
+  // Am, Dm
+  // Dm, An
+  // Am, An
+  const uint8_t order[][2] = {
+      {dn_idx, dn_idx}, {an_idx, dn_idx}, {dn_idx, an_idx}, {an_idx, an_idx}};
+
+  i_r0 = order[op_nib_up % 4][0];
+  i_r1 = order[op_nib_up % 4][1];
+  ins.kinds[0] = regs[i_r0][reg_low];
+  ins.kinds[1] = regs[i_r0][reg_high];
   switch (op_nib_up) {
-  case 0x0: {
+  case 0x0:
+  case 0x1:
+  case 0x2:
+  case 0x3:
+    ins.op = SUB;
     break;
-  }
-  case 0x1: {
+  case 0x4:
+    ins.op = ADDC;
     break;
-  }
-  case 0x2: {
-    break;
-  }
-  case 0x3: {
-    break;
-  }
-  case 0x4: {
-    break;
-  }
-  case 0x5: {
-    break;
-  }
-  case 0x6: {
-    break;
-  }
+  case 0x5:
+  case 0x6:
   case 0x7: {
+    ins.op = ADD;
+    // Order is consistent in this case
+    if (op_nib_up == 0x7)
+      break;
+    // Switch order of registers
+    ArgKind tmp = ins.kinds[0];
+    ins.kinds[0] = ins.kinds[1];
+    ins.kinds[1] = tmp;
     break;
   }
   case 0x8: {
+    ins.op = SUBC;
     break;
   }
-  case 0x9: {
+  case 0x9:
+  case 0xA:
+    ins.op = CMP;
     break;
-  }
-  case 0xA: {
-    break;
-  }
-  case 0xB: {
-    break;
-  }
+  case 0xB:
   case 0xC: {
+    ins.op = NONE;
     break;
   }
-  case 0xD: {
+  case 0xD:
+  case 0xE:
+    ins.op = MOV;
     break;
-  }
-  case 0xE: {
-    break;
-  }
   case 0xF: {
     break;
   }
@@ -579,6 +590,7 @@ void Decoder::decode_dn_op_F1(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_F2(const inst_data *data, Instruction &ins) {
+  // TODO: Test this
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -586,59 +598,123 @@ void Decoder::decode_dn_op_F2(const inst_data *data, Instruction &ins) {
   ArgKind reg;
   bool use_d;
   uint8_t idx;
+
+  ins.sz = InsSzDn::D0s;
+
+  const uint8_t reg_low = ((op_nib_low & 0b1100) >> 2);
+  const uint8_t reg_high = ((op_nib_low & 0b0011));
+  // Same for *most* of these, some require manual changes
+  ins.kinds[0] = regs[dn_idx][reg_low];
+  ins.kinds[1] = regs[dn_idx][reg_high];
+
   switch (op_nib_up) {
   case 0x0: {
+    ins.op = AND;
     break;
   }
   case 0x1: {
+    ins.op = OR;
     break;
   }
   case 0x2: {
+    ins.op = XOR;
     break;
   }
-  case 0x3: {
+
+  // One outlyer case
+  case 0x3:
+    ins.op = NOT;
+    if (op_nib_low > 3) {
+      // Not encoded
+      ins.op = NONE;
+      break;
+    }
+  case 0x8:
+    // ROL | ROR
+    if (op_nib_low > 7) {
+      // Not encoded
+      ins.op = NONE;
+      break;
+    }
+    ins.op = (op_nib_low > 3) ? ROR : ROL;
+  case 0xD: {
+    if (op_nib_up == 0xD)
+      ins.op = EXT;
+    // In these cases single arg DN is stored in final nib.
+    ins.kinds[0] = ins.kinds[1];
+    ins.kinds[1] = ArgKind::NONE;
     break;
   }
+
   case 0x4: {
+    ins.op = MUL;
     break;
   }
   case 0x5: {
+    ins.op = MULU;
     break;
   }
   case 0x6: {
+    ins.op = DIV;
     break;
   }
   case 0x7: {
-    break;
-  }
-  case 0x8: {
+    ins.op = DIVU;
     break;
   }
   case 0x9: {
+    ins.op = ASL;
     break;
   }
   case 0xA: {
+    ins.op = LSR;
     break;
   }
   case 0xB: {
+    ins.op = ASR;
     break;
   }
   case 0xC: {
-    break;
-  }
-  case 0xD: {
+    ins.op = NONE;
     break;
   }
   case 0xE: {
+    if (op_nib_low > 7) {
+      // Not encoded
+      ins.op = NONE;
+      break;
+    }
+    ins.op = MOV;
+    ins.kinds[0] = (op_nib_low > 3) ? ArgKind::PSW : ArgKind::MDR;
     break;
   }
   case 0xF: {
+    ins.op = MOV;
+    idx = op_nib_low % 4;
+    if (idx == 1) {
+      // No instruction here
+      ins.op = NONE;
+      break;
+    }
+    // This ones a bit strange
+    const ArgKind kinds[] = {ArgKind::SP, ArgKind::MDR, ArgKind::PSW};
+    // This or i add an element to pad out the array and i cba
+    if (idx > 1)
+      idx--;
+    ins.kinds[1] = kinds[idx];
+    use_d = idx > 1 ? dn_idx : an_idx;
+    idx = reg_low;
+    if (!use_d)
+      idx = reg_high;
+    reg = regs[use_d][idx];
+    ins.kinds[0] = reg;
     break;
   }
   }
 }
 
 void Decoder::decode_dn_op_F3(const inst_data *data, Instruction &ins) {
+  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -646,59 +722,32 @@ void Decoder::decode_dn_op_F3(const inst_data *data, Instruction &ins) {
   ArgKind reg;
   bool use_d;
   uint8_t idx;
-  switch (op_nib_up) {
-  case 0x0: {
-    break;
-  }
-  case 0x1: {
-    break;
-  }
-  case 0x2: {
-    break;
-  }
-  case 0x3: {
-    break;
-  }
-  case 0x4: {
-    break;
-  }
-  case 0x5: {
-    break;
-  }
-  case 0x6: {
-    break;
-  }
-  case 0x7: {
-    break;
-  }
-  case 0x8: {
-    break;
-  }
-  case 0x9: {
-    break;
-  }
-  case 0xA: {
-    break;
-  }
-  case 0xB: {
-    break;
-  }
-  case 0xC: {
-    break;
-  }
-  case 0xD: {
-    break;
-  }
-  case 0xE: {
-    break;
-  }
-  case 0xF: {
-    break;
-  }
+
+  ins.op = MOV;
+  ins.sz = InsSzDn::D0s;
+
+  ArgKind a_mem_reg = regs[an_idx][op_nib_low & 0b0011];
+  ArgKind di_mem_reg = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+
+  idx = op_nib_low % 8;
+  use_d = op_nib_up < 8;
+  reg = regs[use_d][op_nib_up & 0b0011];
+
+  // TODO: How are we making sure we know this is memory?
+  // I think due to the num of args/kinds we can infer.
+  if (idx > 3) {
+    ins.kinds[0] = reg;
+    ins.kinds[1] = di_mem_reg;
+    ins.kinds[2] = a_mem_reg;
+  } else {
+    ins.kinds[0] = di_mem_reg;
+    ins.kinds[1] = a_mem_reg;
+    ins.kinds[2] = reg;
   }
 }
 
 void Decoder::decode_dn_op_F4(const inst_data *data, Instruction &ins) {
+  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -706,55 +755,23 @@ void Decoder::decode_dn_op_F4(const inst_data *data, Instruction &ins) {
   ArgKind reg;
   bool use_d;
   uint8_t idx;
-  switch (op_nib_up) {
-  case 0x0: {
-    break;
-  }
-  case 0x1: {
-    break;
-  }
-  case 0x2: {
-    break;
-  }
-  case 0x3: {
-    break;
-  }
-  case 0x4: {
-    break;
-  }
-  case 0x5: {
-    break;
-  }
-  case 0x6: {
-    break;
-  }
-  case 0x7: {
-    break;
-  }
-  case 0x8: {
-    break;
-  }
-  case 0x9: {
-    break;
-  }
-  case 0xA: {
-    break;
-  }
-  case 0xB: {
-    break;
-  }
-  case 0xC: {
-    break;
-  }
-  case 0xD: {
-    break;
-  }
-  case 0xE: {
-    break;
-  }
-  case 0xF: {
-    break;
-  }
+
+  ins.op = (op_nib_up > 7) ? MOVHU : MOVBU;
+  ins.sz = InsSzDn::D0s;
+
+  ArgKind a_mem_reg = regs[an_idx][op_nib_low & 0b0011];
+  ArgKind di_mem_reg = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+  idx = op_nib_low % 8;
+  reg = regs[dn_idx][op_nib_up & 0b0011];
+
+  if (idx > 3) {
+    ins.kinds[0] = reg;
+    ins.kinds[1] = di_mem_reg;
+    ins.kinds[2] = a_mem_reg;
+  } else {
+    ins.kinds[0] = di_mem_reg;
+    ins.kinds[1] = a_mem_reg;
+    ins.kinds[2] = reg;
   }
 }
 
@@ -766,7 +783,10 @@ void Decoder::decode_dn_op_F5(const inst_data *data, Instruction &ins) {
   ArgKind reg;
   bool use_d;
   uint8_t idx;
-  switch (op_nib_up) {
+
+  // All UDF20-UDF35
+
+  /*switch (op_nib_up) {
   case 0x0: {
     break;
   }
@@ -815,7 +835,7 @@ void Decoder::decode_dn_op_F5(const inst_data *data, Instruction &ins) {
   case 0xF: {
     break;
   }
-  }
+  }*/
 }
 
 void Decoder::decode_dn_op_F6(const inst_data *data, Instruction &ins) {
@@ -826,7 +846,9 @@ void Decoder::decode_dn_op_F6(const inst_data *data, Instruction &ins) {
   ArgKind reg;
   bool use_d;
   uint8_t idx;
-  switch (op_nib_up) {
+  // All UDF00-UDF15
+
+  /*switch (op_nib_up) {
   case 0x0: {
     break;
   }
@@ -875,7 +897,7 @@ void Decoder::decode_dn_op_F6(const inst_data *data, Instruction &ins) {
   case 0xF: {
     break;
   }
-  }
+  }*/
 }
 
 void Decoder::decode_dn_op_F7(const inst_data *data, Instruction &ins) {
@@ -939,6 +961,7 @@ void Decoder::decode_dn_op_F7(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
+  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -946,38 +969,57 @@ void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
   ArgKind reg;
   bool use_d;
   uint8_t idx;
+
+  this->add_args = true;
+  this->arg_sz = 1;
+
   switch (op_nib_up) {
-  case 0x0: {
+  case 0x0:
+  case 0x1:
+  case 0x2:
+  case 0x3:
+    ins.op = MOV;
+  case 0x4:
+  case 0x5:
+    ins.op = MOVBU;
     break;
-  }
-  case 0x1: {
-    break;
-  }
-  case 0x2: {
-    break;
-  }
-  case 0x3: {
-    break;
-  }
-  case 0x4: {
-    break;
-  }
-  case 0x5: {
-    break;
-  }
-  case 0x6: {
-    break;
-  }
+  case 0x6:
   case 0x7: {
+    // Needed because of the fallthrough
+    if (op_nib_up == 0x6 || op_nib_up == 0x7)
+      ins.op = MOVHU;
+
+    ins.sz = InsSzDn::D1s;
+
+    ArgKind a_mem_reg = regs[an_idx][op_nib_low & 0b0011];
+    ArgKind a_or_d_reg;
+    use_d = (op_nib_low < 2 || op_nib_low > 3);
+    a_or_d_reg = regs[use_d][op_nib_low & 0b1100 >> 2];
+
+    idx = op_nib_low % 2;
+    if (idx) {
+      ins.kinds[0] = a_or_d_reg;
+      ins.kinds[1] = ArgKind::d8;
+      ins.kinds[2] = a_mem_reg;
+    } else {
+      ins.kinds[0] = ArgKind::d8;
+      ins.kinds[1] = a_mem_reg;
+      ins.kinds[2] = a_or_d_reg;
+    }
+
     break;
   }
   case 0x8: {
+    ins.op = NONE;
+    ins.sz = InsSzDn::D0s;
     break;
   }
   case 0x9: {
     break;
   }
   case 0xA: {
+    ins.op = NONE;
+    ins.sz = InsSzDn::D0s;
     break;
   }
   case 0xB: {
@@ -987,6 +1029,8 @@ void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0xD: {
+    ins.op = NONE;
+    ins.sz = InsSzDn::D0s;
     break;
   }
   case 0xE: {
@@ -1448,7 +1492,8 @@ void Decoder::decode_dn_op(const inst_data *data, Instruction &ins_out) {
     decode_dn_op_F6(data, ins_out);
     break;
   case 0xF7:
-    decode_dn_op_F7(data, ins_out);
+    // decode_dn_op_F7(data, ins_out);
+    //  Reserved
     break;
   case 0xF8:
     decode_dn_op_F8(data, ins_out);
@@ -1477,7 +1522,8 @@ void Decoder::decode_dn_op(const inst_data *data, Instruction &ins_out) {
   }
 
   if (add_args && arg_sz) {
-    data++;
+    // Extra +1 cuz data is pointing at the first op byte atm
+    data += 2;
     ins_out.arg_add(data, arg_sz);
   }
 
