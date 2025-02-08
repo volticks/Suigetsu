@@ -4,7 +4,7 @@
 
 // Add this in the array to get the same version of the reg but for derefs and
 // such.
-const uint8_t mem_id = 3;
+const uint8_t mem_id = 4; // Was 3
 // Used in decoding to get the register from the instruction.
 const ArgKind dn_registers[] = {ArgKind::D0,  ArgKind::D1,  ArgKind::D2,
                                 ArgKind::D3,  ArgKind::MD0, ArgKind::MD1,
@@ -20,6 +20,7 @@ public:
   // For adding and maintaining arguments
   bool add_args = false;
   uint8_t arg_sz = 0;
+  const inst_data *end = NULL;
 
 private:
   // For decoding the specific S* or D* ops.

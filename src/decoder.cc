@@ -2,6 +2,7 @@
 #include "instruction.h"
 #include "opcode.h"
 #include "registers.h"
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <ostream>
@@ -45,13 +46,14 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     const inst_op mask_clr = 0b1100;
     reg = dn_registers[(op_nib_low & mask_clr) >> 2];
     ins_out.kinds[0] = reg;
-    if ((mask_clr ^ op_nib_low) == 0) {
+    idx = op_nib_low % 4;
+    if (idx == 0) {
       // Issa CLR. We know it'll be on one of the Dn registers
       // Then need to store it on the instruction.
       std::cout << "Decoder::decode_sn_op instruction is CLR" << std::endl;
       ins_out.op = InsnType::CLR;
       ins_out.sz = InsSzSn::S0;
-      return;
+      break;
     }
 
     // mov/hu/bu Dn,(abs16)
@@ -97,8 +99,8 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
   }
   case 0x2: {
     // Mov or add variation with a imm8 or imm16
-    const InsnType types[] = {ADD, MOV};
-    ins_out.op = types[op_nib_low & 1];
+    // const InsnType types[] = {ADD, MOV};
+    ins_out.op = ((op_nib_low % 8) > 3) ? MOV : ADD;
     std::cout << "Decoder::decode_sn_op instruction is ";
     if (ins_out.op == MOV) {
       std::cout << "\"MOV imm16, ";
@@ -111,7 +113,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     }
 
     use_d = op_nib_low & 0b10;
-    idx = (op_nib_low & 0b1100) >> 2;
+    idx = (op_nib_low & 0b0011);
     if (use_d) {
       std::cout << "d" << (int)idx << "\"" << std::endl;
       reg = dn_registers[idx];
@@ -121,8 +123,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     }
     ins_out.kinds[1] = reg;
     add_args = true;
-    // arg_sz = (op_nib_low & 1);
-    arg_sz = (op_nib_low & 1) + 1;
+    arg_sz = ((op_nib_low % 8) > 3) ? 2 : 1;
 
     break;
   }
@@ -188,23 +189,24 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     }
     break;
   }
-  case 0x6:
+  case 0x6: {
     // TODO: Test
     // TODO: Need some way to
     // This is all mov dm, (an)
     ins_out.op = MOV;
     ins_out.sz = InsSzSn::S0;
-    ins_out.kinds[0] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+    ins_out.kinds[0] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
     ins_out.kinds[1] = regs[an_idx][(op_nib_low & 0b0011) + mem_id];
 
     break;
+  }
   case 0x7: {
     // TODO: Test
     // This is all mov (am), dn
     ins_out.op = MOV;
     ins_out.sz = InsSzSn::S0;
     ins_out.kinds[0] = regs[an_idx][(op_nib_low & 0b0011) + mem_id];
-    ins_out.kinds[1] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+    ins_out.kinds[1] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
     break;
   }
   case 0x8: {
@@ -212,7 +214,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     // Mov Dm, Dn
     ins_out.op = MOV;
     ins_out.kinds[1] = regs[dn_idx][op_nib_low & 0b0011];
-    if ((op_nib_low & 0b1100 >> 2) == (op_nib_low & 0b0011)) {
+    if (((op_nib_low & 0b1100) >> 2) == (op_nib_low & 0b0011)) {
       // Needs to be converted to mov imm8, dn
       ins_out.sz = InsSzSn::S1;
       ins_out.kinds[0] = ArgKind::imm8;
@@ -221,7 +223,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       break;
     }
     ins_out.sz = InsSzSn::S0;
-    ins_out.kinds[0] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+    ins_out.kinds[0] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
     break;
   }
   case 0x9: {
@@ -229,7 +231,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     // Mov Am, An
     ins_out.op = MOV;
     ins_out.kinds[1] = regs[an_idx][op_nib_low & 0b0011];
-    if ((op_nib_low & 0b1100 >> 2) == (op_nib_low & 0b0011)) {
+    if (((op_nib_low & 0b1100) >> 2) == (op_nib_low & 0b0011)) {
       // Mov imm8, an
       ins_out.kinds[0] = ArgKind::imm8;
       ins_out.sz = InsSzSn::S1;
@@ -238,15 +240,15 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       break;
     }
     ins_out.sz = InsSzSn::S0;
-    ins_out.kinds[0] = regs[an_idx][op_nib_low & 0b1100 >> 2];
+    ins_out.kinds[0] = regs[an_idx][(op_nib_low & 0b1100) >> 2];
     break;
   }
   case 0xa: {
     // TODO: Test
     // Cmp Dm, Dn
     ins_out.op = CMP;
-    ins_out.kinds[1] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
-    if ((op_nib_low & 0b1100 >> 2) == (op_nib_low & 0b0011)) {
+    ins_out.kinds[1] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
+    if (((op_nib_low & 0b1100) >> 2) == (op_nib_low & 0b0011)) {
       // Cmp imm8, Dn
       ins_out.kinds[0] = ArgKind::imm8;
       ins_out.sz = InsSzSn::S1;
@@ -255,15 +257,15 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       break;
     }
     ins_out.sz = InsSzSn::S0;
-    ins_out.kinds[0] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+    ins_out.kinds[0] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
     break;
   }
   case 0xb: {
     // TODO: Test
     // Cmp Am, An
     ins_out.op = CMP;
-    ins_out.kinds[1] = regs[an_idx][op_nib_low & 0b1100 >> 2];
-    if ((op_nib_low & 0b1100 >> 2) == (op_nib_low & 0b0011)) {
+    ins_out.kinds[1] = regs[an_idx][(op_nib_low & 0b1100) >> 2];
+    if (((op_nib_low & 0b1100) >> 2) == (op_nib_low & 0b0011)) {
       // Cmp imm8, An
       ins_out.kinds[0] = ArgKind::imm8;
       ins_out.sz = InsSzSn::S1;
@@ -272,7 +274,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       break;
     }
     ins_out.sz = InsSzSn::S0;
-    ins_out.kinds[0] = regs[an_idx][op_nib_low & 0b1100 >> 2];
+    ins_out.kinds[0] = regs[an_idx][(op_nib_low & 0b1100) >> 2];
     break;
   }
   case 0xc: {
@@ -348,7 +350,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     // Add Dm, Dn
     ins_out.op = ADD;
     ins_out.sz = InsSzSn::S0;
-    ins_out.kinds[0] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+    ins_out.kinds[0] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
     ins_out.kinds[1] = regs[dn_idx][op_nib_low & 0b0011];
     break;
   }
@@ -365,6 +367,11 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
   }
   if (add_args && arg_sz) {
     data++;
+    if (data + arg_sz >= this->end) {
+      // Cant decode if we go oob
+      ins_out.sz = 0;
+      arg_sz = 0;
+    }
     ins_out.arg_add(data, arg_sz);
   }
 
@@ -387,7 +394,7 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     ins.op = MOV;
     ins.sz = InsSzDn::D0s;
     ins.kinds[0] = regs[an_idx][(op_nib_low & 0b0011) + mem_id];
-    ins.kinds[1] = regs[an_idx][op_nib_low & 0b1100 >> 2];
+    ins.kinds[1] = regs[an_idx][(op_nib_low & 0b1100) >> 2];
     break;
   }
   case 0x1: {
@@ -395,7 +402,7 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     // Mov am, (an)
     ins.op = MOV;
     ins.sz = InsSzDn::D0s;
-    ins.kinds[0] = regs[an_idx][op_nib_low & 0b1100 >> 2];
+    ins.kinds[0] = regs[an_idx][(op_nib_low & 0b1100) >> 2];
     ins.kinds[1] = regs[an_idx][(op_nib_low & 0b0011) + mem_id];
     break;
   }
@@ -417,7 +424,7 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     ins.op = MOVBU;
     ins.sz = InsSzDn::D0s;
     ins.kinds[0] = regs[an_idx][(op_nib_low & 0b0011) + mem_id];
-    ins.kinds[1] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+    ins.kinds[1] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
 
     break;
   }
@@ -437,7 +444,7 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     ins.op = MOVHU;
     ins.sz = InsSzDn::D0s;
     ins.kinds[0] = regs[an_idx][(op_nib_low & 0b0011) + mem_id];
-    ins.kinds[1] = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+    ins.kinds[1] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
     break;
   }
   case 0x7: {
@@ -727,7 +734,7 @@ void Decoder::decode_dn_op_F3(const inst_data *data, Instruction &ins) {
   ins.sz = InsSzDn::D0s;
 
   ArgKind a_mem_reg = regs[an_idx][op_nib_low & 0b0011];
-  ArgKind di_mem_reg = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+  ArgKind di_mem_reg = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
 
   idx = op_nib_low % 8;
   use_d = op_nib_up < 8;
@@ -760,7 +767,7 @@ void Decoder::decode_dn_op_F4(const inst_data *data, Instruction &ins) {
   ins.sz = InsSzDn::D0s;
 
   ArgKind a_mem_reg = regs[an_idx][op_nib_low & 0b0011];
-  ArgKind di_mem_reg = regs[dn_idx][op_nib_low & 0b1100 >> 2];
+  ArgKind di_mem_reg = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
   idx = op_nib_low % 8;
   reg = regs[dn_idx][op_nib_up & 0b0011];
 
@@ -981,8 +988,8 @@ void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
     ins.op = MOV;
   case 0x4:
   case 0x5:
-    ins.op = MOVBU;
-    break;
+    if (op_nib_up > 0x3)
+      ins.op = MOVBU;
   case 0x6:
   case 0x7: {
     // Needed because of the fallthrough
@@ -994,9 +1001,9 @@ void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
     ArgKind a_mem_reg = regs[an_idx][op_nib_low & 0b0011];
     ArgKind a_or_d_reg;
     use_d = (op_nib_low < 2 || op_nib_low > 3);
-    a_or_d_reg = regs[use_d][op_nib_low & 0b1100 >> 2];
+    a_or_d_reg = regs[use_d][(op_nib_low & 0b1100) >> 2];
 
-    idx = op_nib_low % 2;
+    idx = op_nib_up % 2;
     if (idx) {
       ins.kinds[0] = a_or_d_reg;
       ins.kinds[1] = ArgKind::d8;
@@ -1015,6 +1022,22 @@ void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0x9: {
+
+    idx = op_nib_low % 4;
+    if (idx < 2) {
+      ins.op = NONE;
+      ins.sz = InsSzDn::D0s;
+      break;
+    }
+
+    ins.op = (idx == 2) ? MOVBU : MOVHU;
+    ins.sz = InsSzDn::D1s;
+    ins.kinds[0] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
+    ins.kinds[1] = ArgKind::d8;
+    ins.kinds[1] = ArgKind::SP;
+    add_args = true;
+    arg_sz = 1;
+
     break;
   }
   case 0xA: {
@@ -1023,9 +1046,37 @@ void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0xB: {
+    if (op_nib_low < 8) {
+      ins.op = NONE;
+      ins.sz = InsSzDn::D0s;
+      break;
+    }
+
+    ins.op = (idx > 0xb) ? MOVHU : MOVBU;
+    ins.kinds[0] = ArgKind::d8;
+    ins.kinds[1] = ArgKind::SP;
+    ins.kinds[2] = regs[dn_idx][op_nib_low & 0b0011];
+
+    add_args = true;
+    arg_sz = 1;
     break;
   }
   case 0xC: {
+    if (op_nib_low > 0xb) {
+      ins.op = NONE;
+      ins.sz = InsSzDn::D0s;
+      break;
+    }
+
+    const InsnType types[] = {ASL, LSR, ASR};
+    idx = op_nib_low % 3;
+    ins.op = types[idx];
+    ins.kinds[0] = ArgKind::imm8;
+    ins.kinds[1] = regs[dn_idx][op_nib_low & 0b0011];
+
+    add_args = true;
+    arg_sz = 1;
+
     break;
   }
   case 0xD: {
@@ -1034,15 +1085,60 @@ void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0xE: {
+    // Annoying one
+    idx = op_nib_low >> 2;
+    ins.sz = InsSzDn::D1s;
+    add_args = true;
+    arg_sz = 1;
+    if (idx == 2) {
+      ins.op = InsnType::BVC + (op_nib_low % 4);
+      ins.kinds[0] = ArgKind::d8;
+      ins.kinds[1] = ArgKind::PC;
+      break;
+    }
+
+    ins.op = (idx == 0) ? AND : (idx < 3) ? OR : BTST;
+    ins.kinds[0] = ArgKind::imm8;
+    ins.kinds[1] = regs[dn_idx][op_nib_low & 0b0011];
     break;
   }
   case 0xF: {
+    idx = op_nib_low >> 2;
+    add_args = true;
+    arg_sz = 1;
+    if (idx > 2) {
+      if (op_nib_low != 0xE) {
+        ins.op = NONE;
+        ins.sz = InsSzDn::D0s;
+        break;
+      }
+      ins.op = ADD;
+      ins.kinds[0] = ArgKind::imm8;
+      ins.kinds[1] = ArgKind::SP;
+      ins.sz = InsSzDn::D1s;
+      break;
+    }
+
+    ins.op = MOV;
+    reg = regs[an_idx][op_nib_low & 0b0011];
+    if (idx < 1) {
+      ins.kinds[0] = ArgKind::d8;
+      ins.kinds[1] = reg;
+      ins.kinds[2] = ArgKind::SP;
+    } else {
+      ins.kinds[0] = ArgKind::SP;
+      ins.kinds[1] = ArgKind::d8;
+      ins.kinds[2] = reg;
+    }
+    ins.sz = InsSzDn::D1s;
+
     break;
   }
   }
 }
 
 void Decoder::decode_dn_op_F9(const inst_data *data, Instruction &ins) {
+  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1050,7 +1146,10 @@ void Decoder::decode_dn_op_F9(const inst_data *data, Instruction &ins) {
   ArgKind reg;
   bool use_d;
   uint8_t idx;
-  switch (op_nib_up) {
+
+  // All UDF00-UDF35
+
+  /*switch (op_nib_up) {
   case 0x0: {
     break;
   }
@@ -1099,10 +1198,12 @@ void Decoder::decode_dn_op_F9(const inst_data *data, Instruction &ins) {
   case 0xF: {
     break;
   }
-  }
+  }*/
 }
 
+// Marked as 0xF4 in the manual, silly
 void Decoder::decode_dn_op_FA(const inst_data *data, Instruction &ins) {
+  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1110,59 +1211,155 @@ void Decoder::decode_dn_op_FA(const inst_data *data, Instruction &ins) {
   ArgKind reg;
   bool use_d;
   uint8_t idx;
+
+  // Most of this is 16bit
+  add_args = true;
+  arg_sz = 2;
+
   switch (op_nib_up) {
-  case 0x0: {
-    break;
-  }
-  case 0x1: {
-    break;
-  }
-  case 0x2: {
-    break;
-  }
-  case 0x3: {
-    break;
-  }
-  case 0x4: {
-    break;
-  }
-  case 0x5: {
-    break;
-  }
-  case 0x6: {
-    break;
-  }
+  case 0x0:
+  case 0x1:
+  case 0x2:
+  case 0x3:
+    ins.op = MOV;
+  case 0x4:
+  case 0x5:
+    if (op_nib_up >= 0x4)
+      ins.op = MOVBU;
+  case 0x6:
   case 0x7: {
+    // Needed because of the fallthrough
+    if (op_nib_up >= 0x6)
+      ins.op = MOVHU;
+
+    ins.sz = InsSzDn::D2s;
+
+    ArgKind a_mem_reg = regs[an_idx][op_nib_low & 0b0011];
+    ArgKind a_or_d_reg;
+    use_d = !(op_nib_up == 2 || op_nib_up == 3);
+    a_or_d_reg = regs[use_d][(op_nib_low & 0b1100) >> 2];
+
+    idx = op_nib_low % 2;
+    if (!idx) {
+      ins.kinds[0] = a_or_d_reg;
+      ins.kinds[1] = ArgKind::d16;
+      ins.kinds[2] = a_mem_reg;
+    } else {
+      ins.kinds[0] = ArgKind::d16;
+      ins.kinds[1] = a_mem_reg;
+      ins.kinds[2] = a_or_d_reg;
+    }
+
     break;
   }
-  case 0x8: {
-    break;
-  }
+
+  case 0x8:
   case 0x9: {
+    idx = op_nib_low % 4;
+    if (op_nib_up == 0x8 && idx > 0) {
+      ins.op = NONE;
+      ins.sz = InsSzDn::D0s;
+      break;
+    }
+
+    add_args = true;
+    arg_sz = 2;
+
+    ins.op = (idx < 2) ? MOV : (idx < 3) ? MOVBU : MOVHU;
+    ins.sz = InsSzDn::D2s;
+    use_d = (idx != 0);
+    ins.kinds[0] = regs[use_d][(op_nib_low & 0b1100) >> 2];
+    if (op_nib_up == 0x8) {
+      ins.kinds[1] = ArgKind::abs16;
+    } else {
+      ins.kinds[1] = ArgKind::d16;
+      ins.kinds[2] = ArgKind::SP;
+    }
     break;
   }
-  case 0xA: {
-    break;
-  }
+  case 0xA:
   case 0xB: {
+    if (op_nib_up == 0xA && op_nib_low > 3) {
+      ins.op = NONE;
+      ins.sz = InsSzDn::D0s;
+      break;
+    }
+
+    add_args = true;
+    arg_sz = 2;
+
+    ins.op = (op_nib_low < 8) ? MOV : (op_nib_low < 0xC) ? MOVBU : MOVHU;
+    ins.sz = InsSzDn::D2s;
+    use_d = (op_nib_low > 3);
+    reg = regs[use_d][op_nib_low & 0b0011];
+    if (op_nib_up == 0xA) {
+      ins.kinds[0] = ArgKind::abs16;
+      ins.kinds[1] = reg;
+    } else {
+      ins.kinds[0] = ArgKind::d16;
+      ins.kinds[1] = ArgKind::SP;
+      ins.kinds[2] = reg;
+    }
+
     break;
   }
-  case 0xC: {
-    break;
-  }
+  case 0xC:
   case 0xD: {
-    break;
+    idx = op_nib_low % 8;
+    if (idx > 3) {
+      ins.op = NONE;
+      ins.sz = InsSzDn::D0s;
+      break;
+    }
+    ins.op = (op_nib_low < 4) ? ADD : CMP;
   }
   case 0xE: {
+
+    add_args = true;
+    arg_sz = 2;
+    if (op_nib_up == 0xE)
+      ins.op = (op_nib_low < 4)     ? AND
+               : (op_nib_low < 8)   ? OR
+               : (op_nib_low < 0xC) ? XOR
+                                    : BTST;
+
+    use_d = op_nib_up != 0xD;
+    reg = regs[use_d][op_nib_low & 0b0011];
+
+    ins.kinds[0] = ArgKind::imm16;
+    ins.kinds[1] = reg;
     break;
   }
   case 0xF: {
+
+    ins.sz = InsSzDn::D2s;
+
+    add_args = true;
+
+    if (op_nib_low < 0xC) {
+      arg_sz = 1;
+      idx = op_nib_low >> 2;
+      ins.op = InsnType::BSET + idx;
+      // D8 comes first in memory.
+      ins.kinds[0] = ArgKind::imm8;
+      ins.kinds[1] = ArgKind::d8;
+      ins.kinds[2] = regs[an_idx][op_nib_low & 0b0011];
+    } else {
+      arg_sz = 2;
+      idx = op_nib_low % 4;
+      ins.op = (idx < 1) ? AND : (idx < 2) ? OR : (idx < 3) ? ADD : CALLS;
+      ins.kinds[0] = (idx < 3) ? ArgKind::imm16 : ArgKind::d16;
+      ins.kinds[1] = (idx < 2)   ? ArgKind::PSW
+                     : (idx < 3) ? ArgKind::SP
+                                 : ArgKind::PC;
+    }
     break;
   }
   }
 }
 
 void Decoder::decode_dn_op_FB(const inst_data *data, Instruction &ins) {
+  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1170,6 +1367,8 @@ void Decoder::decode_dn_op_FB(const inst_data *data, Instruction &ins) {
   ArgKind reg;
   bool use_d;
   uint8_t idx;
+  ins.op = NONE;
+  ins.sz = InsSzDn::D0s;
   switch (op_nib_up) {
   case 0x0: {
     break;
@@ -1223,6 +1422,7 @@ void Decoder::decode_dn_op_FB(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_FC(const inst_data *data, Instruction &ins) {
+  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1231,58 +1431,127 @@ void Decoder::decode_dn_op_FC(const inst_data *data, Instruction &ins) {
   bool use_d;
   uint8_t idx;
   switch (op_nib_up) {
-  case 0x0: {
-    break;
-  }
-  case 0x1: {
-    break;
-  }
-  case 0x2: {
-    break;
-  }
-  case 0x3: {
-    break;
-  }
-  case 0x4: {
-    break;
-  }
-  case 0x5: {
-    break;
-  }
-  case 0x6: {
-    break;
-  }
+  case 0x0:
+  case 0x1:
+  case 0x2:
+  case 0x3:
+    ins.op = MOV;
+  case 0x4:
+  case 0x5:
+    ins.op = MOVBU;
+  case 0x6:
   case 0x7: {
+    if (op_nib_up == 0x6 || op_nib_up == 0x7) {
+      ins.op = MOVHU;
+    }
+
+    add_args = true;
+    arg_sz = 4;
+
+    ins.sz = InsSzDn::D4s;
+    idx = op_nib_low % 2;
+
+    use_d = !(op_nib_up == 2 || op_nib_up == 3);
+
+    const ArgKind reg = regs[use_d][(op_nib_low & 0b1100) >> 2];
+    const ArgKind an_reg = regs[an_idx][op_nib_low & 0b0011];
+    if (!idx) {
+      ins.kinds[0] = ArgKind::d32;
+      ins.kinds[1] = an_reg;
+      ins.kinds[2] = reg;
+    } else {
+      ins.kinds[0] = reg;
+      ins.kinds[1] = ArgKind::d32;
+      ins.kinds[2] = an_reg;
+    }
     break;
   }
-  case 0x8: {
-    break;
-  }
+  case 0x8:
   case 0x9: {
+    // TODO: Test
+    ins.sz = InsSzDn::D4s;
+    idx = op_nib_low % 4;
+    ins.op = (idx < 2) ? MOV : (idx < 3) ? MOVBU : MOVHU;
+    use_d = (idx > 0);
+    ins.kinds[0] = regs[use_d][(op_nib_low & 0b1100) >> 2];
+
+    if (op_nib_up == 9)
+      ins.kinds[1] = ArgKind::abs32;
+    else {
+      ins.kinds[1] = ArgKind::d32;
+      ins.kinds[2] = ArgKind::SP;
+    }
+    add_args = true;
+    arg_sz = 4;
     break;
   }
-  case 0xA: {
-    break;
-  }
+  case 0xA:
   case 0xB: {
+    ins.sz = InsSzDn::D4s;
+    idx = op_nib_low % 4;
+    ins.op = (idx < 2) ? MOV : (idx < 3) ? MOVBU : MOVHU;
+    use_d = (idx > 0);
+
+    reg = regs[use_d][op_nib_low & 0b0011];
+    if (op_nib_up == 0xA) {
+      ins.kinds[0] = ArgKind::abs32;
+      ins.kinds[1] = reg;
+    } else {
+      ins.kinds[0] = ArgKind::d32;
+      ins.kinds[1] = ArgKind::SP;
+      ins.kinds[2] = reg;
+    }
+
+    add_args = true;
+    arg_sz = 4;
     break;
   }
-  case 0xC: {
-    break;
-  }
-  case 0xD: {
-    break;
-  }
+  case 0xC:
+  case 0xD:
   case 0xE: {
+
+    ins.sz = InsSzDn::D4s;
+    ins.kinds[0] = ArgKind::imm32;
+
+    if (op_nib_up < 0xE)
+      ins.op = (op_nib_low > 0xB)   ? MOV
+               : (op_nib_low > 0x7) ? CMP
+               : (op_nib_low > 0x3) ? SUB
+                                    : ADD;
+    else
+      ins.op = (op_nib_low > 0xB)   ? BTST
+               : (op_nib_low > 0x7) ? XOR
+               : (op_nib_low > 0x3) ? OR
+                                    : AND;
+
+    use_d = (op_nib_up != 0xD);
+    ins.kinds[1] = regs[use_d][op_nib_low & 0b0011];
+    add_args = true;
+    arg_sz = 4;
+
     break;
   }
   case 0xF: {
+    if (op_nib_low < 0xE) {
+      ins.op = NONE;
+      ins.sz = InsSzDn::D0s;
+    }
+    ins.sz = InsSzDn::D4s;
+    ins.op = (op_nib_low == 0xE) ? ADD : CALLS;
+    if (ins.op == ADD) {
+      ins.kinds[0] = ArgKind::imm32;
+      ins.kinds[1] = ArgKind::SP;
+    } else {
+      ins.kinds[0] = ArgKind::d32;
+      ins.kinds[1] = ArgKind::PC;
+    }
     break;
   }
   }
 }
 
 void Decoder::decode_dn_op_FD(const inst_data *data, Instruction &ins) {
+  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1290,6 +1559,8 @@ void Decoder::decode_dn_op_FD(const inst_data *data, Instruction &ins) {
   ArgKind reg;
   bool use_d;
   uint8_t idx;
+  ins.op = NONE;
+  ins.sz = InsSzDn::D0s;
   switch (op_nib_up) {
   case 0x0: {
     break;
@@ -1343,6 +1614,7 @@ void Decoder::decode_dn_op_FD(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_FE(const inst_data *data, Instruction &ins) {
+  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1351,58 +1623,42 @@ void Decoder::decode_dn_op_FE(const inst_data *data, Instruction &ins) {
   bool use_d;
   uint8_t idx;
   switch (op_nib_up) {
-  case 0x0: {
-    break;
-  }
-  case 0x1: {
-    break;
-  }
-  case 0x2: {
-    break;
-  }
-  case 0x3: {
-    break;
-  }
-  case 0x4: {
-    break;
-  }
-  case 0x5: {
-    break;
-  }
-  case 0x6: {
-    break;
-  }
-  case 0x7: {
-    break;
-  }
+  case 0x0:
   case 0x8: {
+
+    if (op_nib_low > 2) {
+      ins.op = NONE;
+      ins.sz = InsSzDn::D0s;
+      break;
+    }
+
+    add_args = true;
+    ins.op = InsnType::BSET + op_nib_low;
+    ins.kinds[0] = ArgKind::imm8;
+
+    if (op_nib_up == 0) {
+      ins.kinds[1] = ArgKind::abs32;
+      ins.sz = InsSzDn::D4s;
+      arg_sz = 4;
+    } else {
+      ins.kinds[1] = ArgKind::abs16;
+      ins.sz = InsSzDn::D2s;
+      arg_sz = 2;
+    }
+
     break;
   }
-  case 0x9: {
-    break;
-  }
-  case 0xA: {
-    break;
-  }
-  case 0xB: {
-    break;
-  }
-  case 0xC: {
-    break;
-  }
-  case 0xD: {
-    break;
-  }
-  case 0xE: {
-    break;
-  }
-  case 0xF: {
+  default: {
+    ins.op = NONE;
+    ins.sz = InsSzDn::D0s;
     break;
   }
   }
 }
 
 void Decoder::decode_dn_op_FF(const inst_data *data, Instruction &ins) {
+  // TODO: Test, also is this needed?
+
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1517,13 +1773,21 @@ void Decoder::decode_dn_op(const inst_data *data, Instruction &ins_out) {
     decode_dn_op_FE(data, ins_out);
     break;
   case 0xFF:
-    decode_dn_op_FF(data, ins_out);
+    std::cerr << "Decoder::decode_dn_op tried calling 0xFF handler, WTF?"
+              << std::endl;
+    abort();
+    // decode_dn_op_FF(data, ins_out);
     break;
   }
 
   if (add_args && arg_sz) {
     // Extra +1 cuz data is pointing at the first op byte atm
     data += 2;
+    if (data + arg_sz >= this->end) {
+      // Cant decode if we go oob
+      ins_out.sz = 0;
+      arg_sz = 0;
+    }
     ins_out.arg_add(data, arg_sz);
   }
 
@@ -1533,6 +1797,8 @@ void Decoder::decode_dn_op(const inst_data *data, Instruction &ins_out) {
 void Decoder::decode_inst(const inst_data *curr_data, const inst_data *end,
                           Instruction &ins) {
 
+  // Save end ptr so we can check against it in decoding.
+  this->end = end;
   // TODO: Actually decode stuff
   ins.op = InsnType::NOP;
   ins.sz = 0;
@@ -1545,8 +1811,9 @@ void Decoder::decode_inst(const inst_data *curr_data, const inst_data *end,
     return;
 
   inst_data opcode = *curr_data;
-  std::cout << "Decoder::decode_inst opcode data: 0x" << std::hex << (int)opcode
-            << std::endl;
+  // std::cout << "Decoder::decode_inst opcode data: 0x" << std::hex <<
+  // (int)opcode
+  //           << std::endl;
 
   // Go over possible opcodes to determine size
   switch (opcode) {

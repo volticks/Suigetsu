@@ -58,10 +58,10 @@ const char *insn_to_str(InsnType type) {
     return "BSET";
   case BCLR:
     return "BCLR";
-  case ASR_2:
-    return "ASR_2";
-  case LSR_2:
-    return "LSR_2";
+  case ASR:
+    return "ASR";
+  case LSR:
+    return "LSR";
   case ASL:
     return "ASL";
   case ASL2:
@@ -152,6 +152,14 @@ const char *insn_to_str(InsnType type) {
     return "LRA";
   case SETLB:
     return "SETLB";
+  case BVC:
+    return "BVC";
+  case BVS:
+    return "BVS";
+  case BNC:
+    return "BNC";
+  case BNS:
+    return "BNS";
   default:
     return "UNKNOWN";
   }
@@ -229,3 +237,37 @@ const char *arg_kind_to_str(ArgKind arg) {
     return "UNKNOWN";
   }
 }
+
+// Is our argument data?
+bool arg_isdata(ArgKind kind) {
+  return kind >= ArgKind::imm8 && kind <= ArgKind::d32;
+}
+
+uint32_t get_arg_sz(ArgKind kind) {
+  uint32_t sz = 0;
+  if (!arg_isdata(kind))
+    return sz;
+  switch (kind) {
+  case ArgKind::imm8:
+  case ArgKind::d8:
+    sz = 1;
+    break;
+  case ArgKind::imm16:
+  case ArgKind::d16:
+  case ArgKind::abs16:
+    sz = 2;
+    break;
+  case ArgKind::imm32:
+  case ArgKind::d32:
+  case ArgKind::abs32:
+    sz = 4;
+    break;
+  case ArgKind::imm40:
+    sz = 5;
+    break;
+  case ArgKind::imm48:
+    sz = 6;
+    break;
+  }
+  return sz;
+};

@@ -1,0 +1,224 @@
+Decoder::decode_inst opcode data: 0x25
+Decoder::decode_inst opcode: 25
+Decoder::decode_sn_op instruction is "MOV imm16, a1
+MOV imm16, A1
+ARGS: Ò
+Emulator::emu_loop decoded, sz: 3 OP (enum): 0
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 3
+Decoder::decode_inst opcode data: 0x24
+Decoder::decode_inst opcode: 24
+Decoder::decode_sn_op instruction is "ADD imm8, a1
+ADD imm8, A1
+ARGS: Ò
+Emulator::emu_loop decoded, sz: 2 OP (enum): a
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 5
+Decoder::decode_inst opcode data: 0x4
+Decoder::decode_inst opcode: 4
+Decoder::decode_sn_op entering op_nib_up < 1 branch
+Decoder::decode_sn_op instruction is CLR
+CLR D1
+ARGS: 
+Emulator::emu_loop decoded, sz: 1 OP (enum): 9
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 6
+Decoder::decode_inst opcode data: 0x4
+Decoder::decode_inst opcode: 4
+Decoder::decode_sn_op entering op_nib_up < 1 branch
+Decoder::decode_sn_op instruction is CLR
+CLR D1
+ARGS: 
+Emulator::emu_loop decoded, sz: 1 OP (enum): 9
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 7
+Decoder::decode_inst opcode data: 0xf8
+MOVBU 
+ARGS: A
+Emulator::emu_loop decoded, sz: 3 OP (enum): 1
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: a
+Decoder::decode_inst opcode data: 0xf8
+MOVBU 
+ARGS: A
+Emulator::emu_loop decoded, sz: 3 OP (enum): 1
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: d
+Decoder::decode_inst opcode data: 0xf8
+MOVBU 
+ARGS: A
+Emulator::emu_loop decoded, sz: 3 OP (enum): 1
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 10
+Decoder::decode_inst opcode data: 0xf8
+MOVBU 
+ARGS: A
+Emulator::emu_loop decoded, sz: 3 OP (enum): 1
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 13
+Decoder::decode_inst opcode data: 0xf8
+MOVHU d8, A0, D2
+ARGS: A
+Emulator::emu_loop decoded, sz: 3 OP (enum): 2
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 16
+Decoder::decode_inst opcode data: 0xf8
+MOVHU d8, A0, D2
+ARGS: A
+Emulator::emu_loop decoded, sz: 3 OP (enum): 2
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 19
+Decoder::decode_inst opcode data: 0xf8
+MOVBU D3, SP
+ARGS: "
+Emulator::emu_loop decoded, sz: 3 OP (enum): 1
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 1c
+Decoder::decode_inst opcode data: 0xf8
+MOVBU d8, SP, D2
+ARGS: !
+Emulator::emu_loop decoded, sz: 3 OP (enum): 1
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 1f
+Decoder::decode_inst opcode data: 0xf8
+AND imm8, D2
+ARGS: D
+Emulator::emu_loop decoded, sz: 3 OP (enum): 16
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 22
+Decoder::decode_inst opcode data: 0xf8
+UNKNOWN imm8, D0
+ARGS: C
+Emulator::emu_loop decoded, sz: 3 OP (enum): 20
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 25
+Decoder::decode_inst opcode data: 0xf8
+UNKNOWN d8, PC
+ARGS: 3
+Emulator::emu_loop decoded, sz: 3 OP (enum): 4c
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 28
+Decoder::decode_inst opcode data: 0xf8
+UNKNOWN d8, PC
+ARGS: 3
+Emulator::emu_loop decoded, sz: 3 OP (enum): 4d
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 2b
+Decoder::decode_inst opcode data: 0xf8
+UNKNOWN d8, PC
+ARGS: 3
+Emulator::emu_loop decoded, sz: 3 OP (enum): 4e
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 2e
+Decoder::decode_inst opcode data: 0xf8
+UNKNOWN d8, PC
+ARGS: 3
+Emulator::emu_loop decoded, sz: 3 OP (enum): 4f
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 31
+Decoder::decode_inst opcode data: 0xf8
+BTST imm8, D1
+ARGS: ™
+Emulator::emu_loop decoded, sz: 3 OP (enum): 1b
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 34
+Decoder::decode_inst opcode data: 0xf8
+ADD imm8, SP
+ARGS: 	
+Emulator::emu_loop decoded, sz: 3 OP (enum): a
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 37
+Decoder::decode_inst opcode data: 0xf8
+MOV d8, A0, SP
+ARGS: w
+Emulator::emu_loop decoded, sz: 3 OP (enum): 0
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 3a
+Decoder::decode_inst opcode data: 0xf8
+MOV SP, d8, A0
+ARGS: w
+Emulator::emu_loop decoded, sz: 3 OP (enum): 0
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 3d
+Decoder::decode_inst opcode data: 0x48
+Decoder::decode_inst opcode: 48
+INC D0
+ARGS: 
+Emulator::emu_loop decoded, sz: 1 OP (enum): c
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 3e
+Decoder::decode_inst opcode data: 0x65
+Decoder::decode_inst opcode: 65
+MOV D1, MA1
+ARGS: 
+Emulator::emu_loop decoded, sz: 1 OP (enum): 0
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 3f
+Decoder::decode_inst opcode data: 0x6c
+Decoder::decode_inst opcode: 6c
+MOV D3, MA0
+ARGS: 
+Emulator::emu_loop decoded, sz: 1 OP (enum): 0
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 40
+Decoder::decode_inst opcode data: 0x6c
+Decoder::decode_inst opcode: 6c
+MOV D3, MA0
+ARGS: 
+Emulator::emu_loop decoded, sz: 1 OP (enum): 0
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 41
+Decoder::decode_inst opcode data: 0x6f
+Decoder::decode_inst opcode: 6f
+MOV D3, MA3
+ARGS: 
+Emulator::emu_loop decoded, sz: 1 OP (enum): 0
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 42
+Decoder::decode_inst opcode data: 0x2c
+Decoder::decode_inst opcode: 2c
+Decoder::decode_sn_op instruction is "ADD imm8, a3
+ADD imm8, A3
+ARGS:  
+Emulator::emu_loop decoded, sz: 2 OP (enum): a
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 44
+Decoder::decode_inst opcode data: 0x77
+Decoder::decode_inst opcode: 77
+MOV MA3, D1
+ARGS: 
+Emulator::emu_loop decoded, sz: 1 OP (enum): 0
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 45
+Decoder::decode_inst opcode data: 0x6f
+Decoder::decode_inst opcode: 6f
+MOV D3, MA3
+ARGS: 
+Emulator::emu_loop decoded, sz: 1 OP (enum): 0
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 46
+Decoder::decode_inst opcode data: 0x72
+Decoder::decode_inst opcode: 72
+MOV MA2, D0
+ARGS: 
+Emulator::emu_loop decoded, sz: 1 OP (enum): 0
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 47
+Decoder::decode_inst opcode data: 0x6c
+Decoder::decode_inst opcode: 6c
+MOV D3, MA0
+ARGS: 
+Emulator::emu_loop decoded, sz: 1 OP (enum): 0
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 48
+Decoder::decode_inst opcode data: 0x64
+Decoder::decode_inst opcode: 64
+MOV D1, MA0
+ARGS: 
+Emulator::emu_loop decoded, sz: 1 OP (enum): 0
+Emulator::execute_insn doing stuff...
+Emulator::emu_loop, new PC: 49
+Decoder::decode_inst opcode data: 0xa
+Decoder::decode_inst opcode: a
+Decoder::decode_sn_op entering op_nib_up < 1 branch
+Decoder::decode_sn_op instruction is MOVBU

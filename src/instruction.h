@@ -46,23 +46,22 @@ enum class ArgKind {
   LIR,
   LAR,
 
+  // Data args, grouped together - order important
   imm8,
   imm16,
   imm32,
   imm40,
   imm48,
-
-  // 8 bit value representing a collection of registers?
-  regs,
-
   // Absolute values, exclusively used for memory related stuff
   abs16,
   abs32,
-
   // Displacements, used for relative jumps and stuff.
   d8,
   d16,
   d32,
+
+  // 8 bit value representing a collection of registers?
+  regs,
 
   // Memory versions of the registers.
   MA0,
@@ -220,11 +219,10 @@ enum InsnType {
   NOT,
   XOR,
 
-  BTST,
-
+  // Bit testing - order matters
   BSET,
-
   BCLR,
+  BTST,
 
   ASR_2,
   LSR_2,
@@ -291,12 +289,22 @@ enum InsnType {
   LRA,
   SETLB,
 
+  // Branch instructions - order important
+  BVC,
+  BVS,
+  BNC,
+  BNS,
 };
 
 // Convert parts of the instruction type enum to a string
 const char *insn_to_str(InsnType type);
 // Converts arg kind enum to string
 const char *arg_kind_to_str(ArgKind arg);
+// Test if arg is data
+bool arg_isdata(ArgKind kind);
+// Retrieve the size of the (data) argkind in bytes.
+// 0 on non-data arg.
+uint32_t get_arg_sz(ArgKind kind);
 
 struct Instruction {
   // Size of the current instruction in bytes.
@@ -314,7 +322,7 @@ struct Instruction {
   // wanted a way to manage this. This needs to be in here for some reason,
   // putting it in an external cc file aint workin.
   bool arg_add(const inst_data *const arg, uint32_t len) {
-    if (this->curr + len >= sizeof(this->args))
+    if (this->curr + len > (sizeof(this->args) / sizeof(this->args[0])))
       return false;
 
     for (int i = 0; i < len; i++) {
@@ -326,14 +334,44 @@ struct Instruction {
   }
   void log() {
 
-    std::cout << insn_to_str((InsnType)this->op) << " ";
-    if (this->kinds[0] != ArgKind::NONE)
-      std::cout << arg_kind_to_str(this->kinds[0]);
-    if (this->kinds[1] != ArgKind::NONE)
-      std::cout << " " << arg_kind_to_str(this->kinds[1]);
-    std::cout << std::endl;
+    const int kind_sz = sizeof(this->kinds) / sizeof(kinds[0]);
+    uint32_t i = 0;
+    // Data idx
+    int d_idx = this->curr - 1;
+    int j = 0;
+    ArgKind kind;
 
-    fprintf(stdout, "ARGS: %s\n", this->args);
+    std::cout << insn_to_str((InsnType)this->op) << " ";
+
+    while (i < kind_sz && this->kinds[i] != ArgKind::NONE) {
+      if (i)
+        std::cout << ", ";
+
+      kind = this->kinds[i];
+
+      if (!arg_isdata(kind)) {
+        std::cout << arg_kind_to_str(kind);
+      } else {
+        int arg_sz = get_arg_sz(kind);
+        for (j = d_idx; j >= 0 && arg_sz >= 0; j--, arg_sz--) {
+          std::cout << std::hex << (int)this->args[j];
+        }
+        d_idx = 0;
+      }
+      i++;
+    }
+    std::cout << std::endl;
+    // if (this->kinds[0] != ArgKind::NONE) {
+    // }
+    // if (this->kinds[1] != ArgKind::NONE) {
+    //   std::cout << ", " << arg_kind_to_str(this->kinds[1]);
+    // }
+    // if (this->kinds[2] != ArgKind::NONE) {
+    //   std::cout << ", " << arg_kind_to_str(this->kinds[2]);
+    // }
+    // std::cout << std::endl;
+
+    // fprintf(stdout, "ARGS: %s\n", this->args);
   }
 
 }; // typedef Instruction;
