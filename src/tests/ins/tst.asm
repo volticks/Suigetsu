@@ -77,3 +77,91 @@ _start:
   #calls 0x6666, pc
   calls 0x6666
   ###### end 0xFA
+
+
+  ###### 0xF0
+  
+  mov a1, (a2)
+  mov a0, (a1)
+  movbu (a1), d1 
+  movbu d3, (a1) 
+  movhu (a1), d1 
+  movhu d2, (a1) 
+  
+  bset d2, (a1)
+  bclr d3, (a1)
+
+  calls (a3)
+  jmp (a1)
+  rets
+  rti
+  trap
+  
+  ###### end 0xF0
+
+  ###### 0xF1
+  sub d1, d1
+  sub a1, d2
+  sub d2, a3
+  sub a3, a0
+
+
+  addc d1, d0
+
+  add a1, d1
+  add d1, a2
+  add a1, a3
+
+  subc d1, d3
+  
+  cmp a1, d3
+  cmp d1, a2
+  
+  mov a1, d1
+  mov d1, a2
+  ###### end 0xF1
+
+
+  ###### 0xF2
+  and d1, d0
+  or d1, d0
+  xor d1, d0
+  not d2
+
+  mul d1, d2
+  mulu d1, d2
+  div d3, d3
+  divu d3, d1
+
+  rol d2
+  ror d1
+  
+  asl d1, d1
+  lsr d1, d3
+  asr d1, d3
+  
+  ext d2
+
+  mov mdr, d1
+  mov psw, d2
+
+  mov a1, sp
+  mov d0, mdr
+  mov d3, psw
+  ###### end 0xF2
+
+
+  ###### 0xF3
+  mov (d0, a2), d2
+  mov d1, (d2, a0)
+  mov (d3, a3), a2
+  mov a3, (d1, a1)
+  ###### end 0xF3
+  
+  ###### 0xF4
+  movbu (d0, a2), d2
+  movbu d1, (d2, a0)
+  movhu (d3, a3), d2
+  movhu d3, (d1, a1)
+  ###### end 0xF4
+

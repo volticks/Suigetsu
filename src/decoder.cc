@@ -509,11 +509,15 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     ins.op = NONE;
     ins.sz = InsSzDn::D0s;
     if (op_nib_low > 7) {
-      if (op_nib_low < 0xc || op_nib_low == 0xf) // Unused
+      if (op_nib_low < 0xc || op_nib_low == 0xf) {
+        // Unused
+        ins.op = NONE;
+        ins.sz = InsSzDn::D0s;
         break;
+      }
       const InsnType types[] = {RETS, RTI, TRAP};
       idx = op_nib_low % 3;
-      ins.op = types[op_nib_low];
+      ins.op = types[idx];
       break;
     }
 
@@ -526,7 +530,6 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_F1(const inst_data *data, Instruction &ins) {
-  // TODO: Test this
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -549,7 +552,7 @@ void Decoder::decode_dn_op_F1(const inst_data *data, Instruction &ins) {
   i_r0 = order[op_nib_up % 4][0];
   i_r1 = order[op_nib_up % 4][1];
   ins.kinds[0] = regs[i_r0][reg_low];
-  ins.kinds[1] = regs[i_r0][reg_high];
+  ins.kinds[1] = regs[i_r1][reg_high];
   switch (op_nib_up) {
   case 0x0:
   case 0x1:
@@ -565,12 +568,12 @@ void Decoder::decode_dn_op_F1(const inst_data *data, Instruction &ins) {
   case 0x7: {
     ins.op = ADD;
     // Order is consistent in this case
-    if (op_nib_up == 0x7)
-      break;
-    // Switch order of registers
-    ArgKind tmp = ins.kinds[0];
-    ins.kinds[0] = ins.kinds[1];
-    ins.kinds[1] = tmp;
+    // if (op_nib_up == 0x7)
+    //  break;
+    //// Switch order of registers
+    // ArgKind tmp = ins.kinds[0];
+    // ins.kinds[0] = ins.kinds[1];
+    // ins.kinds[1] = tmp;
     break;
   }
   case 0x8: {
@@ -597,7 +600,6 @@ void Decoder::decode_dn_op_F1(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_F2(const inst_data *data, Instruction &ins) {
-  // TODO: Test this
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -631,11 +633,14 @@ void Decoder::decode_dn_op_F2(const inst_data *data, Instruction &ins) {
   // One outlyer case
   case 0x3:
     ins.op = NOT;
+    ins.kinds[0] = ins.kinds[1];
+    ins.kinds[1] = ArgKind::NONE;
     if (op_nib_low > 3) {
       // Not encoded
       ins.op = NONE;
       break;
     }
+    break;
   case 0x8:
     // ROL | ROR
     if (op_nib_low > 7) {
@@ -644,6 +649,9 @@ void Decoder::decode_dn_op_F2(const inst_data *data, Instruction &ins) {
       break;
     }
     ins.op = (op_nib_low > 3) ? ROR : ROL;
+    ins.kinds[0] = ins.kinds[1];
+    ins.kinds[1] = ArgKind::NONE;
+    break;
   case 0xD: {
     if (op_nib_up == 0xD)
       ins.op = EXT;
@@ -669,16 +677,15 @@ void Decoder::decode_dn_op_F2(const inst_data *data, Instruction &ins) {
     ins.op = DIVU;
     break;
   }
-  case 0x9: {
+  case 0x9:
     ins.op = ASL;
-    break;
-  }
-  case 0xA: {
-    ins.op = LSR;
-    break;
-  }
+  case 0xA:
   case 0xB: {
-    ins.op = ASR;
+    if (op_nib_up == 0xb)
+      ins.op = ASR;
+    if (op_nib_up == 0xa)
+      ins.op = LSR;
+
     break;
   }
   case 0xC: {
@@ -708,8 +715,9 @@ void Decoder::decode_dn_op_F2(const inst_data *data, Instruction &ins) {
     // This or i add an element to pad out the array and i cba
     if (idx > 1)
       idx--;
+    ins.kinds[0] = ins.kinds[1];
     ins.kinds[1] = kinds[idx];
-    use_d = idx > 1 ? dn_idx : an_idx;
+    use_d = idx >= 1 ? dn_idx : an_idx;
     idx = reg_low;
     if (!use_d)
       idx = reg_high;
@@ -721,7 +729,6 @@ void Decoder::decode_dn_op_F2(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_F3(const inst_data *data, Instruction &ins) {
-  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -736,7 +743,7 @@ void Decoder::decode_dn_op_F3(const inst_data *data, Instruction &ins) {
   ArgKind a_mem_reg = regs[an_idx][op_nib_low & 0b0011];
   ArgKind di_mem_reg = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
 
-  idx = op_nib_low % 8;
+  idx = op_nib_up % 8;
   use_d = op_nib_up < 8;
   reg = regs[use_d][op_nib_up & 0b0011];
 
@@ -754,7 +761,6 @@ void Decoder::decode_dn_op_F3(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_F4(const inst_data *data, Instruction &ins) {
-  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -768,7 +774,7 @@ void Decoder::decode_dn_op_F4(const inst_data *data, Instruction &ins) {
 
   ArgKind a_mem_reg = regs[an_idx][op_nib_low & 0b0011];
   ArgKind di_mem_reg = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
-  idx = op_nib_low % 8;
+  idx = op_nib_up % 8;
   reg = regs[dn_idx][op_nib_up & 0b0011];
 
   if (idx > 3) {
@@ -1203,7 +1209,6 @@ void Decoder::decode_dn_op_F9(const inst_data *data, Instruction &ins) {
 
 // Marked as 0xF4 in the manual, silly
 void Decoder::decode_dn_op_FA(const inst_data *data, Instruction &ins) {
-  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1783,8 +1788,9 @@ void Decoder::decode_dn_op(const inst_data *data, Instruction &ins_out) {
   if (add_args && arg_sz) {
     // Extra +1 cuz data is pointing at the first op byte atm
     data += 2;
-    if (data + arg_sz >= this->end) {
+    if (data + arg_sz > this->end) {
       // Cant decode if we go oob
+      std::cout << "Decoder::decode_dn_op truncating args" << std::endl;
       ins_out.sz = 0;
       arg_sz = 0;
     }
