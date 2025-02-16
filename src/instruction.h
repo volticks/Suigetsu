@@ -332,6 +332,45 @@ struct Instruction {
     this->curr += len;
     return true;
   }
+
+  void copy_data_args(const inst_data *const args, uint32_t len) {
+    // Data args are in reverse order starting at the end of the instruction, so
+    // need to start from the end. Data idx
+    // int d_idx = len;
+    int d_idx = 0;
+    const int kind_sz = sizeof(this->kinds) / sizeof(kinds[0]);
+    uint32_t i = 0;
+    int kind_idx = kind_sz;
+    int j = 0;
+    ArgKind kind;
+
+    std::cout << insn_to_str((InsnType)this->op) << " ";
+
+    while (kind_idx >= 0) {
+      kind = this->kinds[kind_idx];
+      kind_idx--;
+
+      if (!arg_isdata(kind))
+        continue;
+
+      int arg_sz = get_arg_sz(kind);
+      int end = i + arg_sz;
+
+      if (end > len) {
+        std::cerr << "Instruction::copy_data_args went oob" << std::endl;
+        return;
+      }
+
+      int d_start = d_idx; // - arg_sz;
+      std::cout << "Instruction::copy_data_args curr arg: " << args[d_start]
+                << " size: " << arg_sz << std::endl;
+
+      this->arg_add(&args[d_start], arg_sz);
+      i = end;
+      // d_idx -= arg_sz;
+      d_idx += arg_sz;
+    }
+  }
   void log() {
 
     const int kind_sz = sizeof(this->kinds) / sizeof(kinds[0]);
@@ -353,10 +392,12 @@ struct Instruction {
         std::cout << arg_kind_to_str(kind);
       } else {
         int arg_sz = get_arg_sz(kind);
-        for (j = d_idx; j >= 0 && arg_sz >= 0; j--, arg_sz--) {
+        for (j = d_idx; j >= 0 && arg_sz > 0; j--, arg_sz--) {
+          if (j == d_idx && this->args[j] == 0)
+            j -= 2; // trim leading 0's
           std::cout << std::hex << (int)this->args[j];
         }
-        d_idx = 0;
+        d_idx -= get_arg_sz(kind);
       }
       i++;
     }

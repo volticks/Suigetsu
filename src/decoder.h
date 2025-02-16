@@ -20,6 +20,7 @@ public:
   // For adding and maintaining arguments
   bool add_args = false;
   uint8_t arg_sz = 0;
+  uint8_t num_args = 0;
   const inst_data *end = NULL;
 
 private:

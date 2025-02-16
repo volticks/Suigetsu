@@ -165,3 +165,69 @@ _start:
   movhu d3, (d1, a1)
   ###### end 0xF4
 
+
+  ###### 0xFC
+  mov (0x41414141, a1), d0 
+  mov (0x41414141, a1), a2 
+  movbu (0x41414141, a1), d0 
+  movhu (0x41414141, a1), d2 
+
+  mov d1, (0x41414141, a1)
+  mov a3, (0x41414141, a1)
+  movbu d2, (0x41414141, a1)
+  movhu d3, (0x41414141, a1)
+
+  mov a0, (0x42424242)
+  mov a3, (0x42424242)
+  mov a2, (0x42424242)
+  mov d0, (0x42424242)
+  mov d3, (0x42424242)
+  mov d2, (0x42424242)
+
+  mov a0, (0x42424242, sp)
+  mov a3, (0x42424242, sp)
+  mov a2, (0x42424242, sp)
+  mov d0, (0x42424242, sp)
+  mov d3, (0x42424242, sp)
+  mov d2, (0x42424242, sp)
+
+  mov (0x42424242), a0 
+  mov (0x42424242), a3 
+  movbu (0x42424242), d2 
+  movbu (0x42424242), d0 
+  movhu (0x42424242), d3 
+  movhu (0x42424242), d2 
+  
+  mov   (0x42424242, sp), a0 
+  mov   (0x42424242, sp), a3 
+  movbu (0x42424242, sp), d2 
+  movbu (0x42424242, sp), d0 
+  movhu (0x42424242, sp), d3 
+  movhu (0x42424242, sp), d2 
+
+  add 0x43434343, d2
+  add 0x43434343, a3
+  mov 0x43434343, d2
+  mov 0x43434343, a3
+  cmp 0x43434343, d2
+  cmp 0x43434343, a3
+  sub 0x43434343, d2
+  sub 0x43434343, a3
+
+  and 0x43434343, d2
+  or 0x43434343, d3
+  xor 0x43434343, d2
+  btst 0x43434343, d3
+  add 0x43434343, sp
+  calls 0x43454647
+  ###### end 0xFC
+  
+  ###### 0xFE
+  bset 0x41, (0x42434445)
+  bclr 0x41, (0x42434445)
+  btst 0x41, (0x42434445)
+
+  bset 0x41, (0x4243)
+  bclr 0x41, (0x4243)
+  btst 0x41, (0x4243)
+  ###### end 0xFE

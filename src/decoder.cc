@@ -1342,7 +1342,8 @@ void Decoder::decode_dn_op_FA(const inst_data *data, Instruction &ins) {
     add_args = true;
 
     if (op_nib_low < 0xC) {
-      arg_sz = 1;
+      num_args = 2;
+      arg_sz = 2;
       idx = op_nib_low >> 2;
       ins.op = InsnType::BSET + idx;
       // D8 comes first in memory.
@@ -1427,7 +1428,6 @@ void Decoder::decode_dn_op_FB(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_FC(const inst_data *data, Instruction &ins) {
-  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1443,7 +1443,8 @@ void Decoder::decode_dn_op_FC(const inst_data *data, Instruction &ins) {
     ins.op = MOV;
   case 0x4:
   case 0x5:
-    ins.op = MOVBU;
+    if (op_nib_up > 0x3)
+      ins.op = MOVBU;
   case 0x6:
   case 0x7: {
     if (op_nib_up == 0x6 || op_nib_up == 0x7) {
@@ -1454,7 +1455,7 @@ void Decoder::decode_dn_op_FC(const inst_data *data, Instruction &ins) {
     arg_sz = 4;
 
     ins.sz = InsSzDn::D4s;
-    idx = op_nib_low % 2;
+    idx = op_nib_up % 2;
 
     use_d = !(op_nib_up == 2 || op_nib_up == 3);
 
@@ -1480,7 +1481,7 @@ void Decoder::decode_dn_op_FC(const inst_data *data, Instruction &ins) {
     use_d = (idx > 0);
     ins.kinds[0] = regs[use_d][(op_nib_low & 0b1100) >> 2];
 
-    if (op_nib_up == 9)
+    if (op_nib_up == 8)
       ins.kinds[1] = ArgKind::abs32;
     else {
       ins.kinds[1] = ArgKind::d32;
@@ -1493,7 +1494,7 @@ void Decoder::decode_dn_op_FC(const inst_data *data, Instruction &ins) {
   case 0xA:
   case 0xB: {
     ins.sz = InsSzDn::D4s;
-    idx = op_nib_low % 4;
+    idx = op_nib_low >> 2;
     ins.op = (idx < 2) ? MOV : (idx < 3) ? MOVBU : MOVHU;
     use_d = (idx > 0);
 
@@ -1537,6 +1538,9 @@ void Decoder::decode_dn_op_FC(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0xF: {
+
+    add_args = true;
+    arg_sz = 4;
     if (op_nib_low < 0xE) {
       ins.op = NONE;
       ins.sz = InsSzDn::D0s;
@@ -1618,6 +1622,7 @@ void Decoder::decode_dn_op_FD(const inst_data *data, Instruction &ins) {
   }
 }
 
+// This is gonna require some tinkering.
 void Decoder::decode_dn_op_FE(const inst_data *data, Instruction &ins) {
   // TODO: Test
   ++data;
@@ -1638,17 +1643,18 @@ void Decoder::decode_dn_op_FE(const inst_data *data, Instruction &ins) {
     }
 
     add_args = true;
+    num_args = 2;
     ins.op = InsnType::BSET + op_nib_low;
     ins.kinds[0] = ArgKind::imm8;
 
     if (op_nib_up == 0) {
       ins.kinds[1] = ArgKind::abs32;
-      ins.sz = InsSzDn::D4s;
-      arg_sz = 4;
+      ins.sz = InsSzDn::D5s;
+      arg_sz = 5;
     } else {
       ins.kinds[1] = ArgKind::abs16;
-      ins.sz = InsSzDn::D2s;
-      arg_sz = 2;
+      ins.sz = InsSzDn::D3s;
+      arg_sz = 3;
     }
 
     break;
@@ -1727,6 +1733,7 @@ void Decoder::decode_dn_op(const inst_data *data, Instruction &ins_out) {
   inst_op op = *data;
   this->add_args = false;
   this->arg_sz = 0;
+  this->num_args = 1;
   // TODO: use this
 
   // This is going to be absolutely monsterous.
@@ -1794,7 +1801,13 @@ void Decoder::decode_dn_op(const inst_data *data, Instruction &ins_out) {
       ins_out.sz = 0;
       arg_sz = 0;
     }
-    ins_out.arg_add(data, arg_sz);
+    /// TODOOO
+    if (num_args > 1) {
+      ins_out.copy_data_args(data, arg_sz);
+    } else {
+      ins_out.arg_add(data, arg_sz);
+    }
+    // ins_out.arg_add();
   }
 
   ins_out.log();
