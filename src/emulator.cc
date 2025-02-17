@@ -1,4 +1,5 @@
 #include "emulator.h"
+#include "instruction.h"
 #include "registers.h"
 #include <iostream>
 #include <ostream>
@@ -35,7 +36,7 @@ bool Emulator::emu_loop(const Instructions &insns) {
 
     // TODO: Maybe combine these 2 together, dunno how much sense it makes to
     // have pc and iter be 2 seperate things
-    registers.set_pc(registers.get_pc() + curr_ins.sz);
+    regs.set_pc(regs.get_pc() + curr_ins.sz);
     // std::cout << "Emulator::emu_loop, new PC: " << registers.get_pc()
     //           << std::endl;
     it += curr_ins.sz;
@@ -44,7 +45,49 @@ bool Emulator::emu_loop(const Instructions &insns) {
   return true;
 }
 
-bool Emulator::handle_mov(const Instruction &ins) {}
+bool is_reg(ArgKind kind) {
+  return kind > ArgKind::NONE && kind <= ArgKind::LAR;
+}
+
+bool is_imm(ArgKind kind) {
+  return kind >= ArgKind::imm8 && kind <= ArgKind::imm48;
+}
+
+bool Emulator::handle_mov(const Instruction &ins) {
+  // TODO: Test
+  ArgKind dst = ins.kinds[1];
+  ArgKind src = ins.kinds[0];
+
+  // 2 registers or imm -> reg
+  if (is_reg(dst) && (is_reg(src) || is_imm(src))) {
+
+    if (dst == src) {
+      std::cerr << "Emulator::handle_mov registers are identical, should be "
+                   "impossible. Aborting."
+                << std::endl;
+      abort();
+    }
+    // TODO: Maybe special handling for some register types....
+    // PSW -> Dn 0 extends upper 16 bits
+    // Dn -> PSW ignores upper 16 bits
+
+    reg_type val;
+    if (is_imm(src)) {
+      // Get imm val from args
+      // TODO: needs to change based on size of imm
+      uint8_t sz = get_arg_sz(src);
+      val = *(reg_type *)ins.args;
+    } else {
+      val = regs.get(src);
+    }
+    regs.set(dst, val);
+    return true;
+  }
+
+  // TODO: Handle memory stuff.
+
+  return true;
+}
 
 bool Emulator::execute_insn(const Instruction &ins) {
   // TODO: actual stuff here

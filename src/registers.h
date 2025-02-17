@@ -1,30 +1,44 @@
 #pragma once
+#include "instruction.h"
 #include <cstdint>
 #include <exception>
 typedef uint32_t reg_type;
 typedef uint32_t reg_idx;
-const int num_reg = 4 + 3 + 6;
-const int reg_usable = num_reg - 1;
+// const int num_reg = 4 + 3 + 6;
+const uint32_t num_reg = static_cast<uint32_t>(ArgKind::MA3);
+const ArgKind reg_usable = ArgKind::MA3;
 
 // Should be able to index into the array with these enums
-enum RegTypes {
-  D0,
-  D1,
-  D2,
-  D3,
-  A0,
-  A1,
-  A2,
-  A3,
-  SP,
-  PC,
-  MDR,
-  PSW, // 16bits
-  LIR,
-  LAR
-};
+// enum RegTypes {
+//  D0,
+//  D1,
+//  D2,
+//  D3,
+//  A0,
+//  A1,
+//  A2,
+//  A3,
+//  SP,
+//  PC,
+//  MDR,
+//  PSW, // 16bits
+//  LIR,
+//  LAR,
+//  // Memory versions of the registers.
+//  MA0,
+//  MA1,
+//  MA2,
+//  MA3,
+//  //// Dont believe Dn has the same but just in case
+//  MD0,
+//  MD1,
+//  MD2,
+//  MD3,
+//
+//};
 // Convert reg enum to string
-const char *reg_to_str(RegTypes reg);
+const char *reg_to_str(ArgKind reg);
+// Is the supplied kind a register?
 
 class Reg {
 public:
@@ -35,8 +49,8 @@ public:
   void set_pc(reg_type pc);
 
   // general register access
-  reg_type get(RegTypes reg);
-  bool set(RegTypes reg, reg_type val);
+  reg_type get(ArgKind reg);
+  bool set(ArgKind reg, reg_type val);
 
 private:
   reg_type registers[num_reg];

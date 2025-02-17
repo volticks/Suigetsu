@@ -20,7 +20,7 @@ public:
   // TODO: Fill in these...
 
 private:
-  Reg registers;
+  Reg regs;
   Decoder decoder;
   MMU mmu;
 };

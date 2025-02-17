@@ -1,6 +1,5 @@
 #pragma once
 #include "instruction.h"
-#include "registers.h"
 #include <cstdint>
 #include <cstdio>
 #include <iostream>
@@ -45,6 +44,16 @@ enum class ArgKind {
   PSW,
   LIR,
   LAR,
+  // Memory versions of the registers.
+  MA0,
+  MA1,
+  MA2,
+  MA3,
+  //// Dont believe Dn has the same but just in case
+  MD0,
+  MD1,
+  MD2,
+  MD3,
 
   // Data args, grouped together - order important
   imm8,
@@ -61,17 +70,6 @@ enum class ArgKind {
   d8,
   d16,
   d32,
-
-  // Memory versions of the registers.
-  MA0,
-  MA1,
-  MA2,
-  MA3,
-  //// Dont believe Dn has the same but just in case
-  MD0,
-  MD1,
-  MD2,
-  MD3,
 
 };
 // Key:
@@ -414,17 +412,6 @@ struct Instruction {
       i++;
     }
     std::cout << std::endl;
-    // if (this->kinds[0] != ArgKind::NONE) {
-    // }
-    // if (this->kinds[1] != ArgKind::NONE) {
-    //   std::cout << ", " << arg_kind_to_str(this->kinds[1]);
-    // }
-    // if (this->kinds[2] != ArgKind::NONE) {
-    //   std::cout << ", " << arg_kind_to_str(this->kinds[2]);
-    // }
-    // std::cout << std::endl;
-
-    // fprintf(stdout, "ARGS: %s\n", this->args);
   }
 
 }; // typedef Instruction;
