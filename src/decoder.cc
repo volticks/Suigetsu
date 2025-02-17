@@ -36,7 +36,6 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
   uint8_t idx;
   this->add_args = false;
   this->arg_sz = 0;
-  // TODO: use this
   switch (op_nib_up) {
   case 0x0: {
     std::cout << "Decoder::decode_sn_op entering op_nib_up < 1 branch"
@@ -123,24 +122,23 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     }
     ins_out.kinds[1] = reg;
     add_args = true;
-    arg_sz = ((op_nib_low % 8) > 3) ? 2 : 1;
+    arg_sz = (ins_out.op == MOV) ? 2 : 1;
 
     break;
   }
   case 0x3: {
-    // TODO: Test
     // Mov/b/hu variation with either SP or abs16
     const InsnType types[] = {MOV, MOVBU, MOVHU, MOV};
-    idx = op_nib_low & 0b11;
+    idx = op_nib_low >> 2;
     ins_out.op = types[idx];
     if (idx < 3) {
-      reg = dn_registers[idx];
+      reg = dn_registers[op_nib_low & 0b0011];
       ins_out.kinds[0] = ArgKind::abs16;
       add_args = true;
       arg_sz = 2;
-      ins_out.sz = InsSzSn::S3;
+      ins_out.sz = InsSzSn::S2;
     } else {
-      reg = an_registers[idx];
+      reg = an_registers[op_nib_low & 0b0011];
       ins_out.kinds[0] = ArgKind::SP;
       ins_out.sz = InsSzSn::S0;
     }
@@ -149,27 +147,27 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     break;
   }
   case 0x4: {
-    // TODO: Test
     // Inc or mov variation
     const InsnType types[] = {INC, INC, MOV, MOV};
-    idx = op_nib_low & 0b11;
+    idx = op_nib_low % 4;
 
     ins_out.op = types[idx];
-    use_d = !(idx & 0b01);
-    ins_out.kinds[0] = regs[use_d][idx];
-    if (idx & 0b10) {
+    use_d = !(idx % 2);
+    ins_out.kinds[0] = regs[use_d][(op_nib_low & 0b1100) >> 2];
+    if (idx > 1) {
       // Need to set kinds[1] and set size
       // MOV (D|A)n,(d8,SP)
       ins_out.kinds[1] = ArgKind::d8;
       ins_out.kinds[2] = ArgKind::SP;
       ins_out.sz = InsSzSn::S1;
+      add_args = true;
+      arg_sz = 1;
     } else {
       ins_out.sz = InsSzSn::S0;
     }
     break;
   }
   case 0x5: {
-    // TODO: Test
     // INC, ASL, or mov variation
     const InsnType types[] = {INC4, ASL2, MOV, MOV};
     idx = op_nib_low >> 2;
@@ -177,9 +175,9 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
 
     use_d = (op_nib_low % 0x8) < 4;
     if (op_nib_low > 0x7) {
-      ins_out.kinds[0] = regs[use_d][op_nib_low % 4];
-      ins_out.kinds[1] = ArgKind::d8;
-      ins_out.kinds[2] = ArgKind::SP;
+      ins_out.kinds[0] = ArgKind::d8;
+      ins_out.kinds[1] = ArgKind::SP;
+      ins_out.kinds[2] = regs[use_d][op_nib_low % 4];
       ins_out.sz = InsSzSn::S1;
       add_args = true;
       arg_sz = 1;
@@ -190,7 +188,6 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     break;
   }
   case 0x6: {
-    // TODO: Test
     // TODO: Need some way to
     // This is all mov dm, (an)
     ins_out.op = MOV;
@@ -201,7 +198,6 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     break;
   }
   case 0x7: {
-    // TODO: Test
     // This is all mov (am), dn
     ins_out.op = MOV;
     ins_out.sz = InsSzSn::S0;
@@ -210,7 +206,6 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     break;
   }
   case 0x8: {
-    // TODO: Test
     // Mov Dm, Dn
     ins_out.op = MOV;
     ins_out.kinds[1] = regs[dn_idx][op_nib_low & 0b0011];
@@ -227,7 +222,6 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     break;
   }
   case 0x9: {
-    // TODO: Test
     // Mov Am, An
     ins_out.op = MOV;
     ins_out.kinds[1] = regs[an_idx][op_nib_low & 0b0011];
@@ -244,12 +238,12 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     break;
   }
   case 0xa: {
-    // TODO: Test
     // Cmp Dm, Dn
     ins_out.op = CMP;
-    ins_out.kinds[1] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
+    ins_out.kinds[0] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
     if (((op_nib_low & 0b1100) >> 2) == (op_nib_low & 0b0011)) {
       // Cmp imm8, Dn
+      ins_out.kinds[1] = ins_out.kinds[0];
       ins_out.kinds[0] = ArgKind::imm8;
       ins_out.sz = InsSzSn::S1;
       add_args = true;
@@ -257,16 +251,16 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       break;
     }
     ins_out.sz = InsSzSn::S0;
-    ins_out.kinds[0] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
+    ins_out.kinds[1] = regs[dn_idx][op_nib_low & 0b0011];
     break;
   }
   case 0xb: {
-    // TODO: Test
     // Cmp Am, An
     ins_out.op = CMP;
-    ins_out.kinds[1] = regs[an_idx][(op_nib_low & 0b1100) >> 2];
+    ins_out.kinds[0] = regs[an_idx][(op_nib_low & 0b1100) >> 2];
     if (((op_nib_low & 0b1100) >> 2) == (op_nib_low & 0b0011)) {
       // Cmp imm8, An
+      ins_out.kinds[1] = ins_out.kinds[0];
       ins_out.kinds[0] = ArgKind::imm8;
       ins_out.sz = InsSzSn::S1;
       add_args = true;
@@ -274,11 +268,10 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       break;
     }
     ins_out.sz = InsSzSn::S0;
-    ins_out.kinds[0] = regs[an_idx][(op_nib_low & 0b1100) >> 2];
+    ins_out.kinds[1] = regs[an_idx][op_nib_low & 0b0011];
     break;
   }
   case 0xc: {
-    // TODO: Test
     // This one is a creature
     if (op_nib_low == 0xb) {
       // Handle NOP
@@ -304,7 +297,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
 
     if (idx < 2) {
       arg_sz = 2;
-      ins_out.sz = InsSzSn::S2;
+      ins_out.sz = (ins_out.op == CALL) ? InsSzSn::S4 : InsSzSn::S2;
       ins_out.kinds[0] = ArgKind::d16;
       ins_out.kinds[1] = ArgKind::PC;
       // TODO
@@ -320,7 +313,6 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     break;
   }
   case 0xd: {
-    // TODO: Test
     // Also a creature
     const InsnType types[] = {JMP, CALL, RETF, RET};
     if (op_nib_low < 0xc) {
@@ -332,21 +324,24 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
 
     idx = op_nib_low % 4;
     ins_out.op = types[idx];
-    if (idx > 2) {
-      ins_out.sz = InsSzSn::S0;
+    if (idx >= 2) {
+      ins_out.sz = InsSzSn::S2;
+      ins_out.kinds[0] = ArgKind::regs;
+      ins_out.kinds[1] = ArgKind::imm8;
+      add_args = true;
+      arg_sz = 2;
       break;
     }
 
     ins_out.kinds[0] = ArgKind::d32;
     ins_out.kinds[1] = ArgKind::PC;
-    ins_out.sz = InsSzSn::S4;
+    ins_out.sz = (ins_out.op == CALL) ? InsSzSn::S6 : InsSzSn::S4;
     add_args = true;
     arg_sz = 4;
 
     break;
   }
   case 0xe: {
-    // TODO: Test
     // Add Dm, Dn
     ins_out.op = ADD;
     ins_out.sz = InsSzSn::S0;
@@ -355,8 +350,9 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     break;
   }
   case 0xf: {
-    // TODO: Test
     // ???
+    ins_out.op = NONE;
+    ins_out.sz = InsSzSn::S0;
     break;
   }
   default: {
@@ -389,7 +385,6 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
   uint8_t idx;
   switch (op_nib_up) {
   case 0x0: {
-    // TODO: Test
     // Mov (am), an
     ins.op = MOV;
     ins.sz = InsSzDn::D0s;
@@ -398,7 +393,6 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0x1: {
-    // TODO: Test
     // Mov am, (an)
     ins.op = MOV;
     ins.sz = InsSzDn::D0s;
@@ -407,19 +401,16 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0x2: {
-    // TODO: Test
     ins.op = NONE;
     ins.sz = InsSzDn::D0s;
     break;
   }
   case 0x3: {
-    // TODO: Test
     ins.op = NONE;
     ins.sz = InsSzDn::D0s;
     break;
   }
   case 0x4: {
-    // TODO: Test
     // movbu (am), dn
     ins.op = MOVBU;
     ins.sz = InsSzDn::D0s;
@@ -429,7 +420,6 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0x5: {
-    // TODO: Test
     // movbu dm, (an)
     ins.op = MOVBU;
     ins.sz = InsSzDn::D0s;
@@ -438,8 +428,6 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0x6: {
-    // TODO: Test
-
     // movhu (am), dn
     ins.op = MOVHU;
     ins.sz = InsSzDn::D0s;
@@ -448,7 +436,6 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0x7: {
-    // TODO: Test
     // movhu dm, (an)
     ins.op = MOVHU;
     ins.sz = InsSzDn::D0s;
@@ -457,7 +444,6 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0x8: {
-    // TODO: Test
     // bset dm, (an)
     ins.op = BSET;
     ins.sz = InsSzDn::D0s;
@@ -466,7 +452,6 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0x9: {
-    // TODO: Test
     // bclr dm, (an)
     ins.op = BCLR;
     ins.sz = InsSzDn::D0s;
@@ -475,37 +460,31 @@ void Decoder::decode_dn_op_F0(const inst_data *data, Instruction &ins) {
     break;
   }
   case 0xA: {
-    // TODO: Test
     ins.op = NONE;
     ins.sz = InsSzDn::D0s;
     break;
   }
   case 0xB: {
-    // TODO: Test
     ins.op = NONE;
     ins.sz = InsSzDn::D0s;
     break;
   }
   case 0xC: {
-    // TODO: Test
     ins.op = NONE;
     ins.sz = InsSzDn::D0s;
     break;
   }
   case 0xD: {
-    // TODO: Test
     ins.op = NONE;
     ins.sz = InsSzDn::D0s;
     break;
   }
   case 0xE: {
-    // TODO: Test
     ins.op = NONE;
     ins.sz = InsSzDn::D0s;
     break;
   }
   case 0xF: {
-    // TODO: Test
     ins.op = NONE;
     ins.sz = InsSzDn::D0s;
     if (op_nib_low > 7) {
@@ -797,6 +776,8 @@ void Decoder::decode_dn_op_F5(const inst_data *data, Instruction &ins) {
   bool use_d;
   uint8_t idx;
 
+  ins.op = NONE;
+  ins.sz = InsSzDn::D0s;
   // All UDF20-UDF35
 
   /*switch (op_nib_up) {
@@ -861,6 +842,8 @@ void Decoder::decode_dn_op_F6(const inst_data *data, Instruction &ins) {
   uint8_t idx;
   // All UDF00-UDF15
 
+  ins.op = NONE;
+  ins.sz = InsSzDn::D0s;
   /*switch (op_nib_up) {
   case 0x0: {
     break;
@@ -974,7 +957,6 @@ void Decoder::decode_dn_op_F7(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
-  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1144,7 +1126,6 @@ void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_F9(const inst_data *data, Instruction &ins) {
-  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1153,6 +1134,8 @@ void Decoder::decode_dn_op_F9(const inst_data *data, Instruction &ins) {
   bool use_d;
   uint8_t idx;
 
+  ins.op = NONE;
+  ins.sz = InsSzDn::D0s;
   // All UDF00-UDF35
 
   /*switch (op_nib_up) {
@@ -1319,7 +1302,7 @@ void Decoder::decode_dn_op_FA(const inst_data *data, Instruction &ins) {
     ins.op = (op_nib_low < 4) ? ADD : CMP;
   }
   case 0xE: {
-
+    ins.sz = InsSzDn::D2s;
     add_args = true;
     arg_sz = 2;
     if (op_nib_up == 0xE)
@@ -1330,7 +1313,7 @@ void Decoder::decode_dn_op_FA(const inst_data *data, Instruction &ins) {
 
     use_d = op_nib_up != 0xD;
     reg = regs[use_d][op_nib_low & 0b0011];
-
+    std::cout << "ARGS: " << *(data + 2) << std::endl;
     ins.kinds[0] = ArgKind::imm16;
     ins.kinds[1] = reg;
     break;
@@ -1365,7 +1348,6 @@ void Decoder::decode_dn_op_FA(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_FB(const inst_data *data, Instruction &ins) {
-  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1474,7 +1456,6 @@ void Decoder::decode_dn_op_FC(const inst_data *data, Instruction &ins) {
   }
   case 0x8:
   case 0x9: {
-    // TODO: Test
     ins.sz = InsSzDn::D4s;
     idx = op_nib_low % 4;
     ins.op = (idx < 2) ? MOV : (idx < 3) ? MOVBU : MOVHU;
@@ -1560,7 +1541,6 @@ void Decoder::decode_dn_op_FC(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_FD(const inst_data *data, Instruction &ins) {
-  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1624,7 +1604,6 @@ void Decoder::decode_dn_op_FD(const inst_data *data, Instruction &ins) {
 
 // This is gonna require some tinkering.
 void Decoder::decode_dn_op_FE(const inst_data *data, Instruction &ins) {
-  // TODO: Test
   ++data;
   const inst_op op = *data;
   const inst_op op_nib_up = nib_up(op);
@@ -1668,7 +1647,6 @@ void Decoder::decode_dn_op_FE(const inst_data *data, Instruction &ins) {
 }
 
 void Decoder::decode_dn_op_FF(const inst_data *data, Instruction &ins) {
-  // TODO: Test, also is this needed?
 
   ++data;
   const inst_op op = *data;
@@ -1734,7 +1712,6 @@ void Decoder::decode_dn_op(const inst_data *data, Instruction &ins_out) {
   this->add_args = false;
   this->arg_sz = 0;
   this->num_args = 1;
-  // TODO: use this
 
   // This is going to be absolutely monsterous.
   switch (op) {
@@ -1818,7 +1795,6 @@ void Decoder::decode_inst(const inst_data *curr_data, const inst_data *end,
 
   // Save end ptr so we can check against it in decoding.
   this->end = end;
-  // TODO: Actually decode stuff
   ins.op = InsnType::NOP;
   ins.sz = 0;
   ins.curr = 0;

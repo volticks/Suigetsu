@@ -55,13 +55,12 @@ enum class ArgKind {
   // Absolute values, exclusively used for memory related stuff
   abs16,
   abs32,
+  // 8 bit value representing a collection of registers?
+  regs,
   // Displacements, used for relative jumps and stuff.
   d8,
   d16,
   d32,
-
-  // 8 bit value representing a collection of registers?
-  regs,
 
   // Memory versions of the registers.
   MA0,
@@ -391,10 +390,23 @@ struct Instruction {
       if (!arg_isdata(kind)) {
         std::cout << arg_kind_to_str(kind);
       } else {
+
+        // TODO: decoding and logging of registers in these things???
+        if (kind == ArgKind::regs) {
+          std::cout << "regs";
+          i++;
+          continue;
+        }
+
         int arg_sz = get_arg_sz(kind);
+        bool found_nz = false;
         for (j = d_idx; j >= 0 && arg_sz > 0; j--, arg_sz--) {
-          if (j == d_idx && this->args[j] == 0)
-            j -= 2; // trim leading 0's
+
+          if (!found_nz && this->args[j] == 0)
+            continue;
+          else
+            found_nz = true;
+
           std::cout << std::hex << (int)this->args[j];
         }
         d_idx -= get_arg_sz(kind);

@@ -13,6 +13,12 @@ std::vector<uint8_t> read_file(const char *fname) {
   ifs.seekg(0, std::ios::end);
   const uint32_t sz = ifs.tellg();
   ifs.seekg(0, std::ios::beg);
+  // TODO: This check is really really stupid
+  if (sz == 0xffffffff) {
+    std::cerr << "FileReader::read_file failed to open, does it exist?"
+              << std::endl;
+    exit(-1);
+  }
   std::unique_ptr<uint8_t[]> file_conts = std::make_unique<uint8_t[]>(sz);
   ifs.read((char *)file_conts.get(), sz);
   std::vector<uint8_t> fconts((char *)file_conts.get(),

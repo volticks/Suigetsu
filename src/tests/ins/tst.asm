@@ -1,6 +1,5 @@
-        .global _start
-
-        .text
+.section .text
+.global _start
 _start:
   mov 1234, a1
   mov 1234, a0
@@ -55,10 +54,10 @@ _start:
   movbu (0x5555, sp), d2
   movhu (0x5555, sp), d2
   
-  add 0xdddd, d2
-  cmp 0xdddd, d3
-  add 0xdddd, a2
-  cmp 0xdddd, a3
+  add 0xddd, d2
+  cmp 0xddd, d3
+  add 0xddd, a2
+  cmp 0xddd, a3
   
   ## Looks like these wide bitwise ops are only supported on the dn regs
   and 0xdddd, d2
@@ -231,3 +230,108 @@ _start:
   bclr 0x41, (0x4243)
   btst 0x41, (0x4243)
   ###### end 0xFE
+
+
+  ###### 0x0
+  clr d2 
+  clr d1 
+  clr d3 
+  mov d1, (0x4142)
+  mov d3, (0x4142)
+  movbu d1, (0x4142)
+  movbu d3, (0x4142)
+  movhu d1, (0x4142)
+  movhu d3, (0x4142)
+
+  extb d1
+  extbu d2
+
+  exth d1
+  exthu d2
+
+  add 0x9, a1
+  mov 0x9, a3
+
+  add 0x9, d1
+  mov 0x9, d3
+
+  mov (0x3333), d0
+  movbu (0x3333), d0
+  movhu (0x3333), d0
+  mov sp, a0
+
+  inc d0
+  inc d1
+  inc a0
+  inc a1
+
+  mov d2, (0x44, sp)
+  mov a2, (0x44, sp)
+
+  inc4 a3
+  asl2 d2
+  mov (0x55, sp), d3
+  mov (0x55, sp), a2
+
+  mov d0, (a1)
+  mov d1, (a2)
+
+  mov (a2), d1
+  mov (a3), d2
+
+  mov d0, d1
+  mov a0, a1
+  cmp d0, d1
+  cmp a0, a1
+
+  mov 0x41, d1
+  mov 0x41, a1
+  cmp 0x41, d1
+  cmp 0x41, a1
+
+  blt 0x41
+  bgt 0x41
+  bge 0x41
+  ble 0x41
+  bcs 0x41
+  bhi 0x41
+  bcc 0x41
+  bls 0x41
+  beq 0x41
+  bne 0x41
+  bra 0x41
+
+  nop
+  jmp 0x4444
+  call 0x4141,[],0
+  
+  ## Cannot use any an OR dn reg less than 2
+  #movm (sp), [a0]
+  movm [a2, a3, d2, d3],(sp)
+  movm [a3, a2, d3, d2],(sp)
+  movm [a3, a3, d3],(sp)
+
+  llt 
+  lgt
+  lge
+  lle
+  lcs
+  lhi
+  lcc
+  lls
+  leq
+  lne
+  lra
+  
+  setlb
+  
+
+  jmp 0x41424344
+  call 0x41424344,[],0
+  retf [a3], 4
+  ret [a2], 4
+
+  add d0, d1
+  add d1, d0
+  add d1, d1
+  ###### end 0x0
