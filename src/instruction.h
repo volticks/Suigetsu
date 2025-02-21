@@ -6,6 +6,16 @@
 typedef uint8_t inst_data;
 typedef uint8_t inst_op;
 
+const uint32_t CARRY_BIT = 0x80000000;
+
+// Some PSW bit meanings, TODO add more
+enum PswBits {
+  Z = 0b0001,
+  N = 0b0010,
+  C = 0b0100,
+  V = 0b1000,
+};
+
 // TODO: add Dn aswell
 enum InsSzSn {
   S0 = 1,
@@ -397,17 +407,18 @@ struct Instruction {
         }
 
         int arg_sz = get_arg_sz(kind);
+        int sz_cpy = arg_sz;
         bool found_nz = false;
         for (j = d_idx; j >= 0 && arg_sz > 0; j--, arg_sz--) {
 
-          if (!found_nz && this->args[j] == 0)
+          if (!found_nz && this->args[j] == 0 && sz_cpy > 1)
             continue;
           else
             found_nz = true;
 
           std::cout << std::hex << (int)this->args[j];
         }
-        d_idx -= get_arg_sz(kind);
+        d_idx -= sz_cpy;
       }
       i++;
     }

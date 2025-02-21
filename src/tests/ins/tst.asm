@@ -335,3 +335,40 @@ _start:
   add d1, d0
   add d1, d1
   ###### end 0x0
+
+
+  mov 1234, a1
+  mov 1234, a0
+  mov 0x80, d1
+  mov 0x80000000, d1
+  mov 0x80, d1
+  mov 0x80000086, d1
+  mov a1, d3
+
+  ## Trying to test sign extension.
+  ## mov 0x80, d2
+  .byte 0x8a, 0x80  
+  ## mov 0x8080, d2
+  .byte 0x2e, 0x80, 0x80  
+  ##  mov 0x8080, a2
+  ## Should 0 extend instead of sign extending
+  .byte 0x26, 0x80, 0x80 
+
+  ## Testing ext
+  ext d1
+  extb d1
+  extbu d1
+  
+  mov 0x8000, d1
+  exth d1
+  exthu d1
+  clr d0
+  clr d1
+  exth d1
+
+  mov a1, sp
+  add 0x41424344, a1
+  add a1, d2
+
+  sub d1, d2
+  subc d1, a2

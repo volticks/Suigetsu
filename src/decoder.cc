@@ -111,7 +111,8 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       ins_out.sz = InsSzSn::S1;
     }
 
-    use_d = op_nib_low & 0b10;
+    // use_d = op_nib_low & 0b10;
+    use_d = op_nib_low > 7;
     idx = (op_nib_low & 0b0011);
     if (use_d) {
       std::cout << "d" << (int)idx << "\"" << std::endl;
@@ -363,7 +364,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
   }
   if (add_args && arg_sz) {
     data++;
-    if (data + arg_sz >= this->end) {
+    if (data + arg_sz > this->end) {
       // Cant decode if we go oob
       ins_out.sz = 0;
       arg_sz = 0;
