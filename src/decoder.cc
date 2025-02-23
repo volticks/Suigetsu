@@ -84,7 +84,6 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     break;
   }
   case 0x1: {
-    // TODO: BIG: Test decoding these instructions branches below.
     const InsnType types[] = {EXTB, EXTBU, EXTH, EXTHU};
     // Handles EXTB/BU/H/HU variants
     ins_out.sz = InsSzSn::S0;

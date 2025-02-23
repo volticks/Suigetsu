@@ -67,6 +67,19 @@ reg_type s_ext(reg_type i, uint32_t nbits) {
   return i | (0 - (i & s_mask));
 }
 
+reg_type Emulator::get_val(ArgKind src, const Instruction &ins) {
+  reg_type s;
+  // TODO: extend for abs where appropriate?
+  if (is_imm(src)) {
+    uint8_t sz = get_arg_sz(src) * 8;
+    s = *(reg_type *)ins.args;
+    s = s_ext(s, sz);
+  } else {
+    s = regs.get(src);
+  }
+  return s;
+}
+
 bool Emulator::handle_mov(const Instruction &ins) {
   // TODO: Test
   ArgKind dst = ins.kinds[1];
@@ -210,9 +223,7 @@ bool Emulator::handle_add(const Instruction &ins, int sign = 1) {
 
   return true;
 }
-// TODO: Figure out tf we meant to be doing if it mulu idk what todo
 bool Emulator::handle_mul(const Instruction &ins) {
-  // TODO: Test a bunch
   ArgKind src = ins.kinds[0];
   ArgKind dst = ins.kinds[1];
 
@@ -222,23 +233,179 @@ bool Emulator::handle_mul(const Instruction &ins) {
   reg_type d = regs.get(dst);
   reg_type psw = regs.get(ArgKind::PSW);
 
-  res = s * d;
+  if (ins.op == MULU)
+    res = (unsigned long)d * (unsigned long)s;
+  if (ins.op == MUL)
+    // Disgusting but necessary - need to first get the signed 32-bit values,
+    // then extend them to 64 so we can do a full 64 bit mul
+    res = ((long)((int)d) * (long)((int)s));
 
   bool cnd = (res & 0xffffffff) == 0;
   // Only effects the N and Z from what i can see
-  // TODO: Test PSW stuff here
-  psw &= ~0b11;
+  // TODO: Unsure if this is correct but we shall see, produces correct asm
+  // result anyhow.
+  psw &= ~0b1111;
   psw |= (PswBits::Z * cnd);
-  cnd = (int)(res & 0xffffffff) < 0;
+  cnd = ((int)(res & 0xffffffff)) < 0;
   psw |= (PswBits::N * cnd);
 
-  regs.set(ArgKind::MDR, res >> 32);
+  // std::cout << "MULU: Res: " << std::hex << res << std::endl;
+  // std::cout << "MULU: Res, high: " << std::hex
+  //           << ((res & 0xffffffff00000000) >> 32) << std::endl;
+
+  regs.set(ArgKind::MDR, (res & 0xffffffff00000000) >> 32);
   regs.set(dst, res & 0xffffffff);
   regs.set(ArgKind::PSW, psw);
   return true;
 }
+
+bool Emulator::handle_div(const Instruction &ins) {
+  ArgKind src = ins.kinds[0];
+  ArgKind dst = ins.kinds[1];
+
+  uint64_t res;
+  // Registers are the only operands possible
+  reg_type s = regs.get(src);
+  reg_type d = regs.get(dst);
+  reg_type mdr = regs.get(ArgKind::MDR);
+  reg_type psw = regs.get(ArgKind::PSW);
+
+  uint64_t combined = d + ((uint64_t)mdr << 32);
+  std::cout << "DIV: combined: " << std::hex << combined << std::endl;
+  // TODO: handle div by zero
+  if (ins.op == DIVU) {
+    res = combined / s;
+    mdr = combined % s;
+  }
+  if (ins.op == DIV) {
+    res = (long)((long)combined / (long)s);
+    mdr = (long)((long)combined % (long)s);
+  }
+
+  psw &= ~0b1111;
+  if ((long)s <= 0) {
+    // PSW is set differently here.
+    psw |= PswBits::V;
+  } else {
+    // Normal operation
+    // TODO: unsure about this, manual says we should be checking if the DIVISOR
+    // is negative but that produces weird results and is inconsistent with the
+    // way this flag has been used previously.
+    bool cnd = (int)(res & 0xffffffff) < 0;
+    psw |= (PswBits::N * cnd);
+    cnd = (res & 0xffffffff) == 0;
+    psw |= (PswBits::Z * cnd);
+  }
+
+  regs.set(ArgKind::MDR, mdr);
+  regs.set(dst, res & 0xffffffff);
+  regs.set(ArgKind::PSW, psw);
+  return true;
+}
+
+bool Emulator::handle_inc(const Instruction &ins) {
+  ArgKind dst = ins.kinds[0];
+
+  reg_type res;
+  // Registers are the only operands possible
+  reg_type d = regs.get(dst);
+  reg_type psw = regs.get(ArgKind::PSW);
+
+  int toadd = 1;
+  if (ins.op == INC4)
+    toadd *= 4;
+  d += toadd;
+
+  if (is_dn(dst)) {
+    // Do PSW stuff only on Dn registers
+    // TODO: This seems correct but could do with some more validation later
+    // maybe.
+    bool cnd = (int)d < 0;
+    psw &= ~0b1111;
+    psw |= (PswBits::N * cnd);
+    cnd = (d == 0);
+    psw |= (PswBits::Z * cnd);
+    psw |= (PswBits::C * cnd);
+    cnd = (d - 1 == 0x7fffffff);
+    // TODO: Unsure
+    psw |= (PswBits::V * cnd);
+    regs.set(ArgKind::PSW, psw);
+  }
+
+  regs.set(dst, d);
+
+  return true;
+}
+
+bool Emulator::handle_cmp(const Instruction &ins) {
+
+  ArgKind src = ins.kinds[0];
+  ArgKind dst = ins.kinds[1];
+
+  // Registers are the only operands possible
+  reg_type s;
+  reg_type d = regs.get(dst);
+  reg_type psw = regs.get(ArgKind::PSW);
+
+  // If we use imm, need to sign extend.
+  // TODO: Put this in a function???
+  if (is_imm(src)) {
+    uint8_t sz = get_arg_sz(src) * 8;
+    s = *(reg_type *)ins.args;
+    s = s_ext(s, sz);
+  } else {
+    s = regs.get(src);
+  }
+
+  uint32_t res = d - s;
+  bool cnd = s > d;
+  // Mask off old bits, shouldnt carry over to the next addition.
+  psw &= ~0b1111;
+  psw |= (PswBits::V * cnd);
+  cnd = res == 0;
+  psw |= (PswBits::Z * cnd);
+  cnd = (int)res < 0;
+  psw |= (PswBits::N * cnd);
+  // Now, how to do the carry - i *think* this is the correct way for this.
+  cnd = (s & CARRY_BIT && !(d & CARRY_BIT));
+  psw |= (PswBits::C * cnd);
+
+  regs.set(ArgKind::PSW, psw);
+
+  return true;
+}
+
+bool Emulator::handle_and(const Instruction &ins) {
+  ArgKind src = ins.kinds[0];
+  ArgKind dst = ins.kinds[1];
+  reg_type s = get_val(src, ins);
+  reg_type psw = regs.get(ArgKind::PSW);
+  reg_type d;
+  if (dst != ArgKind::PSW)
+    d = regs.get(dst);
+  else
+    d = psw;
+
+  reg_type res = s & d;
+
+  psw &= ~0b1111;
+  if (dst == ArgKind::PSW) {
+    // Sets from first 4 bits
+    psw = res & 0b1111;
+    res = psw;
+  } else {
+    bool cnd = (int)res < 0;
+    psw |= (PswBits::N * cnd);
+    cnd = res == 0;
+    psw |= (PswBits::Z * cnd);
+    regs.set(ArgKind::PSW, psw);
+  }
+  regs.set(dst, res);
+
+  return true;
+}
+
 bool Emulator::execute_insn(const Instruction &ins) {
-  // TODO: actual stuff here
   // std::cout << "Emulator::execute_insn doing stuff..." << std::endl;
   //
   switch (ins.op) {
@@ -282,11 +449,10 @@ bool Emulator::execute_insn(const Instruction &ins) {
     handle_add(ins);
     // Handle ADD instruction
     break;
+  case INC4:
   case INC:
     // Handle INC instruction
-    break;
-  case INC4:
-    // Handle INC4 instruction
+    handle_inc(ins);
     break;
   case SUBC:
   case SUB:
@@ -298,20 +464,21 @@ bool Emulator::execute_insn(const Instruction &ins) {
     // Handle MUL instruction
     handle_mul(ins);
     break;
+  case DIVU:
   case DIV:
     // Handle DIV instruction
-    break;
-  case DIVU:
-    // Handle DIVU instruction
+    handle_div(ins);
     break;
   case CMP:
     // Handle CMP instruction
+    handle_cmp(ins);
     break;
   case OR:
     // Handle OR instruction
     break;
   case AND:
     // Handle AND instruction
+    handle_and(ins);
     break;
   case NOT:
     // Handle NOT instruction

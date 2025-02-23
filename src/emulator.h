@@ -20,7 +20,18 @@ public:
   bool handle_ext(const Instruction &ins);
   bool handle_add(const Instruction &ins, int sign);
   bool handle_mul(const Instruction &ins);
+  bool handle_div(const Instruction &ins);
+  bool handle_inc(const Instruction &ins);
+  bool handle_cmp(const Instruction &ins);
+  bool handle_and(const Instruction &ins);
+  bool handle_or(const Instruction &ins);
+  bool handle_xor(const Instruction &ins);
+  bool handle_not(const Instruction &ins);
   // TODO: Fill in these...
+
+  // Get value either imm/whatever and sign extend (if applicable) or just
+  // return it.
+  reg_type get_val(ArgKind src, const Instruction &ins);
 
 private:
   Reg regs;

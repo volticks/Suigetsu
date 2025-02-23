@@ -416,6 +416,8 @@ struct Instruction {
           else
             found_nz = true;
 
+          if (this->args[j] == 0)
+            std::cout << "0";
           std::cout << std::hex << (int)this->args[j];
         }
         d_idx -= sz_cpy;
