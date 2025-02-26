@@ -27,6 +27,17 @@ public:
   bool handle_or(const Instruction &ins);
   bool handle_xor(const Instruction &ins);
   bool handle_not(const Instruction &ins);
+  bool handle_btst(const Instruction &ins);
+  bool handle_bset(const Instruction &ins);
+  bool handle_bclr(const Instruction &ins);
+  bool handle_asr(const Instruction &ins);
+  bool handle_lsr(const Instruction &ins);
+  // TODO: Also handle asl2 pls
+  bool handle_asl(const Instruction &ins);
+  bool handle_ror(const Instruction &ins);
+  bool handle_rol(const Instruction &ins);
+  bool handle_bcc(const Instruction &ins);
+  bool handle_lcc(const Instruction &ins);
   // TODO: Fill in these...
 
   // Get value either imm/whatever and sign extend (if applicable) or just

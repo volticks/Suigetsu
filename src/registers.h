@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <exception>
 typedef uint32_t reg_type;
+typedef int32_t reg_type_s;
 typedef uint32_t reg_idx;
 // const int num_reg = 4 + 3 + 6;
 const uint32_t num_reg = static_cast<uint32_t>(ArgKind::MA3);

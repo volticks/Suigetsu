@@ -67,6 +67,7 @@ reg_type s_ext(reg_type i, uint32_t nbits) {
   return i | (0 - (i & s_mask));
 }
 
+// TODO: Add ability to get memory?
 reg_type Emulator::get_val(ArgKind src, const Instruction &ins) {
   reg_type s;
   // TODO: extend for abs where appropriate?
@@ -263,9 +264,9 @@ bool Emulator::handle_div(const Instruction &ins) {
   ArgKind src = ins.kinds[0];
   ArgKind dst = ins.kinds[1];
 
-  uint64_t res;
+  int res = 0;
   // Registers are the only operands possible
-  reg_type s = regs.get(src);
+  reg_type_s s = regs.get(src);
   reg_type d = regs.get(dst);
   reg_type mdr = regs.get(ArgKind::MDR);
   reg_type psw = regs.get(ArgKind::PSW);
@@ -273,19 +274,20 @@ bool Emulator::handle_div(const Instruction &ins) {
   uint64_t combined = d + ((uint64_t)mdr << 32);
   std::cout << "DIV: combined: " << std::hex << combined << std::endl;
   // TODO: handle div by zero
-  if (ins.op == DIVU) {
+  if (ins.op == DIVU && s != 0) {
     res = combined / s;
     mdr = combined % s;
   }
-  if (ins.op == DIV) {
-    res = (long)((long)combined / (long)s);
+  if (ins.op == DIV && s != 0) {
+    res = (int)((long)combined / (long)s);
     mdr = (long)((long)combined % (long)s);
   }
 
   psw &= ~0b1111;
-  if ((long)s <= 0) {
-    // PSW is set differently here.
+  if (s == 0) {
     psw |= PswBits::V;
+    mdr = 0;
+    res = 0xff;
   } else {
     // Normal operation
     // TODO: unsure about this, manual says we should be checking if the DIVISOR
@@ -293,12 +295,12 @@ bool Emulator::handle_div(const Instruction &ins) {
     // way this flag has been used previously.
     bool cnd = (int)(res & 0xffffffff) < 0;
     psw |= (PswBits::N * cnd);
-    cnd = (res & 0xffffffff) == 0;
+    cnd = res == 0;
     psw |= (PswBits::Z * cnd);
   }
 
   regs.set(ArgKind::MDR, mdr);
-  regs.set(dst, res & 0xffffffff);
+  regs.set(dst, res);
   regs.set(ArgKind::PSW, psw);
   return true;
 }
@@ -405,6 +407,190 @@ bool Emulator::handle_and(const Instruction &ins) {
   return true;
 }
 
+// Largely same as AND, maybe encapsulate bitwise logic differently?
+// TODO: Test all bitwise ops
+bool Emulator::handle_or(const Instruction &ins) {
+  ArgKind src = ins.kinds[0];
+  ArgKind dst = ins.kinds[1];
+  reg_type s = get_val(src, ins);
+  reg_type psw = regs.get(ArgKind::PSW);
+  reg_type d;
+  if (dst != ArgKind::PSW)
+    d = regs.get(dst);
+  else
+    d = psw;
+
+  reg_type res = s | d;
+
+  psw &= ~0b1111;
+  if (dst == ArgKind::PSW) {
+    // Sets from first 4 bits
+    psw = res & 0b1111;
+    res = psw;
+  } else {
+    bool cnd = (int)res < 0;
+    psw |= (PswBits::N * cnd);
+    cnd = res == 0;
+    psw |= (PswBits::Z * cnd);
+    regs.set(ArgKind::PSW, psw);
+  }
+  regs.set(dst, res);
+
+  return true;
+}
+
+bool Emulator::handle_xor(const Instruction &ins) {
+  ArgKind src = ins.kinds[0];
+  ArgKind dst = ins.kinds[1];
+  reg_type s = get_val(src, ins);
+  reg_type psw = regs.get(ArgKind::PSW);
+  reg_type d;
+  if (dst != ArgKind::PSW)
+    d = regs.get(dst);
+  else
+    d = psw;
+
+  reg_type res = s ^ d;
+
+  psw &= ~0b1111;
+  bool cnd = (int)res < 0;
+  psw |= (PswBits::N * cnd);
+  cnd = res == 0;
+  psw |= (PswBits::Z * cnd);
+  regs.set(ArgKind::PSW, psw);
+  regs.set(dst, res);
+
+  return true;
+}
+
+bool Emulator::handle_not(const Instruction &ins) {
+
+  ArgKind src = ins.kinds[0];
+  reg_type s = regs.get(src);
+
+  s = ~s;
+
+  regs.set(src, s);
+  // Must also set flags
+  reg_type psw = regs.get(ArgKind::PSW);
+  psw &= ~0b1111;
+  bool cnd = (int)s < 0;
+  psw |= (PswBits::N * cnd);
+  cnd = s == 0;
+  psw |= (PswBits::Z * cnd);
+
+  regs.set(ArgKind::PSW, psw);
+
+  return true;
+}
+
+// BTST kinda just does what and does but doesnt store the result other than
+// setting the flags i think?
+bool Emulator::handle_btst(const Instruction &ins) {
+  ArgKind src = ins.kinds[0];
+  ArgKind dst = ins.kinds[1];
+
+  reg_type s = get_val(src, ins);
+  reg_type psw = regs.get(ArgKind::PSW);
+  reg_type d = get_val(dst, ins);
+  reg_type_s res = s & d;
+
+  // TODO: memory stuff
+
+  bool cnd = res < 0;
+  psw &= ~0b1111;
+  psw |= (PswBits::N * cnd);
+  cnd = res == 0;
+  psw |= (PswBits::Z * cnd);
+  regs.set(ArgKind::PSW, psw);
+
+  return true;
+}
+
+bool Emulator::handle_bset(const Instruction &ins) {
+  // TODO: All of this needs memory support
+  return true;
+}
+
+bool Emulator::handle_bclr(const Instruction &ins) {
+  // TODO: All of this needs memory support
+  return true;
+}
+
+bool Emulator::handle_asr(const Instruction &ins) {
+  ArgKind src = ins.kinds[0];
+  ArgKind dst = ins.kinds[1];
+
+  reg_type s = get_val(src, ins);
+  reg_type psw = regs.get(ArgKind::PSW);
+  reg_type d;
+  reg_type_s res;
+
+  if (dst == ArgKind::NONE) {
+    s = 1;
+    dst = src;
+  } else {
+    d = get_val(dst, ins);
+  }
+
+  reg_type shift = s & 0x1f;
+
+  psw &= ~0b1111;
+  if (shift) {
+    res = (reg_type_s)d >> shift;
+    psw |= (PswBits::C * (d & 1));
+    regs.set(dst, res);
+  } else {
+    res = d;
+  }
+
+  bool cnd = res < 0;
+  psw |= (PswBits::N * cnd);
+  cnd = res == 0;
+  psw |= (PswBits::Z * cnd);
+  regs.set(ArgKind::PSW, psw);
+
+  return true;
+}
+
+// For all intents and purposes just an unsigned shift
+bool Emulator::handle_lsr(const Instruction &ins) {
+  ArgKind src = ins.kinds[0];
+  ArgKind dst = ins.kinds[1];
+
+  reg_type s = get_val(src, ins);
+  reg_type psw = regs.get(ArgKind::PSW);
+  reg_type d;
+  reg_type_s res;
+
+  if (dst == ArgKind::NONE) {
+    s = 1;
+    dst = src;
+  } else {
+    d = get_val(dst, ins);
+  }
+
+  reg_type shift = s & 0x1f;
+
+  psw &= ~0b1111;
+  if (shift) {
+    res = d >> shift;
+    psw |= (PswBits::C * (d & 1));
+    // res &= ~0x80000000;
+    regs.set(dst, res);
+  } else {
+    res = d;
+  }
+
+  bool cnd = res < 0;
+  psw |= (PswBits::N * cnd);
+  cnd = res == 0;
+  psw |= (PswBits::Z * cnd);
+  regs.set(ArgKind::PSW, psw);
+
+  return true;
+}
+
 bool Emulator::execute_insn(const Instruction &ins) {
   // std::cout << "Emulator::execute_insn doing stuff..." << std::endl;
   //
@@ -475,6 +661,7 @@ bool Emulator::execute_insn(const Instruction &ins) {
     break;
   case OR:
     // Handle OR instruction
+    handle_or(ins);
     break;
   case AND:
     // Handle AND instruction
@@ -482,38 +669,41 @@ bool Emulator::execute_insn(const Instruction &ins) {
     break;
   case NOT:
     // Handle NOT instruction
+    handle_not(ins);
     break;
   case XOR:
     // Handle XOR instruction
+    handle_xor(ins);
     break;
   // Bit testing operations
   case BSET:
     // Handle BSET instruction
+    handle_bset(ins);
     break;
   case BCLR:
     // Handle BCLR instruction
+    handle_bclr(ins);
     break;
   case BTST:
     // Handle BTST instruction
+    handle_btst(ins);
     break;
   // Shift and rotate operations
-  case ASR_2:
-    // Handle ASR_2 instruction
-    break;
-  case LSR_2:
-    // Handle LSR_2 instruction
-    break;
   case ASL:
     // Handle ASL instruction
     break;
   case ASL2:
     // Handle ASL2 instruction
     break;
+  case ASR_2:
   case ASR:
     // Handle ASR instruction
+    handle_asr(ins);
     break;
+  case LSR_2:
   case LSR:
     // Handle LSR instruction
+    handle_lsr(ins);
     break;
   case ROR:
     // Handle ROR instruction
