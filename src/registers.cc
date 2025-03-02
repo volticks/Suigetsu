@@ -1,4 +1,5 @@
 #include "registers.h"
+#include "emulator.h"
 #include "instruction.h"
 // Default, all registers 0
 
@@ -7,6 +8,12 @@ Reg::Reg() : registers{0} {}
 reg_type Reg::get(ArgKind reg) {
   if (reg > reg_usable || reg <= ArgKind::NONE)
     throw RegisterException("Reg::get OOB");
+
+  if (is_mem_reg(reg)) {
+    // Return/read the register equivalent to we can do stuf with its addresl
+    // val
+    reg = (ArgKind)((reg_type)reg - (reg_type)mem_reg_off);
+  }
 
   reg_type val = registers[static_cast<uint32_t>(reg)];
 

@@ -47,9 +47,35 @@ _start:
   #asr 0x1f, d0
   mov 0x1f, d1
   lsr d1, d0
-  #mov psw, d0
+  asl d1, d0
+  ror d0
+  rol d0
 
+  mov psw, d0
   mov d0, d2
-  add 0x80000000, d2
+  
+  mov 0x1234, d2
+  mov 0x1000, a0
+  mov d2, (d0, a0)
+
+  #add 0x80000000, d2
+  #mov d0, (a0)
+  inc d0
+  mov (d0, a0), d2
+
+
+  ## Lets try some cross page accesses 
+  mov 0x1000, a0
+  mov 0xffe, d0
+  #mov 0x0, d0
+  mov 0x12345678, d2
+  mov d2, (d0, a0)
+  #inc d0 ## Causes problems innit
+  mov (d0, a0), d2
+
+
+
+  #add 0x80000000, d2
   mov d2, a0
   mov d0, (a0)
+

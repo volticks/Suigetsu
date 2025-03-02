@@ -9,6 +9,20 @@
 
 typedef std::vector<uint8_t> Instructions;
 
+bool is_reg(ArgKind kind);
+
+bool is_imm(ArgKind kind);
+
+bool is_dn(ArgKind kind);
+
+bool is_abs(ArgKind kind);
+bool is_mem_reg(ArgKind kind);
+
+bool is_disp(ArgKind kind);
+
+// Sign extend a number of size nbits
+reg_type s_ext(reg_type i, uint32_t nbits);
+
 class Emulator {
 public:
   // True: On success
@@ -38,11 +52,32 @@ public:
   bool handle_rol(const Instruction &ins);
   bool handle_bcc(const Instruction &ins);
   bool handle_lcc(const Instruction &ins);
+  // ...
+  bool handle_trap(const Instruction &ins);
+  bool handle_nop(const Instruction &ins);
   // TODO: Fill in these...
 
+  // Like get_val but for memory.
+  reg_type get_val_mem(const Instruction &ins, uint32_t *operation);
+  // Get the address from 2 diff registers - IE, base and displacement.
+  reg_type get_addr_from_regs(const Instruction &ins, bool arg);
   // Get value either imm/whatever and sign extend (if applicable) or just
   // return it.
   reg_type get_val(ArgKind src, const Instruction &ins);
+  // Set registers/memory/whatever. Yes, also has to be in header. Ugly.
+  template <typename T>
+  void set_val(ArgKind src, T val, const Instruction &ins) {
+    // If this is a register, simply handoff to the register api
+    if (is_reg(src)) {
+      regs.set(src, val);
+      return;
+    }
+    // Otherwise, probably gonna be memory.
+    // Get the addr from the source
+    addr addr = get_val(src, ins);
+    this->mmu.write(addr, val);
+  }
+  MMU &get_mmu();
 
 private:
   Reg regs;

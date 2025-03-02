@@ -34,6 +34,7 @@ PageDirectory::PageDirectory() {
   this->pte_part = page_idx_mask * 2;
   this->pmd_part = page_idx_mask * 1;
   this->pld_part = page_idx_mask * 0;
+  this->last_allocated = NULL;
 }
 
 PageDirectory::~PageDirectory() {
@@ -78,6 +79,8 @@ void PageDirectory::add_page_entry(uint32_t idx, addr pa) {
     return; // Dont forget size check lol
   // this->page_entries.emplace(this->page_entries.begin() + idx, pa);
   this->page_entries[idx] = page_entry(pa);
+  // Store ref to last allocated page so we can recall it ez
+  this->last_allocated = &this->page_entries[idx];
 }
 
 page_entry &PageDirectory::get_page_entry(uint32_t idx) {
@@ -167,4 +170,38 @@ page_entry &PageDirectory::get_pte_from_vaddr(virt_addr vaddr) {
   std::cout << "Entry addr: " << pte_e.page_addr << std::endl;
   // If all present, we assume we ok to return entry
   return pte_e;
+}
+page_entry *PageDirectory::get_last_alloc() { return this->last_allocated; }
+
+PageDirectory &MMU::get_pd() { return this->page_directory; }
+
+page_range::page_range(virt_addr start, uint32_t num_pages, bit_t rwx) {
+
+  // If we would overflow the address space, throw
+  if (start + (num_pages * page_size) > max_vaddr || num_pages > max_pages) {
+    throw PageException((char *)"Too many pages. Num:", num_pages);
+  }
+  if (start & (page_size - 1)) {
+    throw PageException((char *)"Not page aligned. Addr:", start);
+  }
+
+  this->vma_start = start;
+  this->rwx = rwx;
+  this->num_pages = num_pages;
+}
+
+void MMU::map_range(virt_addr start, uint32_t num, byte rwx) {
+  page_range pr(start, num, rwx);
+
+  for (int i = 0; i < num; i++) {
+
+    if (!this->page_directory.add_page(start + (page_size * i))) {
+      throw PageException(
+          (char *)"MMU::map_range add_page failed failed, addr:",
+          start + (page_size * i));
+    }
+
+    page_entry *curr = this->get_pd().get_last_alloc();
+    curr->rwx = rwx;
+  }
 }

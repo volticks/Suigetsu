@@ -1,6 +1,7 @@
 #include "emulator.h"
 #include "instruction.h"
 #include "registers.h"
+#include <bit>
 #include <cstdint>
 #include <iostream>
 #include <ostream>
@@ -57,6 +58,20 @@ bool is_imm(ArgKind kind) {
 // TODO: May have to expand this to consider memory regs aswell.
 bool is_dn(ArgKind kind) { return kind >= ArgKind::D0 && kind <= ArgKind::D3; }
 
+bool is_an(ArgKind kind) { return kind >= ArgKind::A0 && kind <= ArgKind::A3; }
+
+bool is_abs(ArgKind kind) {
+  return kind >= ArgKind::abs16 && kind <= ArgKind::abs32;
+}
+
+bool is_mem_reg(ArgKind kind) {
+  return kind >= ArgKind::MA0 && kind <= ArgKind::MA3;
+}
+
+bool is_disp(ArgKind kind) {
+  return kind >= ArgKind::d8 && kind <= ArgKind::d32;
+}
+
 // Sign extend a number of size nbits
 reg_type s_ext(reg_type i, uint32_t nbits) {
 
@@ -67,11 +82,15 @@ reg_type s_ext(reg_type i, uint32_t nbits) {
   return i | (0 - (i & s_mask));
 }
 
+MMU &Emulator::get_mmu() { return this->mmu; }
+
 // TODO: Add ability to get memory?
+// TODO: This will straight up NOT work for multiple diff kinds of args, so pay
+// that in mind. This needs fixing.
 reg_type Emulator::get_val(ArgKind src, const Instruction &ins) {
   reg_type s;
   // TODO: extend for abs where appropriate?
-  if (is_imm(src)) {
+  if (is_imm(src) || is_abs(src)) {
     uint8_t sz = get_arg_sz(src) * 8;
     s = *(reg_type *)ins.args;
     s = s_ext(s, sz);
@@ -81,6 +100,49 @@ reg_type Emulator::get_val(ArgKind src, const Instruction &ins) {
   return s;
 }
 
+// Finds actual address from arguments and returns
+reg_type Emulator::get_addr_from_regs(const Instruction &ins, bool arg) {
+  // arg: true: use dest, false: use src
+  uint32_t kind_start = arg;
+  // Wont be more than 2 i dont think
+  ArgKind kind1 = ins.kinds[kind_start];
+  ArgKind kind2 = ins.kinds[kind_start + 1];
+  // Now find the actual values of the kinds, and add em up
+  reg_type k1 = get_val(kind1, ins);
+  reg_type k2 = get_val(kind2, ins);
+  reg_type addr = k1 + k2;
+
+  return addr;
+}
+
+// Gets an address from the registers on the appropriate side, then returns the
+// address and outputs which side to indicate the operation (r/w).
+// TODO: Testing very much needed.
+reg_type Emulator::get_val_mem(const Instruction &ins, uint32_t *operation) {
+  // TODO: Finish
+  uint32_t op_loc;
+  reg_type addr;
+
+  // Reading == 0, Writing == 1
+  op_loc = !(is_abs(ins.kinds[0]) || is_mem_reg(ins.kinds[0]) ||
+             is_disp(ins.kinds[0]) ||
+             is_an(ins.kinds[1]) && ins.kinds[2] != ArgKind::NONE);
+
+  // Simple, just get the addr from registers and read contents.
+  if (is_abs(ins.kinds[op_loc]) || is_mem_reg(ins.kinds[op_loc])) {
+    addr = get_val(ins.kinds[op_loc], ins);
+  }
+  // A bit harder, need to read multiple registers and add base + displacement
+  // to get addr, then we can read.
+  else if (is_disp(ins.kinds[op_loc]) ||
+           is_an(ins.kinds[op_loc + 1]) /*&& ins.kinds[2] != ArgKind::NONE*/) {
+    addr = get_addr_from_regs(ins, op_loc);
+  }
+
+  *operation = op_loc;
+  return addr;
+}
+
 bool Emulator::handle_mov(const Instruction &ins) {
   // TODO: Test
   ArgKind dst = ins.kinds[1];
@@ -88,9 +150,10 @@ bool Emulator::handle_mov(const Instruction &ins) {
   // TODO: May have more args
 
   // 2 registers or imm -> reg
-  if (is_reg(dst) && (is_reg(src) || is_imm(src))) {
+  if (is_reg(dst) && (is_reg(src) || is_imm(src)) &&
+      ins.kinds[2] == ArgKind::NONE) {
 
-    // Is this actually true doe
+    // TODO: Is this actually true doe
     if (dst == src) {
       std::cerr << "Emulator::handle_mov registers are identical, should be "
                    "impossible. Aborting."
@@ -123,6 +186,28 @@ bool Emulator::handle_mov(const Instruction &ins) {
   }
 
   // TODO: Handle memory stuff.
+  // TODO: Pretty sure the above has already caught any and all non-memory
+  // operations
+  // - if not, blegh.
+
+  uint32_t op;
+  reg_type addr = get_val_mem(ins, &op);
+  reg_type val = 0;
+
+  // We know this is populated, so should be using it.
+  dst = ins.kinds[2];
+
+  // TODO: Test these thangs
+  // Writing to something
+  if (op) {
+    val = regs.get(src);
+    mmu.write(addr, val);
+  }
+  // Reading
+  else {
+    val = mmu.read<reg_type>(addr);
+    regs.set(dst, val);
+  }
 
   return true;
 }
@@ -591,6 +676,96 @@ bool Emulator::handle_lsr(const Instruction &ins) {
   return true;
 }
 
+// Also handles asl2
+bool Emulator::handle_asl(const Instruction &ins) {
+  ArgKind src = ins.kinds[0];
+  ArgKind dst = ins.kinds[1];
+
+  reg_type s = get_val(src, ins);
+  reg_type psw = regs.get(ArgKind::PSW);
+  reg_type d;
+  reg_type_s res;
+
+  if (dst == ArgKind::NONE) {
+    s = 1;
+    dst = src;
+  } else {
+    d = get_val(dst, ins);
+  }
+
+  reg_type shift;
+
+  if (ins.op == ASL2)
+    shift = 2;
+  else
+    shift = s & 0x1f;
+
+  psw &= ~0b1111;
+  if (shift) {
+    res = (reg_type_s)d << shift;
+    psw |= (PswBits::C * (d & 1));
+    regs.set(dst, res);
+  } else {
+    res = d;
+  }
+
+  bool cnd = res < 0;
+  psw |= (PswBits::N * cnd);
+  cnd = res == 0;
+  psw |= (PswBits::Z * cnd);
+  regs.set(ArgKind::PSW, psw);
+
+  return true;
+}
+
+bool Emulator::handle_ror(const Instruction &ins) {
+  ArgKind src = ins.kinds[0];
+
+  reg_type s = get_val(src, ins);
+  reg_type psw = regs.get(ArgKind::PSW);
+  reg_type_s res;
+
+  res = std::rotr(s, 1);
+
+  psw &= ~0b1111;
+  bool cnd = res < 0;
+  psw |= (PswBits::N * cnd);
+  cnd = res == 0;
+  psw |= (PswBits::Z * cnd);
+
+  regs.set(src, res);
+  regs.set(ArgKind::PSW, psw);
+
+  return true;
+}
+
+bool Emulator::handle_rol(const Instruction &ins) {
+  ArgKind src = ins.kinds[0];
+
+  reg_type s = get_val(src, ins);
+  reg_type psw = regs.get(ArgKind::PSW);
+  reg_type_s res;
+
+  res = std::rotl(s, 1);
+
+  psw &= ~0b1111;
+  bool cnd = res < 0;
+  psw |= (PswBits::N * cnd);
+  cnd = res == 0;
+  psw |= (PswBits::Z * cnd);
+
+  regs.set(src, res);
+  regs.set(ArgKind::PSW, psw);
+
+  return true;
+}
+
+// Do nothing, basically
+// TODO: Could also add some additional stuff here so it looks like its
+// performing a syscall.
+bool Emulator::handle_trap(const Instruction &ins) { return true; }
+bool Emulator::handle_nop(const Instruction &ins) { return true; }
+
 bool Emulator::execute_insn(const Instruction &ins) {
   // std::cout << "Emulator::execute_insn doing stuff..." << std::endl;
   //
@@ -689,11 +864,10 @@ bool Emulator::execute_insn(const Instruction &ins) {
     handle_btst(ins);
     break;
   // Shift and rotate operations
+  case ASL2:
   case ASL:
     // Handle ASL instruction
-    break;
-  case ASL2:
-    // Handle ASL2 instruction
+    handle_asl(ins);
     break;
   case ASR_2:
   case ASR:
@@ -707,9 +881,11 @@ bool Emulator::execute_insn(const Instruction &ins) {
     break;
   case ROR:
     // Handle ROR instruction
+    handle_ror(ins);
     break;
   case ROL:
     // Handle ROL instruction
+    handle_rol(ins);
     break;
   // Control flow operations
   case Bcc:

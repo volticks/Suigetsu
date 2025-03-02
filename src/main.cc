@@ -38,6 +38,10 @@ int main(int argc, char **argv) {
   Instructions insns = FileReader::read_file(argv[1]);
 
   Emulator emu;
+  // Setup some emu resources
+  // Memory
+  // TODO: I did make flags specifcally for me to use for specifying perms lol.
+  emu.get_mmu().map_range(0x0, 100, 0b110);
   bool ret = emu.emu_loop(insns);
   // Do the execution.
 
