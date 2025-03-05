@@ -30,7 +30,8 @@ public:
   bool execute_insn(const Instruction &ins);
 
   // Handlers for each instruction
-  bool handle_mov(const Instruction &ins);
+  template <typename T> bool handle_mov(const Instruction &ins);
+  bool handle_movm(const Instruction &ins);
   bool handle_ext(const Instruction &ins);
   bool handle_add(const Instruction &ins, int sign);
   bool handle_mul(const Instruction &ins);

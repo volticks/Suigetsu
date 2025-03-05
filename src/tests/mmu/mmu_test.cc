@@ -32,5 +32,7 @@ int main() {
   val = unit.read<unsigned int>(virtual_addr + (page_size - 5));
   std::cout << "Cross page val: " << val << std::endl;
 
+  unit.read<unsigned int>(0x7fffcdfc);
+
   return 0;
 }

@@ -387,7 +387,7 @@ struct Instruction {
     int j = 0;
     ArgKind kind;
 
-    std::cout << insn_to_str((InsnType)this->op) << " ";
+    std::cout << "\t\t" << insn_to_str((InsnType)this->op) << " ";
 
     while (i < kind_sz && this->kinds[i] != ArgKind::NONE) {
       if (i)
@@ -411,7 +411,7 @@ struct Instruction {
         bool found_nz = false;
         for (j = d_idx; j >= 0 && arg_sz > 0; j--, arg_sz--) {
 
-          if (!found_nz && this->args[j] == 0 && sz_cpy > 1)
+          if (!found_nz && this->args[j] == 0 && sz_cpy > 1 && !(arg_sz == 1))
             continue;
           else
             found_nz = true;

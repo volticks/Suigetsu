@@ -1,4 +1,5 @@
 #include "emulator.h"
+#include "mmu.h"
 #include <cstdio>
 #include <fstream>
 #include <iostream>
@@ -35,15 +36,34 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  Instructions insns = FileReader::read_file(argv[1]);
+  try {
+    Instructions insns = FileReader::read_file(argv[1]);
 
-  Emulator emu;
-  // Setup some emu resources
-  // Memory
-  // TODO: I did make flags specifcally for me to use for specifying perms lol.
-  emu.get_mmu().map_range(0x0, 100, 0b110);
-  bool ret = emu.emu_loop(insns);
-  // Do the execution.
+    Emulator emu;
+    // Setup some emu resources
+    // Memory
+    // Init: Need to map space for the program code starting at configurable
+    // address, then write trhe instructions to that location,
+    const virt_addr prog_start = 0x0;
+    const uint32_t n_pages = (insns.size() / page_size) + 1;
+    // R&X by default
+    // Make sure we map enough space.
+    emu.get_mmu().map_range(prog_start, n_pages, 0b101);
+    // Copy in the instructions
+    emu.get_mmu().write_many(prog_start, insns.data(), insns.size());
+    // TODO: I did make flags specifcally for me to use for specifying perms
+    // lol.
+    // Some data pages, R&W
+    emu.get_mmu().map_range(prog_start + (n_pages * page_size), 100, 0b110);
 
+    // Another data test page
+    emu.get_mmu().get_pd().add_page(0x41414000);
+    emu.get_mmu().get_pd().get_last_alloc()->rwx = 0b110;
+
+    bool ret = emu.emu_loop(insns);
+    // Do the execution.
+  } catch (std::exception &e) {
+    std::cerr << "EX: " << e.what() << std::endl;
+  }
   return 0;
 }

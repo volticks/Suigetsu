@@ -37,15 +37,20 @@ PageDirectory::PageDirectory() {
   this->last_allocated = NULL;
 }
 
+// Simply hacky thing to suppress freeing msgs
+const bool do_mem_log = false;
 PageDirectory::~PageDirectory() {
-  for (uint32_t pte_idx = 1; pte_idx <= page_idx_mask; pte_idx++) {
+  for (uint32_t pte_idx = 0; pte_idx <= page_idx_mask; pte_idx++) {
     if (this->page_entries[this->pte_part + pte_idx].page_addr == 0)
       continue;
     void *page_addr =
         (void *)(this->page_entries[this->pte_part + pte_idx].page_addr
                  << page_shift);
-    std::cout << "Off: " << std::hex << this->pte_part + pte_idx << std::endl;
-    std::cout << "Freeing page addr: 0x" << std::hex << page_addr << std::endl;
+    if (do_mem_log) {
+      std::cout << "Off: " << std::hex << this->pte_part + pte_idx << std::endl;
+      std::cout << "Freeing page addr: 0x" << std::hex << page_addr
+                << std::endl;
+    }
     std::free(page_addr);
   }
 }
@@ -203,5 +208,27 @@ void MMU::map_range(virt_addr start, uint32_t num, byte rwx) {
 
     page_entry *curr = this->get_pd().get_last_alloc();
     curr->rwx = rwx;
+  }
+}
+
+void MMU::write_many(virt_addr start, byte *data, uint32_t num) {
+  // If not page aligned, throw
+  if (start & (page_size - 1))
+    throw PageException(
+        (char *)"MMU::write_many start address not page aligned, addr: ",
+        start);
+  // For convenience here we ignore page perms.
+  uint32_t n = 0;
+  virt_addr curr = start;
+  while (num > 0) {
+    // We just gonna memcpy the data page by page
+    n = std::min(page_size, num);
+    page_entry &pe = this->get_pd().get_pte_from_vaddr(curr);
+
+    std::memcpy((void *)(pe.page_addr << page_shift), data, n);
+    curr += n;
+    data += n;
+
+    num -= n;
   }
 }

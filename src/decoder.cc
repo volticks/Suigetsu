@@ -1227,8 +1227,8 @@ void Decoder::decode_dn_op_FA(const inst_data *data, Instruction &ins) {
     use_d = !(op_nib_up == 2 || op_nib_up == 3);
     a_or_d_reg = regs[use_d][(op_nib_low & 0b1100) >> 2];
 
-    idx = op_nib_low % 2;
-    if (!idx) {
+    idx = op_nib_up % 2;
+    if (idx) {
       ins.kinds[0] = a_or_d_reg;
       ins.kinds[1] = ArgKind::d16;
       ins.kinds[2] = a_mem_reg;

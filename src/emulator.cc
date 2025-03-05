@@ -90,7 +90,7 @@ MMU &Emulator::get_mmu() { return this->mmu; }
 reg_type Emulator::get_val(ArgKind src, const Instruction &ins) {
   reg_type s;
   // TODO: extend for abs where appropriate?
-  if (is_imm(src) || is_abs(src)) {
+  if (is_imm(src) || is_abs(src) || is_disp(src)) {
     uint8_t sz = get_arg_sz(src) * 8;
     s = *(reg_type *)ins.args;
     s = s_ext(s, sz);
@@ -142,8 +142,7 @@ reg_type Emulator::get_val_mem(const Instruction &ins, uint32_t *operation) {
   *operation = op_loc;
   return addr;
 }
-
-bool Emulator::handle_mov(const Instruction &ins) {
+template <typename T> bool Emulator::handle_mov(const Instruction &ins) {
   // TODO: Test
   ArgKind dst = ins.kinds[1];
   ArgKind src = ins.kinds[0];
@@ -164,14 +163,14 @@ bool Emulator::handle_mov(const Instruction &ins) {
     // PSW -> Dn 0 extends upper 16 bits
     // Dn -> PSW ignores upper 16 bits
 
-    reg_type val;
+    T val;
     // Sz (in bits)
     uint8_t sz = get_arg_sz(src) * 8;
     if (is_imm(src)) {
       // Get imm val from args
       // TODO: needs to change based on size of imm. Gotta ensure that we sign
       // ext here as imm needs to be (dun).
-      val = *(reg_type *)ins.args;
+      val = *(T *)ins.args;
     } else {
       val = regs.get(src);
     }
@@ -192,10 +191,10 @@ bool Emulator::handle_mov(const Instruction &ins) {
 
   uint32_t op;
   reg_type addr = get_val_mem(ins, &op);
-  reg_type val = 0;
+  T val = 0;
 
   // We know this is populated, so should be using it.
-  dst = ins.kinds[2];
+  dst = ins.kinds[2] == ArgKind::NONE ? ins.kinds[1] : ins.kinds[2];
 
   // TODO: Test these thangs
   // Writing to something
@@ -208,6 +207,13 @@ bool Emulator::handle_mov(const Instruction &ins) {
     val = mmu.read<reg_type>(addr);
     regs.set(dst, val);
   }
+
+  return true;
+}
+
+bool Emulator::handle_movm(const Instruction &ins) {
+
+  bool op = 0;
 
   return true;
 }
@@ -772,13 +778,15 @@ bool Emulator::execute_insn(const Instruction &ins) {
   switch (ins.op) {
   case MOV:
     // Handle MOV instruction
-    handle_mov(ins);
+    handle_mov<reg_type>(ins);
     break;
   case MOVBU:
     // Handle MOVBU instruction
+    handle_mov<uint8_t>(ins);
     break;
   case MOVHU:
     // Handle MOVHU instruction
+    handle_mov<uint16_t>(ins);
     break;
   case MOVM:
     // Handle MOVM instruction

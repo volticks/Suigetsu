@@ -72,10 +72,63 @@ _start:
   mov d2, (d0, a0)
   #inc d0 ## Causes problems innit
   mov (d0, a0), d2
+  #mov (2, a0), d2
+  #mov (0x414, a0), d2
+  #mov (0x4141, a0), d2
+  ##mov (0x41413000, a0), d2
+  ##mov (0x41414000), d2
+  #mov (2, sp), d2
+  #
+  ##mov (0x41413000, a0), a2
+  ##mov (0x41414000, sp), a2
+  #mov 0, a0
+  #mov (0x41, a0), sp
+
+  mov d2, (a0)
+  mov d2, (2, a0)
+  mov d2, (0x414, a0)
+  #mov d2, (0x41413000, a0)
+  #mov d2, (0x41414000)
+  mov d2, (2, sp)
+  #mov d2, (0x41413000, sp)
+  mov sp, (2, a0)
 
 
+  nop
+  nop
+  nop
+  nop
+  mov (2, sp), d2
+  
+  #mov (0x41413000, a0), a2
+  #mov (0x41414000, sp), a2
+  mov 0, a0
+  mov (0x41, a0), sp
 
-  #add 0x80000000, d2
+  
+  movbu (a0), d1
+  movbu (0), d2
+
+  movhu (a0), d1
+  movhu (0), d2
+  mov 128, d1
+  mov d1, a1
+  #movbu (0x8, a1), d2
+  .byte 0xf8, 0x49, 0x80
+  #movb (0), d2 ## Idk if this actually exists -- it doesnt.
+  #mov (0), d2
+  
+  #movm (sp), [other]
+  #movm [other], (sp)
+  ### Nothing below a2 allowed
+  #movm [a2, a3, d2, d3, other], (sp)
+  #movm [a2, a3, d2, d3], (sp)
+  #movm [a2, a3, d2], (sp)
+  #movm [a2, a3], (sp)
+  #movm [a2], (sp)
+
+  add 0x80000000, d2
   mov d2, a0
   mov d0, (a0)
+  mov 0x3333, d0
 

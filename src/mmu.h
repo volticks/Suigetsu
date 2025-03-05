@@ -128,7 +128,7 @@ public:
     std::snprintf(msg.get(), 1024, "%s 0x%lx", newMsg, vaddr);
   }
   // Only returning data() here to silence compiler warning
-  char *what() { return msg.get(); }
+  const char *what() const noexcept { return msg.get(); }
 
 private:
   // Should hopefully manage itself properly
@@ -256,6 +256,8 @@ public:
   PageDirectory &get_pd();
 
   void map_range(virt_addr start, uint32_t num, byte rwx);
+
+  void write_many(virt_addr start, byte *data, uint32_t num);
 
 private:
   PageDirectory page_directory;

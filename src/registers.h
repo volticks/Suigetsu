@@ -62,7 +62,7 @@ class RegisterException : public std::exception {
 public:
   RegisterException(char *newMsg) : msg(newMsg) {}
 
-  char *what() { return msg; }
+  const char *what() const noexcept { return msg; }
 
 private:
   char *msg;
