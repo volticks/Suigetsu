@@ -6,13 +6,21 @@
 #include <iostream>
 
 page_entry::page_entry(addr pa) {
+  // Make SURE everything is 0 BEFORE
+  this->rwx = 0;
+  this->present = 0;
+
   this->present |= 1;
   // Read, write, nx for now
-  this->rwx |= 0b110;
-  this->read |= 0;
-  this->modified |= 0;
+  this->rwx |= PagePerms::rw_mask;
+  this->read = 0;
+  this->modified = 0;
   // To be changed by the instantiator
   this->page_addr = (pa >> 12);
+}
+
+page_entry::page_entry(addr pa, uint32_t perms) : page_entry(pa) {
+  this->rwx = perms;
 }
 
 // Default
@@ -79,13 +87,11 @@ phys_addr PageDirectory::alloc_page() {
   return (phys_addr)page;
 }
 
-void PageDirectory::add_page_entry(uint32_t idx, addr pa) {
+void PageDirectory::add_page_entry(uint32_t idx, addr pa, uint32_t perms) {
   if (idx >= this->page_entries.size())
     return; // Dont forget size check lol
   // this->page_entries.emplace(this->page_entries.begin() + idx, pa);
-  this->page_entries[idx] = page_entry(pa);
-  // Store ref to last allocated page so we can recall it ez
-  this->last_allocated = &this->page_entries[idx];
+  this->page_entries[idx] = page_entry(pa, perms);
 }
 
 page_entry &PageDirectory::get_page_entry(uint32_t idx) {
@@ -96,7 +102,8 @@ page_entry &PageDirectory::get_page_entry(uint32_t idx) {
 
 // Returns true: one or many layers of paging already had entries corresponding
 // to parts of our virtual address. False: This is completely new.
-bool PageDirectory::add_page(virt_addr v_page) {
+bool PageDirectory::add_page(virt_addr v_page,
+                             uint32_t perms = PagePerms::rw_mask) {
 
   bool ret = false;
   // Need to add page to pte, pmd and pld
@@ -107,29 +114,40 @@ bool PageDirectory::add_page(virt_addr v_page) {
   std::cout << "PMD idx: " << std::hex << pmd_idx << std::endl;
   std::cout << "PTE idx: " << std::hex << pte_idx << std::endl;
 
+  page_entry &pld_e = this->page_entries[this->pld_part + pld_idx];
+  uint32_t pmd_part = pld_e.page_addr;
+  if (!pld_e.present) {
+    std::cout << "PLD adding: " << std::hex << this->pld_part + pld_idx
+              << std::endl;
+    this->add_page_entry(this->pld_part + pld_idx, this->pmd_part << page_shift,
+                         perms);
+    ret = true;
+  }
+
+  // TODO: replace this with the ACTUAL pld part.
+  page_entry &pmd_e = this->page_entries[pmd_part + pmd_idx];
+  if (!pmd_e.present) {
+    std::cout << "(add)PMD idx: " << this->pmd_part + pmd_idx << std::endl;
+    this->add_page_entry(pmd_part + pmd_idx, pte_part << page_shift, perms);
+    ret = true;
+  }
+
+  uint32_t pte_part = pmd_e.page_addr;
+  page_entry &pte_e = this->page_entries[pte_part + pte_idx];
   // Have we already put a pte here?
-  if (!this->page_entries[this->pte_part + pte_idx].present) {
+  if (!pte_e.present) {
     // If no pte here yet, make sure we allocate some memory first
     addr page = (addr)alloc_page();
     std::cout << "Page: 0x" << std::hex << page << std::endl;
-    this->add_page_entry(this->pte_part + pte_idx, (addr)page);
+    this->add_page_entry(pte_part + pte_idx, (addr)page, perms);
+
+    // Store ref to last allocated page so we can recall it ez
+    // Using idx here is fine as theres an assertion in add_page_entry that
+    // checks it.
+    // this->last_allocated = &this->page_entries[this->pte_part + pte_idx];
     ret = true;
   }
 
-  if (!this->page_entries[this->pmd_part + pmd_idx].present) {
-    std::cout << "(add)PMD idx: " << this->pmd_part + pmd_idx << std::endl;
-    this->add_page_entry(this->pmd_part + pmd_idx,
-                         this->pte_part << page_shift);
-    ret = true;
-  }
-
-  if (!this->page_entries[this->pld_part + pld_idx].present) {
-    std::cout << "PLD adding: " << std::hex << this->pld_part + pld_idx
-              << std::endl;
-    this->add_page_entry(this->pld_part + pld_idx,
-                         this->pmd_part << page_shift);
-    ret = true;
-  }
   return ret;
 }
 
@@ -200,14 +218,14 @@ void MMU::map_range(virt_addr start, uint32_t num, byte rwx) {
 
   for (int i = 0; i < num; i++) {
 
-    if (!this->page_directory.add_page(start + (page_size * i))) {
+    if (!this->page_directory.add_page(start + (page_size * i), rwx)) {
       throw PageException(
           (char *)"MMU::map_range add_page failed failed, addr:",
           start + (page_size * i));
     }
 
-    page_entry *curr = this->get_pd().get_last_alloc();
-    curr->rwx = rwx;
+    // page_entry *curr = this->get_pd().get_last_alloc();
+    // curr->rwx |= rwx;
   }
 }
 
@@ -231,4 +249,13 @@ void MMU::write_many(virt_addr start, byte *data, uint32_t num) {
 
     num -= n;
   }
+}
+
+bool MMU::is_rx(const page_entry &pe) {
+  return pe.present && pe.rwx & (PagePerms::rx_mask);
+}
+
+bool MMU::is_rx(virt_addr va) {
+  const page_entry &pe = this->get_pd().get_pte_from_vaddr(va);
+  return is_rx(pe);
 }

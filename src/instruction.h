@@ -7,6 +7,8 @@ typedef uint8_t inst_data;
 typedef uint8_t inst_op;
 
 const uint32_t CARRY_BIT = 0x80000000;
+const uint32_t min_ins = 1;
+const uint32_t max_ins = 7;
 
 // Some PSW bit meanings, TODO add more
 enum PswBits {

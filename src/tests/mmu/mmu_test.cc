@@ -10,7 +10,7 @@ int main() {
   PageDirectory &pd = unit.get_pd();
 
   uint64_t virtual_addr = 0x7ffff000;
-  pd.add_page(virtual_addr);
+  pd.add_page(virtual_addr, PagePerms::rw_mask);
   page_entry &pe = pd.get_pte_from_vaddr(virtual_addr);
   printf("Physical addr: 0x%lx\n", pe.page_addr << 12);
 
@@ -26,8 +26,8 @@ int main() {
   std::cout << "Testing cross page reads and writes..." << std::endl;
 
   virtual_addr = 0x1000;
-  pd.add_page(virtual_addr);
-  pd.add_page(virtual_addr + page_size);
+  pd.add_page(virtual_addr, PagePerms::rd_mask);
+  pd.add_page(virtual_addr + page_size, PagePerms::rd_mask);
   unit.write(virtual_addr + (page_size - 5), 0x4142434445464748);
   val = unit.read<unsigned int>(virtual_addr + (page_size - 5));
   std::cout << "Cross page val: " << val << std::endl;

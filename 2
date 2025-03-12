@@ -47,7 +47,6 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
         // necessary.
 
         cached_next = mmu.get_pd().get_pte_from_vaddr(pc + max_ins);
-        mmu.get_pd().get_pte_from_vaddr(0x64000);
         if (!this->mmu.is_rx(cached_next)) {
           bad = true;
           throw PageException("Cant exec page: ", pc + max_ins);

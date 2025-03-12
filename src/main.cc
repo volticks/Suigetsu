@@ -47,20 +47,24 @@ int main(int argc, char **argv) {
     const virt_addr prog_start = 0x0;
     const uint32_t n_pages = (insns.size() / page_size) + 1;
     // R&X by default
+    // --- Changed to rwx
     // Make sure we map enough space.
-    emu.get_mmu().map_range(prog_start, n_pages, 0b101);
+    emu.get_mmu().map_range(prog_start, n_pages, 0b111);
     // Copy in the instructions
     emu.get_mmu().write_many(prog_start, insns.data(), insns.size());
     // TODO: I did make flags specifcally for me to use for specifying perms
     // lol.
     // Some data pages, R&W
-    emu.get_mmu().map_range(prog_start + (n_pages * page_size), 100, 0b110);
+    // emu.get_mmu().map_range(prog_start + (n_pages * page_size), 100, 0b110);
+    // RWX
+    emu.get_mmu().map_range(prog_start + (n_pages * page_size), 100, 0b111);
 
     // Another data test page
-    emu.get_mmu().get_pd().add_page(0x41414000);
-    emu.get_mmu().get_pd().get_last_alloc()->rwx = 0b110;
+    emu.get_mmu().get_pd().add_page(0x41414000, PagePerms::rw_mask);
+    // Constructor for page_entry already sets these up, but just to make sure.
+    // emu.get_mmu().get_pd().get_last_alloc()->rwx |= PagePerms::rw_mask;
 
-    bool ret = emu.emu_loop(insns);
+    bool ret = emu.emu_loop(insns, prog_start);
     // Do the execution.
   } catch (std::exception &e) {
     std::cerr << "EX: " << e.what() << std::endl;

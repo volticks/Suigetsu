@@ -3,6 +3,7 @@
 // Probably gonna have 3 levels of paging, as thats all thats prolly necessary
 // for a 32bit addr space.
 
+#include "instruction.h"
 #include <arpa/inet.h>
 #include <cstdint>
 #include <iostream>
@@ -15,7 +16,7 @@ typedef uint64_t phys_addr;
 // Encompasses phys and virt addr
 typedef uint64_t addr;
 typedef uint8_t byte;
-typedef int bit_t;
+typedef uint8_t bit_t;
 
 // Gets only the 9 bits of the page index
 const uint32_t page_idx_mask = 0x1ff;
@@ -26,6 +27,8 @@ const uint32_t page_size = 0x1000;
 const uint32_t page_mask = 0xf000;
 const uint32_t max_vaddr = 0xffffffff;
 const uint32_t max_pages = max_vaddr / page_size;
+// If we go oob when decoding an instruction
+const uint32_t decoding_deadzone = max_ins;
 
 namespace PagePerms {
 const uint32_t rd_mask = 0b100;
@@ -33,6 +36,7 @@ const uint32_t wr_mask = 0b010;
 const uint32_t ex_mask = 0b001;
 const uint32_t rwx_mask = 0b111;
 const uint32_t rw_mask = 0b110;
+const uint32_t rx_mask = 0b101;
 } // namespace PagePerms
 
 // Represents a page table entry in our MMU, very lightweight version of an
@@ -56,6 +60,7 @@ struct page_entry {
   addr page_addr : 36;
 
   page_entry(addr pa);
+  page_entry(addr pa, uint32_t perms);
   page_entry();
 } __attribute__((packed, aligned(1))) typedef page;
 
@@ -76,12 +81,12 @@ public:
   ~PageDirectory();
   // Add a virtual page into our page table, mapping it to the corresponding
   // physical addr
-  bool add_page(virt_addr v_page);
+  bool add_page(virt_addr v_page, uint32_t perms);
   page_entry &get_pte_from_vaddr(virt_addr vaddr);
 
   phys_addr alloc_page();
   // Wrapper around emplacing into the page entry vec
-  void add_page_entry(uint32_t idx, addr pa);
+  void add_page_entry(uint32_t idx, addr pa, uint32_t perms);
   // Just a getter lol
   page_entry &get_page_entry(uint32_t idx);
 
@@ -258,6 +263,9 @@ public:
   void map_range(virt_addr start, uint32_t num, byte rwx);
 
   void write_many(virt_addr start, byte *data, uint32_t num);
+
+  bool is_rx(virt_addr va);
+  bool is_rx(const page_entry &pe);
 
 private:
   PageDirectory page_directory;

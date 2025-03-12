@@ -7,6 +7,16 @@
 #include <cstdint>
 #include <vector>
 
+// Whether an instruction reads from or writes to memory
+enum Op { R, W };
+enum MovmBits {
+  other = 0x8,
+  a3 = 0x10,
+  a2 = 0x20,
+  d3 = 0x40,
+  d2 = 0x80,
+};
+
 typedef std::vector<uint8_t> Instructions;
 
 bool is_reg(ArgKind kind);
@@ -26,7 +36,7 @@ reg_type s_ext(reg_type i, uint32_t nbits);
 class Emulator {
 public:
   // True: On success
-  bool emu_loop(const Instructions &insns);
+  bool emu_loop(const Instructions &insns, virt_addr start);
   bool execute_insn(const Instruction &ins);
 
   // Handlers for each instruction
@@ -53,13 +63,14 @@ public:
   bool handle_rol(const Instruction &ins);
   bool handle_bcc(const Instruction &ins);
   bool handle_lcc(const Instruction &ins);
+  bool handle_jmp(const Instruction &ins);
   // ...
   bool handle_trap(const Instruction &ins);
   bool handle_nop(const Instruction &ins);
   // TODO: Fill in these...
 
   // Like get_val but for memory.
-  reg_type get_val_mem(const Instruction &ins, uint32_t *operation);
+  reg_type get_val_mem(const Instruction &ins, Op *operation);
   // Get the address from 2 diff registers - IE, base and displacement.
   reg_type get_addr_from_regs(const Instruction &ins, bool arg);
   // Get value either imm/whatever and sign extend (if applicable) or just

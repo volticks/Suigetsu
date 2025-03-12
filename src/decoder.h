@@ -1,5 +1,6 @@
 
 #include "instruction.h"
+#include "mmu.h"
 #include <cstdint>
 
 // Add this in the array to get the same version of the reg but for derefs and
@@ -15,8 +16,12 @@ const ArgKind an_registers[] = {ArgKind::A0,  ArgKind::A1,  ArgKind::A2,
 
 class Decoder {
 public:
+  // For ordinary decoding: in bounds, readable memory within the same page
   void decode_inst(const inst_data *curr_data, const inst_data *end,
                    Instruction &ins);
+  // For more complicated decodes
+  void decode_inst(const inst_data *curr_data, uint32_t n_to_end,
+                   page_entry &next, Instruction &ins);
   // For adding and maintaining arguments
   bool add_args = false;
   uint8_t arg_sz = 0;

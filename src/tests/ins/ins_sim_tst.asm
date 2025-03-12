@@ -120,12 +120,65 @@ _start:
   
   #movm (sp), [other]
   #movm [other], (sp)
-  ### Nothing below a2 allowed
+  mov 0, d0
+  mov d0, a0
+  mov a0, sp
+  ## Nothing below a2 allowed
+  add 48, sp
+
+
+  mov 9, d0
+  mov d0, mdr
+
+  mov 1, d2
+  mov 2, d3
+  mov 3, a2
+  mov 4, a3
+  mov 5, d0
+  mov 6, d1
+  mov 7, a0
+  mov 8, a1
+  #mov 9, mdr
+  #mov 10, lir
+  #mov 11, lar
+
   #movm [a2, a3, d2, d3, other], (sp)
+  #movm (sp), [other]
+
+  movm [a2, a3, d2, d3], (sp)
+  movm [a2, a3, d2, d3], (sp)
+  movm (sp), [a2, a3, d2, d3]
+  movm (sp), [a2, a3, d2, d3]
+  
+  mov (sp), d2
+
+  #movm [a2, d3, d2, a3, other], (sp)
   #movm [a2, a3, d2, d3], (sp)
   #movm [a2, a3, d2], (sp)
   #movm [a2, a3], (sp)
+  #movm [a2, d3, a3], (sp)
   #movm [a2], (sp)
+  
+  #mov 0, d2
+  #add a0, d2
+  #add a1, d2
+  #add a2, d2
+  #add a3, d2
+  #add d0, d2
+  #add d1, d2
+  #add d3, d2
+
+  #mov mdr, d3
+  #add d3, d2
+  #add 0x80000000, d2
+
+  mov 0x41414003, d2
+  #mov 0x10012, d2
+  mov d2, a0
+
+  mov 0x8049f8, d0
+  mov d0, (a0)
+  jmp (a0)
 
   add 0x80000000, d2
   mov d2, a0
