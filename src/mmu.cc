@@ -38,8 +38,10 @@ PageDirectory::PageDirectory() {
   //
   // *3 since we wanna store entries for pte, pmd, and pld. Max index is
   // page_idx_mask, so just multiply that by 3 for now.
-  this->page_entries.resize((page_idx_mask * 3) + 1);
-  this->pte_part = page_idx_mask * 2;
+  // this->page_entries.resize((page_idx_mask * 5) + 1);
+
+  memset(this->pld_ents, 0, sizeof(this->pld_ents));
+  this->pte_part = page_idx_mask * 3;
   this->pmd_part = page_idx_mask * 1;
   this->pld_part = page_idx_mask * 0;
   this->last_allocated = NULL;
@@ -48,18 +50,8 @@ PageDirectory::PageDirectory() {
 // Simply hacky thing to suppress freeing msgs
 const bool do_mem_log = false;
 PageDirectory::~PageDirectory() {
-  for (uint32_t pte_idx = 0; pte_idx <= page_idx_mask; pte_idx++) {
-    if (this->page_entries[this->pte_part + pte_idx].page_addr == 0)
-      continue;
-    void *page_addr =
-        (void *)(this->page_entries[this->pte_part + pte_idx].page_addr
-                 << page_shift);
-    if (do_mem_log) {
-      std::cout << "Off: " << std::hex << this->pte_part + pte_idx << std::endl;
-      std::cout << "Freeing page addr: 0x" << std::hex << page_addr
-                << std::endl;
-    }
-    std::free(page_addr);
+  for (auto page : this->pages) {
+    std::free((void *)page);
   }
 }
 
@@ -82,6 +74,7 @@ phys_addr PageDirectory::alloc_page() {
     throw PageException(
         (char *)"PageDirectory::alloc_page returned null in allocation.");
   }
+  this->pages.emplace_back((phys_addr)page);
   std::memset(page, 0, page_size);
 
   return (phys_addr)page;
@@ -105,6 +98,7 @@ page_entry &PageDirectory::get_page_entry(uint32_t idx) {
 bool PageDirectory::add_page(virt_addr v_page,
                              uint32_t perms = PagePerms::rw_mask) {
 
+  std::cout << "V page: " << std::hex << v_page << std::endl;
   bool ret = false;
   // Need to add page to pte, pmd and pld
   uint32_t pte_idx = get_page_index(v_page, 0);
@@ -114,39 +108,70 @@ bool PageDirectory::add_page(virt_addr v_page,
   std::cout << "PMD idx: " << std::hex << pmd_idx << std::endl;
   std::cout << "PTE idx: " << std::hex << pte_idx << std::endl;
 
-  page_entry &pld_e = this->page_entries[this->pld_part + pld_idx];
-  uint32_t pmd_part = pld_e.page_addr;
-  if (!pld_e.present) {
-    std::cout << "PLD adding: " << std::hex << this->pld_part + pld_idx
-              << std::endl;
-    this->add_page_entry(this->pld_part + pld_idx, this->pmd_part << page_shift,
-                         perms);
+  // Testing
+  page_entry *pld_e1 = &this->pld_ents[pld_idx];
+  page_entry *pmd_ptr = (page_entry *)(pld_e1->page_addr << page_shift);
+  if (!pld_e1->present) {
+    pmd_ptr = (page_entry *)alloc_page();
+    *pld_e1 = page_entry((addr)pmd_ptr, perms);
+    ret = true;
+  }
+  page_entry *pmd_e1 = &pmd_ptr[pmd_idx];
+  page_entry *pte_ptr = (page_entry *)(pmd_e1->page_addr << page_shift);
+  if (!pmd_e1->present) {
+    pte_ptr = (page_entry *)alloc_page();
+    *pmd_e1 = page_entry((addr)pte_ptr, perms);
     ret = true;
   }
 
-  // TODO: replace this with the ACTUAL pld part.
-  page_entry &pmd_e = this->page_entries[pmd_part + pmd_idx];
-  if (!pmd_e.present) {
-    std::cout << "(add)PMD idx: " << this->pmd_part + pmd_idx << std::endl;
-    this->add_page_entry(pmd_part + pmd_idx, pte_part << page_shift, perms);
+  page_entry *pte_e = &pte_ptr[pte_idx];
+  phys_addr pte = (pte_e->page_addr << page_shift);
+  if (!pte_e->present) {
+    pte = alloc_page();
+    *pte_e = page_entry((addr)pte, perms);
     ret = true;
   }
+  //
 
-  uint32_t pte_part = pmd_e.page_addr;
-  page_entry &pte_e = this->page_entries[pte_part + pte_idx];
-  // Have we already put a pte here?
-  if (!pte_e.present) {
-    // If no pte here yet, make sure we allocate some memory first
-    addr page = (addr)alloc_page();
-    std::cout << "Page: 0x" << std::hex << page << std::endl;
-    this->add_page_entry(pte_part + pte_idx, (addr)page, perms);
+  // page_entry &pld_e = this->page_entries[this->pld_part + pld_idx];
+  // uint32_t pmd_part = pld_e.page_addr;
+  // if (!pld_e.present) {
+  //   std::cout << "PLD adding: " << std::hex << this->pld_part + pld_idx
+  //             << std::endl;
+  //   this->add_page_entry(this->pld_part + pld_idx, pld_idx << page_shift,
+  //                        perms);
+  //   ret = true;
+  //   pmd_part = pld_idx;
+  // }
 
-    // Store ref to last allocated page so we can recall it ez
-    // Using idx here is fine as theres an assertion in add_page_entry that
-    // checks it.
-    // this->last_allocated = &this->page_entries[this->pte_part + pte_idx];
-    ret = true;
-  }
+  //// TODO: replace this with the ACTUAL pld part.
+  // page_entry &pmd_e = this->page_entries[this->pmd_part + pmd_part +
+  // pmd_idx]; uint32_t pte_part = pmd_e.page_addr; if (!pmd_e.present) {
+  //   std::cout << "(add)PMD Entry addr: " << this->pmd_part + pmd_part +
+  //   pmd_idx
+  //             << std::endl;
+  //   this->add_page_entry(this->pmd_part + pmd_part + pmd_idx,
+  //                        pmd_idx << page_shift, perms);
+  //   ret = true;
+  //   pte_part = pmd_idx;
+  // }
+
+  // page_entry &pte_e = this->page_entries[this->pte_part + pte_part +
+  // pte_idx];
+  //// Have we already put a pte here?
+  // if (!pte_e.present) {
+  //   // If no pte here yet, make sure we allocate some memory first
+  //   addr page = (addr)alloc_page();
+  //   std::cout << "Page: 0x" << std::hex << page << std::endl;
+  //   this->add_page_entry(this->pte_part + pte_part + pte_idx, (addr)page,
+  //                        perms);
+
+  //  // Store ref to last allocated page so we can recall it ez
+  //  // Using idx here is fine as theres an assertion in add_page_entry that
+  //  // checks it.
+  //  // this->last_allocated = &this->page_entries[this->pte_part + pte_idx];
+  //  ret = true;
+  //}
 
   return ret;
 }
@@ -165,34 +190,52 @@ page_entry &PageDirectory::get_pte_from_vaddr(virt_addr vaddr) {
   std::cout << "PTE idx: " << pte_idx << std::endl;
 
   // Now we have IDXs, navigate the layers of paging
-  page_entry &pld_e = this->get_page_entry(this->pld_part + pld_idx);
-  if (!pld_e.present) {
+  page_entry *pld_e1 = &this->pld_ents[pld_idx];
+  page_entry *pmd_ptr = (page_entry *)(pld_e1->page_addr << page_shift);
+  if (!pld_e1->present) {
     // Do a page fault or something, this address doesnt exist.
     throw PageException((char *)"Page fault in PLD, not present. Off:",
                         pld_idx);
   }
-
-  std::cout << "PMD Entry addr: " << pld_e.page_addr + pmd_idx << std::endl;
-  uint32_t pmd_part = pld_e.page_addr;
-  page_entry &pmd_e = this->get_page_entry(pmd_part + pmd_idx);
-  if (!pmd_e.present) {
+  page_entry *pmd_e1 = &pmd_ptr[pmd_idx];
+  page_entry *pte_ptr = (page_entry *)(pmd_e1->page_addr << page_shift);
+  if (!pmd_e1->present) {
     // Do a page fault or something, this address doesnt exist.
     throw PageException((char *)"Page fault in PMD, not present. Off:",
-                        pte_idx);
+                        pmd_idx);
   }
 
-  std::cout << "PTE Entry addr: " << pmd_e.page_addr << std::endl;
-  uint32_t pte_part = pmd_e.page_addr;
-  page_entry &pte_e = this->get_page_entry(pte_part + pte_idx);
-  if (!pte_e.present) {
+  page_entry *pte_e = &pte_ptr[pte_idx];
+  phys_addr pte = (pte_e->page_addr << page_shift);
+  if (!pte_e->present) {
     // Do a page fault or something, this address doesnt exist.
     throw PageException((char *)"Page fault in PTE, not present. Off:",
                         pte_idx);
   }
 
-  std::cout << "Entry addr: " << pte_e.page_addr << std::endl;
-  // If all present, we assume we ok to return entry
-  return pte_e;
+  // uint32_t pmd_part = pld_e.page_addr;
+  // uint32_t pmd_idx_full = this->pmd_part + pmd_part + pmd_idx;
+  // std::cout << "PMD Entry addr: " << pmd_idx_full << std::endl;
+  // page_entry &pmd_e = this->get_page_entry(pmd_idx_full);
+  // if (!pmd_e.present) {
+  //   // Do a page fault or something, this address doesnt exist.
+  //   throw PageException((char *)"Page fault in PMD, not present. Off:",
+  //                       pmd_idx_full);
+  // }
+
+  // uint32_t pte_part = pmd_e.page_addr;
+  // uint32_t pte_idx_full = this->pte_part + pte_part + pte_idx;
+  // std::cout << "PTE Entry addr: " << pmd_e.page_addr << std::endl;
+  // page_entry &pte_e = this->get_page_entry(pte_idx_full);
+  // if (!pte_e.present) {
+  //   // Do a page fault or something, this address doesnt exist.
+  //   throw PageException((char *)"Page fault in PTE, not present. Off:",
+  //                       pte_idx);
+  // }
+
+  // std::cout << "Entry addr: " << pte_e.page_addr << std::endl;
+  //  If all present, we assume we ok to return entry
+  return *pte_e;
 }
 page_entry *PageDirectory::get_last_alloc() { return this->last_allocated; }
 
@@ -252,7 +295,7 @@ void MMU::write_many(virt_addr start, byte *data, uint32_t num) {
 }
 
 bool MMU::is_rx(const page_entry &pe) {
-  return pe.present && pe.rwx & (PagePerms::rx_mask);
+  return pe.present && (pe.rwx & (PagePerms::rx_mask)) == PagePerms::rx_mask;
 }
 
 bool MMU::is_rx(virt_addr va) {

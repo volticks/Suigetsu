@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
     emu.get_mmu().map_range(prog_start + (n_pages * page_size), 100, 0b111);
 
     // Another data test page
-    emu.get_mmu().get_pd().add_page(0x41414000, PagePerms::rw_mask);
+    emu.get_mmu().get_pd().add_page(0x41414000, PagePerms::rwx_mask);
     // Constructor for page_entry already sets these up, but just to make sure.
     // emu.get_mmu().get_pd().get_last_alloc()->rwx |= PagePerms::rw_mask;
 

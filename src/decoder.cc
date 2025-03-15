@@ -2,6 +2,7 @@
 #include "instruction.h"
 #include "opcode.h"
 #include "registers.h"
+#include <algorithm>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -31,6 +32,10 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
   inst_op op = *data;
   inst_op op_nib_up = nib_up(op);
   inst_op op_nib_low = nib_low(op);
+  // Call has to be flipped around cuz its weird, so we do a reverse copy into
+  // this buffer here
+  inst_data call_args[7 + 1] = {0};
+  bool ok = false;
   ArgKind reg;
   bool use_d;
   uint8_t idx;
@@ -299,7 +304,18 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       arg_sz = 2;
       ins_out.sz = (ins_out.op == CALL) ? InsSzSn::S4 : InsSzSn::S2;
       ins_out.kinds[0] = ArgKind::d16;
-      ins_out.kinds[1] = ArgKind::PC;
+      if (ins_out.op == CALL) {
+        arg_sz = 4;
+        ins_out.kinds[2] = ArgKind::imm8;
+        ins_out.kinds[1] = ArgKind::regs;
+        ins_out.kinds[0] = ArgKind::d16;
+
+        std::reverse_copy(data + 1, data + 5, call_args + 1);
+        call_args[0] = op;
+        ok = true;
+      } else
+        ins_out.kinds[1] = ArgKind::PC;
+
       // TODO
     } else {
       // TODO
@@ -333,11 +349,32 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       break;
     }
 
+    add_args = true;
+    arg_sz = 4;
     ins_out.kinds[0] = ArgKind::d32;
     ins_out.kinds[1] = ArgKind::PC;
     ins_out.sz = (ins_out.op == CALL) ? InsSzSn::S6 : InsSzSn::S4;
-    add_args = true;
-    arg_sz = 4;
+
+    if (ins_out.op == CALL) {
+      arg_sz = 6;
+      ins_out.kinds[2] = ArgKind::imm8;
+      ins_out.kinds[1] = ArgKind::regs;
+      ins_out.kinds[0] = ArgKind::d32;
+      // TODO: Is this safe?
+      // Cuz we reversed it its now in the wrong direction, so correct that
+      std::reverse_copy(data + 1, data + 7, call_args + 1);
+      // std::cout << "CALL ARG: " << std::hex
+      //           << ntohl(*(reg_type *)(call_args + 3)) << std::endl;
+      //*(reg_type *)(call_args + 3) = ntohl(*(reg_type *)(call_args + 3));
+      call_args[0] = op;
+      ok = true;
+      break;
+    }
+
+    // TODO: Think this stuff is redundant now.
+    // ins_out.kinds[1] = ArgKind::regs;
+    // ins_out.kinds[2] = ArgKind::imm8;
+    // arg_sz = 6;
 
     break;
   }
@@ -361,14 +398,26 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
     break;
   }
   }
+
+  // Necessary as call does args in opposite order to most other tihngs lol
+  if (ins_out.op == CALL) {
+    data = call_args;
+    num_args = 3;
+  }
   if (add_args && arg_sz) {
     data++;
-    if (data + arg_sz > this->end) {
+    if (data + arg_sz > this->end && !ok) {
       // Cant decode if we go oob
       ins_out.sz = 0;
       arg_sz = 0;
     }
-    ins_out.arg_add(data, arg_sz);
+
+    /// TODOOO
+    if (num_args > 1) {
+      ins_out.copy_data_args(data, arg_sz);
+    } else {
+      ins_out.arg_add(data, arg_sz);
+    }
   }
 
   ins_out.log();

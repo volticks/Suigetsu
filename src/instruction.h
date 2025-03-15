@@ -1,8 +1,10 @@
 #pragma once
 #include "instruction.h"
+#include <cassert>
 #include <cstdint>
 #include <cstdio>
 #include <iostream>
+#include <vector>
 typedef uint8_t inst_data;
 typedef uint8_t inst_op;
 
@@ -404,6 +406,7 @@ struct Instruction {
         // TODO: decoding and logging of registers in these things???
         if (kind == ArgKind::regs) {
           std::cout << "regs";
+          d_idx -= 1;
           i++;
           continue;
         }
@@ -427,6 +430,35 @@ struct Instruction {
       i++;
     }
     std::cout << std::endl;
+  }
+
+  uint32_t get_arg(uint32_t kindno) const {
+    static const uint32_t end = sizeof(this->args) / sizeof(this->args[0]);
+    assert(kindno < end);
+
+    const ArgKind src = this->kinds[kindno];
+    uint32_t s = 0;
+
+    uint32_t idx = 0;
+    if (kindno > 0) {
+      // Need to add sizes of other kinds
+      idx += get_arg_sz(this->kinds[0]);
+      if (kindno > 1)
+        idx += get_arg_sz(this->kinds[1]);
+    }
+
+    // TODO: extend for abs where appropriate?
+    uint8_t sz = get_arg_sz(src);
+
+    // TODO: Im a lazy bastard who writes asserts instead of throwing exceptions
+    assert(idx + sz <= end && this->curr >= idx + sz);
+
+    for (int i = idx + sz; i > idx && i > 0; i--) {
+      s <<= 8;
+      s += this->args[this->curr - i];
+    }
+
+    return s;
   }
 
 }; // typedef Instruction;

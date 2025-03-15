@@ -103,6 +103,10 @@ private:
   //
   // Disregard above, this performs all these functions by itself
   std::vector<page_entry> page_entries;
+  // Used for tracking and freeing of pages after we are done with them
+  std::vector<phys_addr> pages;
+  // Additional entries will be allocated and tagged on from here
+  page_entry pld_ents[page_idx_mask];
   // Store the last page allocated for easy access.
   page_entry *last_allocated;
 

@@ -240,7 +240,7 @@ const char *arg_kind_to_str(ArgKind arg) {
 
 // Is our argument data?
 bool arg_isdata(ArgKind kind) {
-  return kind >= ArgKind::imm8 && kind <= ArgKind::d32;
+  return kind >= ArgKind::imm8 && kind <= ArgKind::d32 || kind == ArgKind::regs;
 }
 
 uint32_t get_arg_sz(ArgKind kind) {
@@ -248,6 +248,7 @@ uint32_t get_arg_sz(ArgKind kind) {
   if (!arg_isdata(kind))
     return sz;
   switch (kind) {
+  case ArgKind::regs:
   case ArgKind::imm8:
   case ArgKind::d8:
     sz = 1;

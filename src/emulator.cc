@@ -3,6 +3,7 @@
 #include "mmu.h"
 #include "registers.h"
 #include <bit>
+#include <cassert>
 #include <cstdint>
 #include <cstring>
 #include <iostream>
@@ -47,7 +48,6 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
         // necessary.
 
         cached_next = mmu.get_pd().get_pte_from_vaddr(pc + max_ins);
-        mmu.get_pd().get_pte_from_vaddr(0x64000);
         if (!this->mmu.is_rx(cached_next)) {
           bad = true;
           throw PageException("Cant exec page: ", pc + max_ins);
@@ -72,8 +72,8 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
         if (bad) {
           std::cerr << "Emulator::emu_loop page not executable, bailing"
                     << std::endl;
-          break;
         }
+        break;
       }
       // Not readable or executable, bail if we access.
       if (!this->mmu.is_rx(cached) || !this->mmu.is_rx(cached_next_prev))
@@ -195,6 +195,23 @@ reg_type Emulator::get_val(ArgKind src, const Instruction &ins) {
   } else {
     s = regs.get(src);
   }
+  return s;
+}
+reg_type Emulator::get_val(uint32_t kindno, const Instruction &ins) {
+  assert(kindno < sizeof(ins.kinds) / sizeof(ins.kinds[0]));
+  ArgKind src = ins.kinds[kindno];
+  reg_type s;
+
+  if (is_reg(src)) {
+    s = regs.get(src);
+    return s;
+  }
+
+  s = ins.get_arg(kindno);
+
+  // else {
+  //   s = regs.get(src);
+  // }
   return s;
 }
 
@@ -981,6 +998,21 @@ bool Emulator::handle_jmp(const Instruction &ins) {
   return true;
 }
 
+bool Emulator::handle_call(const Instruction &ins) {
+
+  virt_addr callee = get_val(0, ins);
+  reg_type regs = get_val(1, ins);
+  reg_type sp_off = get_val(2, ins);
+
+  std::cout << "Emulator::handle_call callee -> " << std::hex << callee
+            << std::endl;
+  std::cout << "Emulator::handle_call regs -> " << std::hex << regs
+            << std::endl;
+  std::cout << "Emulator::handle_call sp_off -> " << std::hex << sp_off
+            << std::endl;
+
+  return true;
+}
 // Do nothing, basically
 // TODO: Could also add some additional stuff here so it looks like its
 // performing a syscall.
@@ -1127,6 +1159,7 @@ bool Emulator::execute_insn(const Instruction &ins) {
     break;
   case CALL:
     // Handle CALL instruction
+    handle_call(ins);
     break;
   case CALLS:
     // Handle CALLS instruction

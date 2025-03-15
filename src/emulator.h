@@ -64,6 +64,8 @@ public:
   bool handle_bcc(const Instruction &ins);
   bool handle_lcc(const Instruction &ins);
   bool handle_jmp(const Instruction &ins);
+  // TODO: constness removed to evade annoying error, fix maybe.
+  bool handle_call(const Instruction &ins);
   // ...
   bool handle_trap(const Instruction &ins);
   bool handle_nop(const Instruction &ins);
@@ -76,6 +78,7 @@ public:
   // Get value either imm/whatever and sign extend (if applicable) or just
   // return it.
   reg_type get_val(ArgKind src, const Instruction &ins);
+  reg_type get_val(uint32_t kindno, const Instruction &ins);
   // Set registers/memory/whatever. Yes, also has to be in header. Ugly.
   template <typename T>
   void set_val(ArgKind src, T val, const Instruction &ins) {
