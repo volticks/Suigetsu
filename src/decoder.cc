@@ -3,6 +3,7 @@
 #include "opcode.h"
 #include "registers.h"
 #include <algorithm>
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -310,7 +311,10 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
         ins_out.kinds[1] = ArgKind::regs;
         ins_out.kinds[0] = ArgKind::d16;
 
+        // TODO: I dont like this but due to how finnicky call is with its
+        // arguments its necessary
         std::reverse_copy(data + 1, data + 5, call_args + 1);
+        *(uint16_t *)(call_args + 3) = ntohs(*(uint16_t *)(call_args + 3));
         call_args[0] = op;
         ok = true;
       } else
@@ -365,7 +369,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       std::reverse_copy(data + 1, data + 7, call_args + 1);
       // std::cout << "CALL ARG: " << std::hex
       //           << ntohl(*(reg_type *)(call_args + 3)) << std::endl;
-      //*(reg_type *)(call_args + 3) = ntohl(*(reg_type *)(call_args + 3));
+      *(reg_type *)(call_args + 3) = ntohl(*(reg_type *)(call_args + 3));
       call_args[0] = op;
       ok = true;
       break;

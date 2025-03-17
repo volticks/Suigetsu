@@ -267,6 +267,8 @@ public:
   void map_range(virt_addr start, uint32_t num, byte rwx);
 
   void write_many(virt_addr start, byte *data, uint32_t num);
+  // Logs num dwords from start virt addr.
+  void log_many(virt_addr start, uint32_t num);
 
   bool is_rx(virt_addr va);
   bool is_rx(const page_entry &pe);

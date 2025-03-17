@@ -28,6 +28,7 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
   page_entry cached_next_prev;
   reg_type pc;
   inst_data *real_ins = (inst_data *)((cached.page_addr << page_shift));
+  inst_data *real_ins_cpy = real_ins;
 
   inst_data decode_spillover[max_ins * 2] = {0};
 
@@ -56,7 +57,7 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
         // If the first part of the split isnt on the current page, check the
         // page it IS on.
 
-        if (pc > curr + page_size) {
+        if (pc >= curr + page_size) {
           cached_next_prev = mmu.get_pd().get_pte_from_vaddr(pc);
           // We gud,
           real_ins = (inst_data *)(cached_next_prev.page_addr << 12) +
@@ -96,6 +97,8 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
         std::memcpy(decode_spillover, real_ins, read1);
         std::memcpy(decode_spillover + read1,
                     (inst_data *)(cached_next.page_addr << 12), read2);
+        // Save to enable reassigning if we didnt go oob.
+        real_ins_cpy = real_ins;
         // This is temporary, will be reassigned.
         real_ins = decode_spillover;
       }
@@ -108,11 +111,19 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
     //           << " OP (enum): " << std::hex << (int)curr_ins.op << std::endl;
 
     bool oob = pc + curr_ins.sz > (curr + page_size);
+
+    // If we didnt go oob we need to restore this immediately so we can resume
+    // where we left off
+    if (!oob && real_ins == decode_spillover) {
+      real_ins = real_ins_cpy;
+    }
+
     //  Instruction decoding would go OOB...
     if (!bad_next && oob) {
       cached = cached_next;
       // Also need to remember to reassign the ptr we r using innit
-      uint32_t off = (pc + curr_ins.sz) & 0xfff;
+      // uint32_t off = (pc + curr_ins.sz) & 0xfff;
+      uint32_t off = pc & (page_size - 1);
       curr = (pc + curr_ins.sz) & ~(page_size - 1);
       real_ins = (inst_data *)(cached.page_addr << 12) + off;
     }
@@ -134,9 +145,10 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
     execute_insn(curr_ins);
 
     // Only re-set pc if we dont set it outrselves via an instruction
-    if (pc == regs.get_pc())
+    if (pc == regs.get_pc()) {
       regs.set_pc(pc + curr_ins.sz);
-    real_ins += curr_ins.sz;
+      real_ins += curr_ins.sz;
+    }
     // std::cout << "Emulator::emu_loop, new PC: " << registers.get_pc()
     //           << std::endl;
     it += curr_ins.sz;
@@ -990,6 +1002,139 @@ bool Emulator::handle_rol(const Instruction &ins) {
   return true;
 }
 
+// TODO: Test
+bool Emulator::handle_bcc(const Instruction &ins) {
+  bool cnd;
+  reg_type psw = regs.get(ArgKind::PSW);
+
+  bool z = psw & PswBits::Z;
+  bool n = psw & PswBits::N;
+  bool c = psw & PswBits::C;
+  bool v = psw & PswBits::V;
+
+  switch (ins.op) {
+  case BEQ:
+    cnd = z;
+    break;
+  case BNE:
+    cnd = !z;
+    break;
+  case BGT:
+    cnd = !z || !(n ^ v);
+    break;
+  case BGE:
+    cnd = !(n ^ v);
+    break;
+  case BLE:
+    cnd = z || (n ^ v);
+    break;
+  case BLT:
+    cnd = n ^ v;
+    break;
+  case BHI:
+    cnd = !c || !z;
+    break;
+  case BCC:
+    cnd = !c;
+    break;
+  case BLS:
+    // TODO: Maybe use single or
+    cnd = c || z;
+    break;
+  case BCS:
+    cnd = c;
+    break;
+  case BVC:
+    cnd = !v;
+    break;
+  case BVS:
+    cnd = v;
+    break;
+  case BNC:
+    cnd = !n;
+    break;
+  case BNS:
+    cnd = n;
+    break;
+  case BRA:
+    cnd = true;
+    break;
+  }
+
+  if (!cnd)
+    return false;
+  // Its just a dmp in this case
+  handle_jmp(ins);
+  return true;
+}
+// TODO: Test
+bool Emulator::handle_lcc(const Instruction &ins) {
+  bool cnd;
+  reg_type psw = regs.get(ArgKind::PSW);
+  reg_type lar = regs.get(ArgKind::LAR);
+
+  bool z = psw & PswBits::Z;
+  bool n = psw & PswBits::N;
+  bool c = psw & PswBits::C;
+  bool v = psw & PswBits::V;
+
+  switch (ins.op) {
+  case LEQ:
+    cnd = z;
+    break;
+  case LNE:
+    cnd = !z;
+    break;
+  case LGT:
+    cnd = !z || !(n ^ v);
+    break;
+  case LGE:
+    cnd = !(n ^ v);
+    break;
+  case LLE:
+    cnd = z || (n ^ v);
+    break;
+  case LLT:
+    cnd = n ^ v;
+    break;
+  case LHI:
+    cnd = !c || !z;
+    break;
+  case LCC:
+    cnd = !c;
+    break;
+  case LLS:
+    // TODO: Maybe use single or
+    cnd = c || z;
+    break;
+  case LCS:
+    cnd = c;
+    break;
+  case LRA:
+    cnd = true;
+    break;
+  }
+
+  if (cnd)
+    lar -= 4;
+  else
+    lar += 1;
+
+  regs.set_pc(lar);
+  // Its just a dmp in this case
+  return true;
+}
+
+// TODO: Test
+bool Emulator::handle_setlb(const Instruction &ins) {
+
+  reg_type pc = regs.get_pc();
+  regs.set(ArgKind::LIR, mmu.read<reg_type>(pc + 1));
+  regs.set(ArgKind::LAR, pc + 5);
+
+  return true;
+}
+
 bool Emulator::handle_jmp(const Instruction &ins) {
 
   reg_type addr = get_val(ins.kinds[0], ins);
@@ -1000,23 +1145,201 @@ bool Emulator::handle_jmp(const Instruction &ins) {
 
 bool Emulator::handle_call(const Instruction &ins) {
 
-  virt_addr callee = get_val(0, ins);
-  reg_type regs = get_val(1, ins);
+  reg_type callee = get_val(0, ins);
+  reg_type reg = get_val(1, ins);
   reg_type sp_off = get_val(2, ins);
+  reg_type sp = regs.get(ArgKind::SP);
+  int idx = 0;
 
   std::cout << "Emulator::handle_call callee -> " << std::hex << callee
             << std::endl;
-  std::cout << "Emulator::handle_call regs -> " << std::hex << regs
-            << std::endl;
+  std::cout << "Emulator::handle_call regs -> " << std::hex << reg << std::endl;
   std::cout << "Emulator::handle_call sp_off -> " << std::hex << sp_off
             << std::endl;
 
+  ArgKind kinds[11] = {(ArgKind)0};
+
+  if (reg & MovmBits::other) {
+
+    std::cout << "Emulator::handle_movm Other found, doing funny business"
+              << std::endl;
+
+    // Dummy
+    // addr += 4;
+    // Move a bunch of registers to/from SP
+
+    const ArgKind other_kinds[] = {ArgKind::LAR, ArgKind::LIR, ArgKind::MDR,
+                                   ArgKind::A1,  ArgKind::A0,  ArgKind::D1,
+                                   ArgKind::D0,  ArgKind::A3,  ArgKind::A2,
+                                   ArgKind::D3,  ArgKind::D2};
+
+    std::memcpy((void *)kinds, other_kinds, sizeof(kinds));
+
+  } else {
+
+    std::cout << "Emulator::handle_movm normal registers" << std::endl;
+    // This is marginally less ugly.
+    if (reg & MovmBits::a3) {
+      kinds[idx++] = ArgKind::A3;
+    }
+    if (reg & MovmBits::a2) {
+      kinds[idx++] = ArgKind::A2;
+    }
+    if (reg & MovmBits::d3) {
+      kinds[idx++] = ArgKind::D3;
+    }
+    if (reg & MovmBits::d2) {
+      kinds[idx++] = ArgKind::D2;
+    }
+
+    if (idx != 0)
+      idx--;
+  }
+
+  // TODO: Now actually store the registers
+
+  uint32_t sp_cp = sp;
+
+  std::cout << "Emulator::handle_call SP before:" << std::endl;
+  mmu.log_many(sp - 48, 22);
+
+  reg_type pc = regs.get_pc();
+  reg_type saved_pc = pc + ins.sz;
+  mmu.write(sp_cp, saved_pc);
+  for (; idx >= 0; idx--) {
+    sp_cp -= 4;
+    mmu.write(sp_cp, regs.get(kinds[idx]));
+  }
+
+  std::cout << "Emulator::handle_call SP after:" << std::endl;
+  mmu.log_many(sp - 48, 22);
+  // TODO: Also set SP-imm8(zero_ext)->SP, PC+?->MDR, PC+d32->PC
+
+  regs.set(ArgKind::SP, sp - sp_off);
+  regs.set(ArgKind::MDR, saved_pc);
+  regs.set(ArgKind::PC, pc + callee);
+
   return true;
 }
-// Do nothing, basically
+
+// TODO: Test
+bool Emulator::handle_calls(const Instruction &ins) {
+  ArgKind src = ins.kinds[0];
+  reg_type callee = get_val(0, ins);
+  reg_type pc = regs.get(ArgKind::PC);
+  reg_type sp = regs.get(ArgKind::SP);
+
+  regs.set(ArgKind::MDR, pc + ins.sz);
+  mmu.write(sp, pc + ins.sz);
+
+  // Use displacement
+  if (!is_reg(src)) {
+    callee = pc + callee;
+  }
+
+  regs.set(ArgKind::PC, callee);
+
+  return true;
+}
+
+// TODO: Test
+bool Emulator::handle_ret(const Instruction &ins) {
+
+  reg_type retaddr;
+  reg_type sp = regs.get(ArgKind::SP);
+  reg_type pc = regs.get_pc();
+  int idx = 0;
+
+  if (ins.op == RET || ins.op == RETS)
+    retaddr = mmu.read<reg_type>(sp);
+  else
+    retaddr = regs.get(ArgKind::MDR); // No idea why they chose to use MDR
+
+  regs.set_pc(retaddr);
+
+  // Rets doesnt restore any registers
+  if (ins.op == RETS)
+    return true;
+
+  reg_type reg = get_val(0, ins);
+  reg_type sp_off = get_val(1, ins);
+
+  // Now handle register shenanigans
+
+  std::cout << "Emulator::handle_ret regs -> " << std::hex << reg << std::endl;
+  std::cout << "Emulator::handle_ret sp_off -> " << std::hex << sp_off
+            << std::endl;
+
+  ArgKind kinds[11] = {(ArgKind)0};
+
+  if (reg & MovmBits::other) {
+
+    std::cout << "Emulator::handle_movm Other found, doing funny business"
+              << std::endl;
+
+    // Dummy
+    // addr += 4;
+    // Move a bunch of registers to/from SP
+
+    const ArgKind other_kinds[] = {ArgKind::LAR, ArgKind::LIR, ArgKind::MDR,
+                                   ArgKind::A1,  ArgKind::A0,  ArgKind::D1,
+                                   ArgKind::D0,  ArgKind::A3,  ArgKind::A2,
+                                   ArgKind::D3,  ArgKind::D2};
+
+    std::memcpy((void *)kinds, other_kinds, sizeof(kinds));
+
+  } else {
+
+    std::cout << "Emulator::handle_movm normal registers" << std::endl;
+    // This is marginally less ugly.
+    if (reg & MovmBits::a3) {
+      kinds[idx++] = ArgKind::A3;
+    }
+    if (reg & MovmBits::a2) {
+      kinds[idx++] = ArgKind::A2;
+    }
+    if (reg & MovmBits::d3) {
+      kinds[idx++] = ArgKind::D3;
+    }
+    if (reg & MovmBits::d2) {
+      kinds[idx++] = ArgKind::D2;
+    }
+
+    if (idx != 0)
+      idx--;
+  }
+
+  sp += sp_off;
+  regs.set(ArgKind::SP, sp);
+
+  std::cout << "Emulator::handle_ret SP area:" << std::endl;
+  mmu.log_many(sp - 44, 11);
+
+  for (int disp = -44; idx >= 0 && disp <= -4; idx--, disp += 4) {
+    regs.set(kinds[idx], mmu.read<reg_type>(sp - disp));
+  }
+
+  return true;
+}
+
+// TODO: Test
+bool Emulator::handle_rti(const Instruction &ins) {
+  reg_type sp = regs.get(ArgKind::SP);
+  regs.set(ArgKind::PSW, mmu.read<uint16_t>(sp));
+  regs.set_pc(mmu.read<reg_type>(sp + 4));
+  regs.set(ArgKind::SP, sp + 8);
+  return true;
+}
+
 // TODO: Could also add some additional stuff here so it looks like its
 // performing a syscall.
-bool Emulator::handle_trap(const Instruction &ins) { return true; }
+bool Emulator::handle_trap(const Instruction &ins) {
+  reg_type pc = regs.get_pc();
+  mmu.write(regs.get(ArgKind::SP), pc + 2);
+  // Why this? It was in the manual.
+  regs.set_pc(0x40000010);
+  return true;
+}
 bool Emulator::handle_nop(const Instruction &ins) { return true; }
 
 bool Emulator::execute_insn(const Instruction &ins) {
@@ -1146,6 +1469,7 @@ bool Emulator::execute_insn(const Instruction &ins) {
   // Control flow operations
   case Bcc:
     // Handle Bcc instruction
+    handle_bcc(ins);
     break;
   case Lcc:
     // Handle Lcc instruction
@@ -1177,11 +1501,9 @@ bool Emulator::execute_insn(const Instruction &ins) {
   case RETS:
     // Handle RETS instruction
     break;
-  case RTS_1:
-    // Handle RTS_1 instruction
-    break;
   case RTI:
     // Handle RTI instruction
+    handle_rti(ins);
     break;
   // Miscellaneous operations
   case NOP:
@@ -1202,58 +1524,44 @@ bool Emulator::execute_insn(const Instruction &ins) {
   // Branch variants
   case BLT:
     // Handle BLT instruction
-    break;
   case BGT:
     // Handle BGT instruction
-    break;
   case BGE:
     // Handle BGE instruction
-    break;
   case BLE:
     // Handle BLE instruction
-    break;
   case BCS:
     // Handle BCS instruction
-    break;
   case BHI:
     // Handle BHI instruction
-    break;
   case BCC:
     // Handle BCC instruction
-    break;
   case BLS:
     // Handle BLS instruction
-    break;
   case BEQ:
     // Handle BEQ instruction
-    break;
   case BNE:
     // Handle BNE instruction
-    break;
   case BRA:
     // Handle BRA instruction
+    handle_bcc(ins);
     break;
   // Loop execution instructions
   case LLT:
     // Handle LLT instruction
-    break;
   case LGT:
     // Handle LGT instruction
-    break;
   case LGE:
     // Handle LGE instruction
-    break;
   case LLE:
     // Handle LLE instruction
-    break;
   case LCS:
     // Handle LCS instruction
-    break;
   case LHI:
     // Handle LHI instruction
-    break;
   case LCC:
     // Handle LCC instruction
+    handle_lcc(ins);
     break;
   case LLS:
     // Handle LLS instruction
@@ -1269,6 +1577,7 @@ bool Emulator::execute_insn(const Instruction &ins) {
     break;
   case SETLB:
     // Handle SETLB instruction
+    handle_setlb(ins);
     break;
   // Additional branch instructions
   case BVC:

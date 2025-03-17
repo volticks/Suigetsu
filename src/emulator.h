@@ -63,7 +63,12 @@ public:
   bool handle_rol(const Instruction &ins);
   bool handle_bcc(const Instruction &ins);
   bool handle_lcc(const Instruction &ins);
+  bool handle_setlb(const Instruction &ins);
   bool handle_jmp(const Instruction &ins);
+
+  bool handle_calls(const Instruction &ins);
+  bool handle_ret(const Instruction &ins);
+  bool handle_rti(const Instruction &ins);
   // TODO: constness removed to evade annoying error, fix maybe.
   bool handle_call(const Instruction &ins);
   // ...

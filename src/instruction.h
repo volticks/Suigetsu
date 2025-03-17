@@ -1,10 +1,11 @@
 #pragma once
 #include "instruction.h"
+#include <bit>
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
 #include <iostream>
-#include <vector>
+#include <netinet/in.h>
 typedef uint8_t inst_data;
 typedef uint8_t inst_op;
 
@@ -452,10 +453,10 @@ struct Instruction {
 
     // TODO: Im a lazy bastard who writes asserts instead of throwing exceptions
     assert(idx + sz <= end && this->curr >= idx + sz);
-
+    uint8_t curr = 0;
     for (int i = idx + sz; i > idx && i > 0; i--) {
-      s <<= 8;
-      s += this->args[this->curr - i];
+      curr = this->args[this->curr - i];
+      s += curr << (8 * ((idx + sz) - i));
     }
 
     return s;

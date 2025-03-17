@@ -294,6 +294,28 @@ void MMU::write_many(virt_addr start, byte *data, uint32_t num) {
   }
 }
 
+void MMU::log_many(virt_addr start, uint32_t num) {
+  // For convenience here we ignore page perms.
+  uint32_t n = 0;
+  virt_addr curr = start;
+  while (num > 0) {
+    // We just gonna memcpy the data page by page
+    n = std::min(page_size, num);
+    page_entry &pe = this->get_pd().get_pte_from_vaddr(curr);
+    uint32_t *addr =
+        (uint32_t *)(pe.page_addr << page_shift) + (start & (page_size - 1));
+
+    for (int i = 0; i < num; i++) {
+      printf("0x%08llx // 0x%04x : 0x%04x\n", addr + i, start + (i * 4),
+             addr[i]);
+    }
+
+    curr += n;
+    num -= n;
+    start = 0;
+  }
+}
+
 bool MMU::is_rx(const page_entry &pe) {
   return pe.present && (pe.rwx & (PagePerms::rx_mask)) == PagePerms::rx_mask;
 }
