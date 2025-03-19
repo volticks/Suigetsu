@@ -102,6 +102,11 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
         // This is temporary, will be reassigned.
         real_ins = decode_spillover;
       }
+    } else {
+      // Within same page, re-assign real_ins so we align
+      // This is some freaky freaky ptr shenanigans
+      real_ins = (inst_data *)((uint64_t)real_ins & ~(uint64_t)(page_size - 1));
+      real_ins += pc & (page_size - 1);
     }
 
     // decoder.decode_inst(it.base(), end.base(), curr_ins);
@@ -345,6 +350,7 @@ template <typename T> bool Emulator::handle_mov(const Instruction &ins) {
 bool Emulator::handle_movm(const Instruction &ins) {
 
   Op op;
+  // Will be SP
   reg_type addr = get_val_mem(ins, &op);
   const uint32_t kidx = (op + 1) % 2;
   // Should fingies crossed be our registers.
@@ -355,6 +361,8 @@ bool Emulator::handle_movm(const Instruction &ins) {
   int idx = 0;
   int toadd = -4;
   ArgKind kinds[11] = {(ArgKind)0};
+
+  regs.dump_regs();
 
   if (reg & MovmBits::other) {
 
@@ -400,11 +408,14 @@ bool Emulator::handle_movm(const Instruction &ins) {
     toadd = 4;
   }
 
+  // Other uses a kinda "dummy" area before we start.
+  if (reg & MovmBits::other || (op == W && !(reg & MovmBits::other)))
+    addr += toadd;
+
   for (; idx < (sizeof(kinds) / sizeof(kinds[0])) && idx >= 0;) {
     if (kinds[idx] == ArgKind::NONE)
       break;
 
-    addr += toadd;
     if (op == W) {
       mmu.write(addr, regs.get(kinds[idx]));
       idx--;
@@ -412,11 +423,16 @@ bool Emulator::handle_movm(const Instruction &ins) {
       regs.set(kinds[idx], mmu.read<reg_type>(addr));
       idx++;
     }
+    addr += toadd;
   }
-  addr += toadd;
+
+  // Dont wanna take too many
+  if (op == W)
+    addr -= toadd;
 
   regs.set(ArgKind::SP, addr);
 
+  regs.dump_regs();
   return true;
 }
 
@@ -1174,7 +1190,7 @@ bool Emulator::handle_call(const Instruction &ins) {
                                    ArgKind::D3,  ArgKind::D2};
 
     std::memcpy((void *)kinds, other_kinds, sizeof(kinds));
-
+    idx = 11 - 1;
   } else {
 
     std::cout << "Emulator::handle_movm normal registers" << std::endl;
@@ -1201,7 +1217,7 @@ bool Emulator::handle_call(const Instruction &ins) {
   uint32_t sp_cp = sp;
 
   std::cout << "Emulator::handle_call SP before:" << std::endl;
-  mmu.log_many(sp - 48, 22);
+  mmu.log_many(sp - 48, 10);
 
   reg_type pc = regs.get_pc();
   reg_type saved_pc = pc + ins.sz;
@@ -1250,16 +1266,11 @@ bool Emulator::handle_ret(const Instruction &ins) {
   reg_type pc = regs.get_pc();
   int idx = 0;
 
-  if (ins.op == RET || ins.op == RETS)
-    retaddr = mmu.read<reg_type>(sp);
-  else
-    retaddr = regs.get(ArgKind::MDR); // No idea why they chose to use MDR
-
-  regs.set_pc(retaddr);
-
   // Rets doesnt restore any registers
-  if (ins.op == RETS)
+  if (ins.op == RETS) {
+    retaddr = mmu.read<reg_type>(sp);
     return true;
+  }
 
   reg_type reg = get_val(0, ins);
   reg_type sp_off = get_val(1, ins);
@@ -1287,7 +1298,7 @@ bool Emulator::handle_ret(const Instruction &ins) {
                                    ArgKind::D3,  ArgKind::D2};
 
     std::memcpy((void *)kinds, other_kinds, sizeof(kinds));
-
+    idx = 11 - 1;
   } else {
 
     std::cout << "Emulator::handle_movm normal registers" << std::endl;
@@ -1312,10 +1323,20 @@ bool Emulator::handle_ret(const Instruction &ins) {
   sp += sp_off;
   regs.set(ArgKind::SP, sp);
 
-  std::cout << "Emulator::handle_ret SP area:" << std::endl;
-  mmu.log_many(sp - 44, 11);
+  if (ins.op == RET)
+    retaddr = mmu.read<reg_type>(sp);
+  else
+    retaddr = regs.get(ArgKind::MDR); // No idea why they chose to use MDR
 
-  for (int disp = -44; idx >= 0 && disp <= -4; idx--, disp += 4) {
+  regs.set_pc(retaddr);
+
+  std::cout << "Emulator::handle_ret SP area ( " << ((idx - 2) * 4)
+            << "):" << std::endl;
+  mmu.log_many(sp - ((idx - 2) * 4), 11);
+
+  // for (int disp = -44; idx >= 0 && disp <= -4; idx--, disp += 4) {
+  for (int disp = 4; idx >= 0 /* && disp <= ((idx - 2) * 4)*/;
+       idx--, disp += 4) {
     regs.set(kinds[idx], mmu.read<reg_type>(sp - disp));
   }
 
@@ -1490,16 +1511,16 @@ bool Emulator::execute_insn(const Instruction &ins) {
     break;
   case TRAP:
     // Handle TRAP instruction
+    handle_trap(ins);
     break;
   // Return operations
   case RET:
     // Handle RET instruction
-    break;
   case RETF:
     // Handle RETF instruction
-    break;
   case RETS:
     // Handle RETS instruction
+    handle_ret(ins);
     break;
   case RTI:
     // Handle RTI instruction
@@ -1508,6 +1529,7 @@ bool Emulator::execute_insn(const Instruction &ins) {
   // Miscellaneous operations
   case NOP:
     // Handle NOP instruction
+    handle_nop(ins);
     break;
   case UDFnn:
     // Handle UDFnn instruction
@@ -1542,6 +1564,14 @@ bool Emulator::execute_insn(const Instruction &ins) {
     // Handle BEQ instruction
   case BNE:
     // Handle BNE instruction
+  case BVC:
+    // Handle BVC instruction
+  case BVS:
+    // Handle BVS instruction
+  case BNC:
+    // Handle BNC instruction
+  case BNS:
+    // Handle BNS instruction
   case BRA:
     // Handle BRA instruction
     handle_bcc(ins);
@@ -1578,19 +1608,6 @@ bool Emulator::execute_insn(const Instruction &ins) {
   case SETLB:
     // Handle SETLB instruction
     handle_setlb(ins);
-    break;
-  // Additional branch instructions
-  case BVC:
-    // Handle BVC instruction
-    break;
-  case BVS:
-    // Handle BVS instruction
-    break;
-  case BNC:
-    // Handle BNC instruction
-    break;
-  case BNS:
-    // Handle BNS instruction
     break;
   default:
     // Handle unknown instruction

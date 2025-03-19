@@ -316,6 +316,8 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
         std::reverse_copy(data + 1, data + 5, call_args + 1);
         *(uint16_t *)(call_args + 3) = ntohs(*(uint16_t *)(call_args + 3));
         call_args[0] = op;
+        data = call_args;
+        num_args = 3;
         ok = true;
       } else
         ins_out.kinds[1] = ArgKind::PC;
@@ -350,6 +352,16 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       ins_out.kinds[1] = ArgKind::imm8;
       add_args = true;
       arg_sz = 2;
+
+      // Because yet again for some reason MN103 decides to invert the arg order
+      // we must yet again reverse
+      call_args[0] = op;
+      call_args[1] = data[2];
+      call_args[2] = data[1];
+      data = call_args;
+      num_args = 2;
+      ok = true;
+
       break;
     }
 
@@ -371,6 +383,8 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
       //           << ntohl(*(reg_type *)(call_args + 3)) << std::endl;
       *(reg_type *)(call_args + 3) = ntohl(*(reg_type *)(call_args + 3));
       call_args[0] = op;
+      data = call_args;
+      num_args = 3;
       ok = true;
       break;
     }
@@ -404,10 +418,10 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
   }
 
   // Necessary as call does args in opposite order to most other tihngs lol
-  if (ins_out.op == CALL) {
-    data = call_args;
-    num_args = 3;
-  }
+  // if (ins_out.op == CALL) {
+  //  data = call_args;
+  //  num_args = 3;
+  //}
   if (add_args && arg_sz) {
     data++;
     if (data + arg_sz > this->end && !ok) {

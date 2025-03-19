@@ -5,7 +5,7 @@
 
 Reg::Reg() : registers{0} {}
 
-reg_type Reg::get(ArgKind reg) {
+reg_type Reg::get(ArgKind reg, bool logging) {
   if (reg > reg_usable || reg <= ArgKind::NONE)
     throw RegisterException("Reg::get OOB");
 
@@ -21,8 +21,9 @@ reg_type Reg::get(ArgKind reg) {
     val &= 0xffff;
   }
 
-  std::cout << "Reg::get " << arg_kind_to_str(reg) << " has " << std::hex << val
-            << std::endl;
+  if (logging)
+    std::cout << "Reg::get " << arg_kind_to_str(reg) << " has " << std::hex
+              << val << std::endl;
   return val;
 }
 // Returns false for OOB accesses, true default
@@ -44,6 +45,16 @@ bool Reg::set(ArgKind reg, reg_type val) {
 
 reg_type Reg::get_pc() { return get(ArgKind::PC); }
 void Reg::set_pc(reg_type pc) { set(ArgKind::PC, pc); }
+
+void Reg::dump_regs() {
+  printf("Reg::dump_regs, dumping all registers\n");
+  uint32_t start = static_cast<uint32_t>(ArgKind::NONE) + 1;
+  uint32_t end = static_cast<uint32_t>(reg_usable);
+  for (; start < end; start++) {
+    printf("%s\t:%08x\n", arg_kind_to_str((ArgKind)start),
+           this->get((ArgKind)start, false));
+  }
+}
 
 // const char *reg_to_str(ArgKind reg) {
 //   switch (reg) {

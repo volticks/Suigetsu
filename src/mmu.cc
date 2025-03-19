@@ -302,11 +302,11 @@ void MMU::log_many(virt_addr start, uint32_t num) {
     // We just gonna memcpy the data page by page
     n = std::min(page_size, num);
     page_entry &pe = this->get_pd().get_pte_from_vaddr(curr);
-    uint32_t *addr =
-        (uint32_t *)(pe.page_addr << page_shift) + (start & (page_size - 1));
+    uint32_t start_off = (start & (page_size - 1)) / 4;
+    uint32_t *addr = (uint32_t *)(pe.page_addr << page_shift) + start_off;
 
     for (int i = 0; i < num; i++) {
-      printf("0x%08llx // 0x%04x : 0x%04x\n", addr + i, start + (i * 4),
+      printf("0x%08llx // 0x%08x : 0x%08x\n", addr + i, start + (i * 4),
              addr[i]);
     }
 

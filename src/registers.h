@@ -51,8 +51,10 @@ public:
   void set_pc(reg_type pc);
 
   // general register access
-  reg_type get(ArgKind reg);
+  reg_type get(ArgKind reg, bool logging = true);
   bool set(ArgKind reg, reg_type val);
+
+  void dump_regs();
 
 private:
   reg_type registers[num_reg];
