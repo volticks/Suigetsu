@@ -1,0 +1,10 @@
+Something like: 
+```
+sed "s/csmith.h/my_stdint.h/g;/platform_/d;/print_/d;" out/test.c > out/
+test_processed.c
+```
+
+Then compile normally.
+
+
+./Suigetsu ../src/tests/ins/fib 0 70 4096 > out_test.txt

@@ -21,7 +21,6 @@ enum PswBits {
   V = 0b1000,
 };
 
-// TODO: add Dn aswell
 enum InsSzSn {
   S0 = 1,
   S1 = 2,

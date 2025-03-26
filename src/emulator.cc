@@ -26,21 +26,25 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
   // Naming convention is a lil confusing here, basically the former part of the
   // split - if thats not the current page.
   page_entry cached_next_prev;
-  reg_type pc;
+  reg_type pc = 0, oldpc = 0;
   inst_data *real_ins = (inst_data *)((cached.page_addr << page_shift));
   inst_data *real_ins_cpy = real_ins;
 
   inst_data decode_spillover[max_ins * 2] = {0};
-
+  addr new_addr = 0;
   bool bad_next = false;
   bool bad = false;
   // If we do go oob, need to move to next page specified
   bool use_next = false;
 
+  regs.set_pc(start);
+
   while (true) {
     // TODO: Maybe some kinda page caching to make this less expensive?
+    oldpc = pc;
     pc = regs.get_pc();
-    if (pc < curr || pc + max_ins > (curr + page_size)) {
+    if (pc < curr || pc + max_ins > (curr + page_size) /*||
+        (pc & page_mask) != (oldpc & page_mask)*/) {
       // Outside current cached page, need to re-check new page.
       try {
         // Depending on the instruction size could go oob of the page during
@@ -57,11 +61,17 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
         // If the first part of the split isnt on the current page, check the
         // page it IS on.
 
-        if (pc >= curr + page_size) {
+        if (pc >= curr + page_size || pc <= (curr & ~(page_size - 1))) {
           cached_next_prev = mmu.get_pd().get_pte_from_vaddr(pc);
+
+          // if (curr + page_size - pc < max_ins) {
+          //   new_addr = cached_next.page_addr;
+          // } else {
+          new_addr = cached_next_prev.page_addr;
+          //}
+
           // We gud,
-          real_ins = (inst_data *)(cached_next_prev.page_addr << 12) +
-                     (pc & (page_size - 1));
+          real_ins = (inst_data *)(new_addr << 12) + (pc & (page_size - 1));
         }
       } catch (PageException &pex) {
         // Not present
@@ -112,6 +122,11 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
     // decoder.decode_inst(it.base(), end.base(), curr_ins);
     decoder.decode_inst(real_ins, real_ins + max_ins, curr_ins);
 
+    if (curr_ins.op == 0xff) {
+      std::cout << "Emulator::emu_loop Found break/trap, leaving" << std::endl;
+      break;
+    }
+
     // std::cout << "Emulator::emu_loop decoded, sz: " << (int)curr_ins.sz
     //           << " OP (enum): " << std::hex << (int)curr_ins.op << std::endl;
 
@@ -127,9 +142,9 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
     if (!bad_next && oob) {
       cached = cached_next;
       // Also need to remember to reassign the ptr we r using innit
-      // uint32_t off = (pc + curr_ins.sz) & 0xfff;
-      uint32_t off = pc & (page_size - 1);
-      curr = (pc + curr_ins.sz) & ~(page_size - 1);
+      uint32_t off = (pc + curr_ins.sz) & (page_size - 1);
+      // uint32_t off = pc & (page_size - 1);
+      //  curr = (pc + curr_ins.sz) & ~(page_size - 1);
       real_ins = (inst_data *)(cached.page_addr << 12) + off;
     }
     // ... AND we cant go oob
@@ -154,6 +169,8 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
       regs.set_pc(pc + curr_ins.sz);
       real_ins += curr_ins.sz;
     }
+
+    curr = (pc + curr_ins.sz) & ~(page_size - 1);
     // std::cout << "Emulator::emu_loop, new PC: " << registers.get_pc()
     //           << std::endl;
     it += curr_ins.sz;
@@ -198,6 +215,7 @@ reg_type s_ext(reg_type i, uint32_t nbits) {
 }
 
 MMU &Emulator::get_mmu() { return this->mmu; }
+Reg &Emulator::get_regs() { return this->regs; }
 
 // TODO: Add ability to get memory?
 // TODO: This will straight up NOT work for multiple diff kinds of args, so pay
@@ -249,7 +267,6 @@ reg_type Emulator::get_addr_from_regs(const Instruction &ins, bool arg) {
 
 // Gets an address from the registers on the appropriate side, then returns the
 // address and outputs which side to indicate the operation (r/w).
-// TODO: Testing very much needed.
 reg_type Emulator::get_val_mem(const Instruction &ins, Op *operation) {
   // TODO: Finish
   uint32_t op_loc;
@@ -346,7 +363,6 @@ template <typename T> bool Emulator::handle_mov(const Instruction &ins) {
   return true;
 }
 
-// TODO: Looks aight but may need more testing
 bool Emulator::handle_movm(const Instruction &ins) {
 
   Op op;
@@ -376,32 +392,27 @@ bool Emulator::handle_movm(const Instruction &ins) {
 
     const ArgKind other_kinds[] = {ArgKind::LAR, ArgKind::LIR, ArgKind::MDR,
                                    ArgKind::A1,  ArgKind::A0,  ArgKind::D1,
-                                   ArgKind::D0,  ArgKind::A3,  ArgKind::A2,
-                                   ArgKind::D3,  ArgKind::D2};
+                                   ArgKind::D0};
 
-    std::memcpy((void *)kinds, other_kinds, sizeof(kinds));
+    std::memcpy((void *)kinds, other_kinds, sizeof(other_kinds));
 
-    if (op == W) {
-      idx = sizeof(kinds) / sizeof(kinds[0]) - 1;
-    }
-  } else {
-
-    std::cout << "Emulator::handle_movm normal registers" << std::endl;
-    // This is marginally less ugly.
-    if (reg & MovmBits::a3) {
-      kinds[idx++] = ArgKind::A3;
-    }
-    if (reg & MovmBits::a2) {
-      kinds[idx++] = ArgKind::A2;
-    }
-    if (reg & MovmBits::d3) {
-      kinds[idx++] = ArgKind::D3;
-    }
-    if (reg & MovmBits::d2) {
-      kinds[idx++] = ArgKind::D2;
-    }
-    idx--;
+    idx = sizeof(other_kinds) / sizeof(other_kinds[0]);
   }
+  std::cout << "Emulator::handle_movm normal registers" << std::endl;
+  // This is marginally less ugly.
+  if (reg & MovmBits::a3) {
+    kinds[idx++] = ArgKind::A3;
+  }
+  if (reg & MovmBits::a2) {
+    kinds[idx++] = ArgKind::A2;
+  }
+  if (reg & MovmBits::d3) {
+    kinds[idx++] = ArgKind::D3;
+  }
+  if (reg & MovmBits::d2) {
+    kinds[idx++] = ArgKind::D2;
+  }
+  idx--;
 
   if (op == R) {
     idx = 0;
@@ -426,8 +437,7 @@ bool Emulator::handle_movm(const Instruction &ins) {
     addr += toadd;
   }
 
-  // Dont wanna take too many
-  if (op == W)
+  if (op == W && !(reg & MovmBits::other))
     addr -= toadd;
 
   regs.set(ArgKind::SP, addr);
@@ -514,8 +524,12 @@ bool Emulator::handle_add(const Instruction &ins, int sign = 1) {
     // Now do PSW shenanigans
     // Handle overflow.
     // 8 byte so we can detect ovf
-    // bool cnd = ((uint64_t)s + (uint64_t)(d * sign) + cf_maybe) > UINT32_MAX;
-    bool cnd = ((uint64_t)d + (uint64_t)(s * sign) + cf_maybe) > UINT32_MAX;
+    // bool cnd = ((uint64_t)s + (uint64_t)(d * sign) + cf_maybe) >
+    // UINT32_MAX;
+    // bool cnd = ((reg_type_s)d > 0 && (reg_type_s)s > 0) && ((uint64_t)d +
+    // (uint64_t)(s * sign) + cf_maybe) > UINT32_MAX;
+    bool cnd = (reg_type_s)res < (reg_type_s)d &&
+               (reg_type_s)res < (reg_type_s)s && (reg_type_s)res > 0;
     // Mask off old bits, shouldnt carry over to the next addition.
     psw &= ~0b1111;
     psw |= (PswBits::V * cnd);
@@ -524,7 +538,8 @@ bool Emulator::handle_add(const Instruction &ins, int sign = 1) {
     cnd = (int)res < 0;
     psw |= (PswBits::N * cnd);
     // Now, how to do the carry.
-    cnd = (s & CARRY_BIT && d & CARRY_BIT);
+    // cnd = (s & CARRY_BIT || d & CARRY_BIT);
+    cnd = (res < d || res < s);
     psw |= (PswBits::C * cnd);
 
     regs.set(ArgKind::PSW, psw);
@@ -599,9 +614,9 @@ bool Emulator::handle_div(const Instruction &ins) {
     res = 0xff;
   } else {
     // Normal operation
-    // TODO: unsure about this, manual says we should be checking if the DIVISOR
-    // is negative but that produces weird results and is inconsistent with the
-    // way this flag has been used previously.
+    // TODO: unsure about this, manual says we should be checking if the
+    // DIVISOR is negative but that produces weird results and is inconsistent
+    // with the way this flag has been used previously.
     bool cnd = (int)(res & 0xffffffff) < 0;
     psw |= (PswBits::N * cnd);
     cnd = res == 0;
@@ -669,7 +684,9 @@ bool Emulator::handle_cmp(const Instruction &ins) {
   }
 
   uint32_t res = d - s;
-  bool cnd = s > d;
+  std::cout << "Emulator::handle_cmp res -> " << std::hex << res << std::endl;
+  // If we overflow and ARENT negative.
+  bool cnd = (reg_type_s)res > (reg_type_s)d && (reg_type_s)res > 0;
   // Mask off old bits, shouldnt carry over to the next addition.
   psw &= ~0b1111;
   psw |= (PswBits::V * cnd);
@@ -678,7 +695,8 @@ bool Emulator::handle_cmp(const Instruction &ins) {
   cnd = (int)res < 0;
   psw |= (PswBits::N * cnd);
   // Now, how to do the carry - i *think* this is the correct way for this.
-  cnd = (s & CARRY_BIT && !(d & CARRY_BIT));
+  // cnd = (s & CARRY_BIT && !(d & CARRY_BIT));
+  cnd = res > d || res > s;
   psw |= (PswBits::C * cnd);
 
   regs.set(ArgKind::PSW, psw);
@@ -947,6 +965,7 @@ bool Emulator::handle_asl(const Instruction &ins) {
   if (dst == ArgKind::NONE) {
     s = 1;
     dst = src;
+    d = get_val(src, ins);
   } else {
     d = get_val(dst, ins);
   }
@@ -1036,7 +1055,7 @@ bool Emulator::handle_bcc(const Instruction &ins) {
     cnd = !z;
     break;
   case BGT:
-    cnd = !z || !(n ^ v);
+    cnd = !(z || (n ^ v));
     break;
   case BGE:
     cnd = !(n ^ v);
@@ -1048,7 +1067,7 @@ bool Emulator::handle_bcc(const Instruction &ins) {
     cnd = n ^ v;
     break;
   case BHI:
-    cnd = !c || !z;
+    cnd = !(c || z);
     break;
   case BCC:
     cnd = !c;
@@ -1154,14 +1173,16 @@ bool Emulator::handle_setlb(const Instruction &ins) {
 bool Emulator::handle_jmp(const Instruction &ins) {
 
   reg_type addr = get_val(ins.kinds[0], ins);
-  regs.set_pc(addr);
+  regs.set_pc(addr + regs.get_pc());
 
   return true;
 }
 
 bool Emulator::handle_call(const Instruction &ins) {
 
-  reg_type callee = get_val(0, ins);
+  reg_type_s callee = get_val(0, ins);
+  callee = s_ext(callee, get_arg_sz(ins.kinds[0]) * 8);
+
   reg_type reg = get_val(1, ins);
   reg_type sp_off = get_val(2, ins);
   reg_type sp = regs.get(ArgKind::SP);
@@ -1177,7 +1198,7 @@ bool Emulator::handle_call(const Instruction &ins) {
 
   if (reg & MovmBits::other) {
 
-    std::cout << "Emulator::handle_movm Other found, doing funny business"
+    std::cout << "Emulator::handle_call Other found, doing funny business"
               << std::endl;
 
     // Dummy
@@ -1186,32 +1207,27 @@ bool Emulator::handle_call(const Instruction &ins) {
 
     const ArgKind other_kinds[] = {ArgKind::LAR, ArgKind::LIR, ArgKind::MDR,
                                    ArgKind::A1,  ArgKind::A0,  ArgKind::D1,
-                                   ArgKind::D0,  ArgKind::A3,  ArgKind::A2,
-                                   ArgKind::D3,  ArgKind::D2};
+                                   ArgKind::D0};
 
-    std::memcpy((void *)kinds, other_kinds, sizeof(kinds));
-    idx = 11 - 1;
-  } else {
+    std::memcpy((void *)kinds, other_kinds, sizeof(other_kinds));
 
-    std::cout << "Emulator::handle_movm normal registers" << std::endl;
-    // This is marginally less ugly.
-    if (reg & MovmBits::a3) {
-      kinds[idx++] = ArgKind::A3;
-    }
-    if (reg & MovmBits::a2) {
-      kinds[idx++] = ArgKind::A2;
-    }
-    if (reg & MovmBits::d3) {
-      kinds[idx++] = ArgKind::D3;
-    }
-    if (reg & MovmBits::d2) {
-      kinds[idx++] = ArgKind::D2;
-    }
-
-    if (idx != 0)
-      idx--;
+    idx = sizeof(other_kinds) / sizeof(other_kinds[0]);
   }
-
+  std::cout << "Emulator::handle_call normal registers" << std::endl;
+  // This is marginally less ugly.
+  if (reg & MovmBits::a3) {
+    kinds[idx++] = ArgKind::A3;
+  }
+  if (reg & MovmBits::a2) {
+    kinds[idx++] = ArgKind::A2;
+  }
+  if (reg & MovmBits::d3) {
+    kinds[idx++] = ArgKind::D3;
+  }
+  if (reg & MovmBits::d2) {
+    kinds[idx++] = ArgKind::D2;
+  }
+  idx--;
   // TODO: Now actually store the registers
 
   uint32_t sp_cp = sp;
@@ -1219,7 +1235,7 @@ bool Emulator::handle_call(const Instruction &ins) {
   std::cout << "Emulator::handle_call SP before:" << std::endl;
   mmu.log_many(sp - 48, 10);
 
-  reg_type pc = regs.get_pc();
+  reg_type_s pc = regs.get_pc();
   reg_type saved_pc = pc + ins.sz;
   mmu.write(sp_cp, saved_pc);
   for (; idx >= 0; idx--) {
@@ -1238,7 +1254,6 @@ bool Emulator::handle_call(const Instruction &ins) {
   return true;
 }
 
-// TODO: Test
 bool Emulator::handle_calls(const Instruction &ins) {
   ArgKind src = ins.kinds[0];
   reg_type callee = get_val(0, ins);
@@ -1253,12 +1268,11 @@ bool Emulator::handle_calls(const Instruction &ins) {
     callee = pc + callee;
   }
 
-  regs.set(ArgKind::PC, callee);
+  regs.set_pc(callee);
 
   return true;
 }
 
-// TODO: Test
 bool Emulator::handle_ret(const Instruction &ins) {
 
   reg_type retaddr;
@@ -1268,7 +1282,7 @@ bool Emulator::handle_ret(const Instruction &ins) {
 
   // Rets doesnt restore any registers
   if (ins.op == RETS) {
-    retaddr = mmu.read<reg_type>(sp);
+    regs.set_pc(mmu.read<reg_type>(sp));
     return true;
   }
 
@@ -1285,7 +1299,7 @@ bool Emulator::handle_ret(const Instruction &ins) {
 
   if (reg & MovmBits::other) {
 
-    std::cout << "Emulator::handle_movm Other found, doing funny business"
+    std::cout << "Emulator::handle_ret Other found, doing funny business"
               << std::endl;
 
     // Dummy
@@ -1294,38 +1308,33 @@ bool Emulator::handle_ret(const Instruction &ins) {
 
     const ArgKind other_kinds[] = {ArgKind::LAR, ArgKind::LIR, ArgKind::MDR,
                                    ArgKind::A1,  ArgKind::A0,  ArgKind::D1,
-                                   ArgKind::D0,  ArgKind::A3,  ArgKind::A2,
-                                   ArgKind::D3,  ArgKind::D2};
+                                   ArgKind::D0};
 
-    std::memcpy((void *)kinds, other_kinds, sizeof(kinds));
-    idx = 11 - 1;
-  } else {
+    std::memcpy((void *)kinds, other_kinds, sizeof(other_kinds));
 
-    std::cout << "Emulator::handle_movm normal registers" << std::endl;
-    // This is marginally less ugly.
-    if (reg & MovmBits::a3) {
-      kinds[idx++] = ArgKind::A3;
-    }
-    if (reg & MovmBits::a2) {
-      kinds[idx++] = ArgKind::A2;
-    }
-    if (reg & MovmBits::d3) {
-      kinds[idx++] = ArgKind::D3;
-    }
-    if (reg & MovmBits::d2) {
-      kinds[idx++] = ArgKind::D2;
-    }
-
-    if (idx != 0)
-      idx--;
+    idx = sizeof(other_kinds) / sizeof(other_kinds[0]);
   }
-
+  std::cout << "Emulator::handle_ret normal registers" << std::endl;
+  // This is marginally less ugly.
+  if (reg & MovmBits::a3) {
+    kinds[idx++] = ArgKind::A3;
+  }
+  if (reg & MovmBits::a2) {
+    kinds[idx++] = ArgKind::A2;
+  }
+  if (reg & MovmBits::d3) {
+    kinds[idx++] = ArgKind::D3;
+  }
+  if (reg & MovmBits::d2) {
+    kinds[idx++] = ArgKind::D2;
+  }
+  idx--;
   sp += sp_off;
   regs.set(ArgKind::SP, sp);
 
   if (ins.op == RET)
     retaddr = mmu.read<reg_type>(sp);
-  else
+  else                                // RETF
     retaddr = regs.get(ArgKind::MDR); // No idea why they chose to use MDR
 
   regs.set_pc(retaddr);
@@ -1494,6 +1503,7 @@ bool Emulator::execute_insn(const Instruction &ins) {
     break;
   case Lcc:
     // Handle Lcc instruction
+    handle_lcc(ins);
     break;
   case JMP:
     // Handle JMP instruction
@@ -1508,6 +1518,7 @@ bool Emulator::execute_insn(const Instruction &ins) {
     break;
   case CALLS:
     // Handle CALLS instruction
+    handle_calls(ins);
     break;
   case TRAP:
     // Handle TRAP instruction

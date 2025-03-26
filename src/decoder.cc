@@ -765,8 +765,9 @@ void Decoder::decode_dn_op_F2(const inst_data *data, Instruction &ins) {
     ins.kinds[1] = kinds[idx];
     use_d = idx >= 1 ? dn_idx : an_idx;
     idx = reg_low;
-    if (!use_d)
-      idx = reg_high;
+    // TODO: Evaluate why this was even here.
+    // if (!use_d)
+    //   idx = reg_high;
     reg = regs[use_d][idx];
     ins.kinds[0] = reg;
     break;
@@ -793,8 +794,6 @@ void Decoder::decode_dn_op_F3(const inst_data *data, Instruction &ins) {
   use_d = op_nib_up < 8;
   reg = regs[use_d][op_nib_up & 0b0011];
 
-  // TODO: How are we making sure we know this is memory?
-  // I think due to the num of args/kinds we can infer.
   if (idx > 3) {
     ins.kinds[0] = reg;
     ins.kinds[1] = di_mem_reg;
@@ -1055,7 +1054,7 @@ void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
 
     ArgKind a_mem_reg = regs[an_idx][op_nib_low & 0b0011];
     ArgKind a_or_d_reg;
-    use_d = (op_nib_low < 2 || op_nib_low > 3);
+    use_d = (op_nib_up < 2 || op_nib_up > 3);
     a_or_d_reg = regs[use_d][(op_nib_low & 0b1100) >> 2];
 
     idx = op_nib_up % 2;
@@ -1124,7 +1123,7 @@ void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
     }
 
     const InsnType types[] = {ASL, LSR, ASR};
-    idx = op_nib_low % 3;
+    idx = (op_nib_low & 0b1100) >> 2;
     ins.op = types[idx];
     ins.kinds[0] = ArgKind::imm8;
     ins.kinds[1] = regs[dn_idx][op_nib_low & 0b0011];
@@ -1915,8 +1914,13 @@ void Decoder::decode_inst(const inst_data *curr_data, const inst_data *end,
   }
 
   // Cant decode reserved instructions.
-  if (ins.op == InsnType::NONE && opcode == 0xF7) {
+  if (ins.op == InsnType::NONE && opcode == 0xf7) {
     ins.sz = 0;
+    return;
+  } else if (opcode == 0xff) {
+    std::cout << "Decoder::decode_inst decoded BREAK" << std::endl;
+    ins.op = 0xff;
+    ins.sz = 1;
     return;
   }
 

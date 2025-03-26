@@ -64,10 +64,7 @@ static uint32_t get_page_index(virt_addr v_page, byte level) {
 // Offset into the physical page our virtual addr has.
 static uint32_t get_page_offset(virt_addr v_addr) { return v_addr & 0xfff; }
 
-// TODO: We dont free any of this yet, fix that or we WILL have memory leaks.
-// Also probably could be static. Also we assume aligned_alloc will be nice and
-// actually return us the alignment that we want, so *maybe* check that in
-// future?
+// Returns page aligned allocation
 phys_addr PageDirectory::alloc_page() {
   void *page = std::aligned_alloc(page_size, page_size);
   if (page == nullptr) {
@@ -305,7 +302,11 @@ void MMU::log_many(virt_addr start, uint32_t num) {
     uint32_t start_off = (start & (page_size - 1)) / 4;
     uint32_t *addr = (uint32_t *)(pe.page_addr << page_shift) + start_off;
 
-    for (int i = 0; i < num; i++) {
+    for (int i = 0; i < n; i++) {
+      // If we overflow the page boundary mid execution
+      if (i != 0 &&
+          ((start + i * 4) & page_size) > ((start + (i - 1) * 4) & page_size))
+        break;
       printf("0x%08llx // 0x%08x : 0x%08x\n", addr + i, start + (i * 4),
              addr[i]);
     }

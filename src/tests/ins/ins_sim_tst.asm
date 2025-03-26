@@ -1,5 +1,8 @@
 
 .section .text
+
+
+
 .global _start
 _start:
   #mov 1, d2
@@ -142,11 +145,25 @@ _start:
   #mov 10, lir
   #mov 11, lar
 
-  movm (sp), [a2, a3, d2, d3]
+  movm (sp), [a2, a3, d2, other]
   #movm (sp), [other]
 
-  movm [a2, a3, d2, d3], (sp)
-  movm (sp), [a2, a3, d2, d3]
+  movm [a2, a3, d2, other], (sp)
+  movm (sp), [a2, a3, d3, other]
+  #mov a1, d0
+
+
+  xor 0x80000000, d0
+
+  #jmp 0x20
+  jmp 0xb
+
+  mov d0, a1
+  mov d0, (a1)
+  bset 0x41, (0x42, a1)
+  # This WILL modify instruction data btw
+  #bset 0x41, (0x141)
+  break
   #movm (sp), [a2, a3, d2, d3]
   #movm [a2, a3, d2, d3], (sp)
   #movm (sp), [a2, a3, d2, d3]
@@ -185,25 +202,52 @@ _start:
 #  .byte 0xcd, 0x43, 0x43, 0x0, 0xff
 #.byte 0xcd, 0x43, 0x43, 0x1, 0xff
 #.byte 0xcd, 0x43, 0x44, 0x2, 0xff
-bset 0x41, (0x42, a1)
-bset 0x41, (0x41)
 #.byte 0xcd, 0x43, 0x43, 0xfe, 0xff
-
+  
 #.byte 0xdd, 0x43, 0x43, 0x44, 0x44, 0x20, 0xff
   mov 0x100, a0
   mov a0, sp
-  call 0x19, [a2,a3,d2,d3, other], 0xff 
+  call 0xb, [a2,a3,d2,other], 0xff 
+  nop
+  nop
+  jmp 0x7
+  nop
+  retf [a2,a3,d2,other], 0xff
   nop
   nop
   nop
   nop
   nop
   nop
+
+
+  ## Testing CALLS and RETF
+  calls 9
+  nop
+  nop
+  jmp 0x7
+  nop
+  nop
+  rets
+  nop
+  nop
+
+  add a0, d2
+  add a1, d2
+  add a2, d2
+  add a3, d2
+  add lar, d2
+  add lir, d2
+  #add sp, d2
+  add d0, d2
+  add d1, d2
+  add d3, d2
+
+  mov mdr, d1
+  add d1, d2
+
   add 0x80000000, d2
   mov d2, a0
   mov d0, (a0)
-  mov 0x3333, d0
-  rti
+  #rti
 
-  nop
-  ret [a2,a3,d2,d3, other], 0xff

@@ -69,12 +69,10 @@ public:
   bool handle_calls(const Instruction &ins);
   bool handle_ret(const Instruction &ins);
   bool handle_rti(const Instruction &ins);
-  // TODO: constness removed to evade annoying error, fix maybe.
   bool handle_call(const Instruction &ins);
   // ...
   bool handle_trap(const Instruction &ins);
   bool handle_nop(const Instruction &ins);
-  // TODO: Fill in these...
 
   // Like get_val but for memory.
   reg_type get_val_mem(const Instruction &ins, Op *operation);
@@ -98,6 +96,7 @@ public:
     this->mmu.write(addr, val);
   }
   MMU &get_mmu();
+  Reg &get_regs();
 
 private:
   Reg regs;
