@@ -165,7 +165,7 @@ static const int32_t  func_1(void)
     }
 
     // Added by me
-    return g_999;
+    //return g_999;
     //
 
     for (g_8 = 0; (g_8 >= 0); g_8 -= 1)
@@ -776,8 +776,8 @@ int main (int argc, char* argv[])
     //i = *(int*)g_1337;
     //return i;
     int *res = (int*)func_1();
-    i = *res;
-    return i;
+    //i = *res;
+    //return i;
     // 
 
     csmith_sink_ = g_3;

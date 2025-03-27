@@ -43,7 +43,7 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
     // TODO: Maybe some kinda page caching to make this less expensive?
     oldpc = pc;
     pc = regs.get_pc();
-    if (pc < curr || pc + max_ins > (curr + page_size) /*||
+    if (pc < curr || pc >> page_shift != oldpc >> page_shift || pc + max_ins > (curr + page_size) /*||
         (pc & page_mask) != (oldpc & page_mask)*/) {
       // Outside current cached page, need to re-check new page.
       try {
