@@ -41,6 +41,18 @@ int main(int argc, char **argv) {
 
   if (argc < 2) {
     std::cerr << "Usage: ./Suigetsu <filepath>." << std::endl;
+    std::cerr << "Optional: <program map start> <entrypoint> <load offset>"
+              << std::endl;
+    std::cerr << "\t<program map start>\t: Virtual address where program "
+                 "should be loaded."
+              << std::endl;
+    std::cerr << "\t<entrypoint>\t\t: PC entrypoint." << std::endl;
+    std::cerr
+        << "\t<load offset>\t\t: Offset into the file to start loading the "
+           "program."
+        << std::endl;
+    std::cerr << "Default for all is 0" << std::endl;
+
     return 1;
   }
 
@@ -88,7 +100,7 @@ int main(int argc, char **argv) {
     emu.get_mmu().map_range(prog_start + (n_pages * page_size), 100, 0b111);
 
     // Another data test page
-    emu.get_mmu().get_pd().add_page(0x41414000, PagePerms::rwx_mask);
+    // emu.get_mmu().get_pd().add_page(0x41414000, PagePerms::rwx_mask);
     // Constructor for page_entry already sets these up, but just to make sure.
     // emu.get_mmu().get_pd().get_last_alloc()->rwx |= PagePerms::rw_mask;
 
