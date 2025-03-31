@@ -11,11 +11,12 @@
 
 // TODO: Since we adding jumps and stuff we need to re-evaluate how we do this
 // shit also since end conditions wont be the same among other things.
+// TODO: This doesnt rlly need to take the insns anymo.
 bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
 
-  const Instructions::const_iterator begin = insns.begin();
-  const Instructions::const_iterator end = insns.end();
-  Instructions::const_iterator it = begin;
+  // const Instructions::const_iterator begin = insns.begin();
+  // const Instructions::const_iterator end = insns.end();
+  // Instructions::const_iterator it = begin;
   bool ret = true;
 
   Instruction curr_ins;
@@ -47,11 +48,6 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
         (pc & page_mask) != (oldpc & page_mask)*/) {
       // Outside current cached page, need to re-check new page.
       try {
-        // Depending on the instruction size could go oob of the page during
-        // decoding,
-        // TODO: Will need to truncate the "end" passed to decode_inst if
-        // necessary.
-
         cached_next = mmu.get_pd().get_pte_from_vaddr(pc + max_ins);
         if (!this->mmu.is_rx(cached_next)) {
           bad = true;
@@ -60,15 +56,10 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
 
         // If the first part of the split isnt on the current page, check the
         // page it IS on.
-
         if (pc >= curr + page_size || pc <= (curr & ~(page_size - 1))) {
           cached_next_prev = mmu.get_pd().get_pte_from_vaddr(pc);
 
-          // if (curr + page_size - pc < max_ins) {
-          //   new_addr = cached_next.page_addr;
-          // } else {
           new_addr = cached_next_prev.page_addr;
-          //}
 
           // We gud,
           real_ins = (inst_data *)(new_addr << 12) + (pc & (page_size - 1));
@@ -93,14 +84,10 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
       // TODO: Get this finished.
       uint32_t end_dist = ((pc + page_size) & ~(page_size - 1)) - pc;
       if (!bad_next && end_dist < max_ins) {
-        // TODO: Update this comment lol this makes no sense now.
-        // Ok, this is a doozie. And ill need to look into how exactly other
-        // emulators do this, but we need to copy however much would go OOB into
-        // the decoding_deadzone of the current page.
-        //
-        // This essentially just means it will reflect the rest of whatever
-        // instruction should be there from the next page to the deadzone space.
-        // Why did i call it deadzone? Unsure, inspired by ASAN i guess
+        // This handles cases where an instruction carries over to the next
+        // page, so we just end up copying the other part of what is/could be
+        // part of the instruction to a buffer and using that for the rest of
+        // this cycle.
         // TODO: Mention this in the report.
         uint32_t read1 = end_dist;
         uint32_t read2 = (pc + max_ins) - (pc + read1);
@@ -147,7 +134,7 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
       //  curr = (pc + curr_ins.sz) & ~(page_size - 1);
       real_ins = (inst_data *)(cached.page_addr << 12) + off;
     }
-    // ... AND we cant go oob
+    // ... AND we cant go oob (bad next page)
     else if (curr_ins.sz == 0 || oob) {
       std::cerr << "Emulator::emu_loop decoding went OOB OR failed, exiting."
                 << std::endl;
@@ -173,7 +160,7 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
     curr = (pc + curr_ins.sz) & ~(page_size - 1);
     // std::cout << "Emulator::emu_loop, new PC: " << registers.get_pc()
     //           << std::endl;
-    it += curr_ins.sz;
+    // it += curr_ins.sz;
   }
 
   return true;
@@ -237,16 +224,13 @@ reg_type Emulator::get_val(uint32_t kindno, const Instruction &ins) {
   ArgKind src = ins.kinds[kindno];
   reg_type s;
 
-  if (is_reg(src)) {
+  if (is_reg(src) || is_mem_reg(src)) {
     s = regs.get(src);
     return s;
   }
 
   s = ins.get_arg(kindno);
 
-  // else {
-  //   s = regs.get(src);
-  // }
   return s;
 }
 
@@ -1264,10 +1248,9 @@ bool Emulator::handle_calls(const Instruction &ins) {
   mmu.write(sp, pc + ins.sz);
 
   // Use displacement
-  if (!is_reg(src)) {
+  if (!is_reg(src) && !is_mem_reg(src)) {
     callee = pc + callee;
   }
-
   regs.set_pc(callee);
 
   return true;

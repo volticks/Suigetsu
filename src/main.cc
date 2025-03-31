@@ -41,7 +41,8 @@ int main(int argc, char **argv) {
 
   if (argc < 2) {
     std::cerr << "Usage: ./Suigetsu <filepath>." << std::endl;
-    std::cerr << "Optional: <program map start> <entrypoint> <load offset>"
+    std::cerr << "Optional: <program map start> <entrypoint> <load offset> "
+                 "<text section end>"
               << std::endl;
     std::cerr << "\t<program map start>\t: Virtual address where program "
                  "should be loaded."
@@ -51,6 +52,11 @@ int main(int argc, char **argv) {
         << "\t<load offset>\t\t: Offset into the file to start loading the "
            "program."
         << std::endl;
+
+    std::cerr << "\t<text section end>\t\t: Specified end of the text section. "
+                 "If specified will add null byte padding to act as BSS "
+                 "section coming after text section."
+              << std::endl;
     std::cerr << "Default for all is 0" << std::endl;
 
     return 1;
@@ -61,6 +67,12 @@ int main(int argc, char **argv) {
   // Offset into the file we wanna load from, for example if .text in ELF starts
   // at 0x1000 we can load at that addr.
   virt_addr load_start_off = 0x0;
+  // Some test cases showed that gcc will put variables directly after the end
+  // of the text section (bss), so we need to account for that by adding space
+  // after the end until the next section. This is where you can specify the
+  // offset of this padding -- basically end of the text section.
+  virt_addr text_seg_sep = 0x0;
+  const uint32_t npad = 0x1000;
   if (argc >= 3) {
     // Returns 0 on fail apparently so alls well
     // TODO: Should prolly abort if it doesnt turn into
@@ -73,12 +85,20 @@ int main(int argc, char **argv) {
   if (argc >= 5) {
     load_start_off = std::atoi(argv[4]);
   }
+  if (argc >= 6) {
+    text_seg_sep = std::atoi(argv[5]);
+  }
 
   std::cout << "main: Entry -> " << std::hex << entry << std::endl;
   std::cout << "main: Mapping start -> " << std::hex << prog_start << std::endl;
 
   try {
     Instructions insns = FileReader::read_file(argv[1], load_start_off);
+
+    if (text_seg_sep != 0) {
+      // Insert padding after text section
+      insns.insert(insns.begin() + text_seg_sep, npad, 0);
+    }
 
     Emulator emu;
     // Setup some emu resources

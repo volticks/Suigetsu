@@ -1,3 +1,8 @@
+Generate:
+```
+csmith --concise --ptr-size 4 --no-checksum --no-safe-math --output src/tests/ins/tcase1.c
+```
+
 Something like: 
 ```
 sed "s/csmith.h/my_stdint.h/g;/platform_/d;/print_/d;" out/test.c > out/
@@ -8,3 +13,13 @@ Then compile normally.
 
 
 ./Suigetsu ../src/tests/ins/fib 0 70 4096 > out_test.txt
+
+
+Only run against programs which dont include anything or call any stdlib funcs.
+
+grep -riL "#include" *.c > good_cfiles.txt
+xargs -a good_cfiles.txt cp -t min 
+cd min
+sed -i "1i #include \"my_stdint.h\"" *
+
+also remove all extern int main thingies

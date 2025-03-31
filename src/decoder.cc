@@ -18,17 +18,8 @@ const uint8_t dn_idx = 1;
 const uint8_t an_idx = 0;
 const ArgKind *regs[] = {an_registers, dn_registers};
 
-// Sn has a very limited number of instructions it could be.
-// This is basically just pseudocode for now, need to work on this big time.
-// Want to use the opcodes array for something since i went to all that trouble
-// but not sure i'll find a use for it in the end cuz this part switch part
-// checking is ugly asf.
-// TODO: Something about this.
-// Should we do some kind of masking of the bits here or something? Maybe have a
-// mask for the CLR instruction we can and the opcode against, since we know
-// that if the value is 0,4,8,or 0xC then we have a mask which checks for these
-// bits specifically, this also means we wont be just writing the instruction
-// set entirely by hand into our program lol. Just theorycrafting anywho.
+// Sn has a very limited number of instructions it could be -- compared to dn,
+// anyway.
 void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
   inst_op op = *data;
   inst_op op_nib_up = nib_up(op);
@@ -845,57 +836,6 @@ void Decoder::decode_dn_op_F5(const inst_data *data, Instruction &ins) {
   ins.op = NONE;
   ins.sz = InsSzDn::D0s;
   // All UDF20-UDF35
-
-  /*switch (op_nib_up) {
-  case 0x0: {
-    break;
-  }
-  case 0x1: {
-    break;
-  }
-  case 0x2: {
-    break;
-  }
-  case 0x3: {
-    break;
-  }
-  case 0x4: {
-    break;
-  }
-  case 0x5: {
-    break;
-  }
-  case 0x6: {
-    break;
-  }
-  case 0x7: {
-    break;
-  }
-  case 0x8: {
-    break;
-  }
-  case 0x9: {
-    break;
-  }
-  case 0xA: {
-    break;
-  }
-  case 0xB: {
-    break;
-  }
-  case 0xC: {
-    break;
-  }
-  case 0xD: {
-    break;
-  }
-  case 0xE: {
-    break;
-  }
-  case 0xF: {
-    break;
-  }
-  }*/
 }
 
 void Decoder::decode_dn_op_F6(const inst_data *data, Instruction &ins) {
@@ -910,58 +850,9 @@ void Decoder::decode_dn_op_F6(const inst_data *data, Instruction &ins) {
 
   ins.op = NONE;
   ins.sz = InsSzDn::D0s;
-  /*switch (op_nib_up) {
-  case 0x0: {
-    break;
-  }
-  case 0x1: {
-    break;
-  }
-  case 0x2: {
-    break;
-  }
-  case 0x3: {
-    break;
-  }
-  case 0x4: {
-    break;
-  }
-  case 0x5: {
-    break;
-  }
-  case 0x6: {
-    break;
-  }
-  case 0x7: {
-    break;
-  }
-  case 0x8: {
-    break;
-  }
-  case 0x9: {
-    break;
-  }
-  case 0xA: {
-    break;
-  }
-  case 0xB: {
-    break;
-  }
-  case 0xC: {
-    break;
-  }
-  case 0xD: {
-    break;
-  }
-  case 0xE: {
-    break;
-  }
-  case 0xF: {
-    break;
-  }
-  }*/
 }
 
+// Unused for now
 void Decoder::decode_dn_op_F7(const inst_data *data, Instruction &ins) {
   ++data;
   const inst_op op = *data;
@@ -1203,57 +1094,6 @@ void Decoder::decode_dn_op_F9(const inst_data *data, Instruction &ins) {
   ins.op = NONE;
   ins.sz = InsSzDn::D0s;
   // All UDF00-UDF35
-
-  /*switch (op_nib_up) {
-  case 0x0: {
-    break;
-  }
-  case 0x1: {
-    break;
-  }
-  case 0x2: {
-    break;
-  }
-  case 0x3: {
-    break;
-  }
-  case 0x4: {
-    break;
-  }
-  case 0x5: {
-    break;
-  }
-  case 0x6: {
-    break;
-  }
-  case 0x7: {
-    break;
-  }
-  case 0x8: {
-    break;
-  }
-  case 0x9: {
-    break;
-  }
-  case 0xA: {
-    break;
-  }
-  case 0xB: {
-    break;
-  }
-  case 0xC: {
-    break;
-  }
-  case 0xD: {
-    break;
-  }
-  case 0xE: {
-    break;
-  }
-  case 0xF: {
-    break;
-  }
-  }*/
 }
 
 // Marked as 0xF4 in the manual, silly
@@ -1423,56 +1263,6 @@ void Decoder::decode_dn_op_FB(const inst_data *data, Instruction &ins) {
   uint8_t idx;
   ins.op = NONE;
   ins.sz = InsSzDn::D0s;
-  switch (op_nib_up) {
-  case 0x0: {
-    break;
-  }
-  case 0x1: {
-    break;
-  }
-  case 0x2: {
-    break;
-  }
-  case 0x3: {
-    break;
-  }
-  case 0x4: {
-    break;
-  }
-  case 0x5: {
-    break;
-  }
-  case 0x6: {
-    break;
-  }
-  case 0x7: {
-    break;
-  }
-  case 0x8: {
-    break;
-  }
-  case 0x9: {
-    break;
-  }
-  case 0xA: {
-    break;
-  }
-  case 0xB: {
-    break;
-  }
-  case 0xC: {
-    break;
-  }
-  case 0xD: {
-    break;
-  }
-  case 0xE: {
-    break;
-  }
-  case 0xF: {
-    break;
-  }
-  }
 }
 
 void Decoder::decode_dn_op_FC(const inst_data *data, Instruction &ins) {
@@ -1616,56 +1406,6 @@ void Decoder::decode_dn_op_FD(const inst_data *data, Instruction &ins) {
   uint8_t idx;
   ins.op = NONE;
   ins.sz = InsSzDn::D0s;
-  switch (op_nib_up) {
-  case 0x0: {
-    break;
-  }
-  case 0x1: {
-    break;
-  }
-  case 0x2: {
-    break;
-  }
-  case 0x3: {
-    break;
-  }
-  case 0x4: {
-    break;
-  }
-  case 0x5: {
-    break;
-  }
-  case 0x6: {
-    break;
-  }
-  case 0x7: {
-    break;
-  }
-  case 0x8: {
-    break;
-  }
-  case 0x9: {
-    break;
-  }
-  case 0xA: {
-    break;
-  }
-  case 0xB: {
-    break;
-  }
-  case 0xC: {
-    break;
-  }
-  case 0xD: {
-    break;
-  }
-  case 0xE: {
-    break;
-  }
-  case 0xF: {
-    break;
-  }
-  }
 }
 
 // This is gonna require some tinkering.
@@ -1712,6 +1452,7 @@ void Decoder::decode_dn_op_FE(const inst_data *data, Instruction &ins) {
   }
 }
 
+// Unused
 void Decoder::decode_dn_op_FF(const inst_data *data, Instruction &ins) {
 
   ++data;
