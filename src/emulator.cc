@@ -62,7 +62,8 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
           new_addr = cached_next_prev.page_addr;
 
           // We gud,
-          real_ins = (inst_data *)(new_addr << 12) + (pc & (page_size - 1));
+          real_ins =
+              (inst_data *)(new_addr << page_shift) + (pc & (page_size - 1));
         }
       } catch (PageException &pex) {
         // Not present
@@ -154,7 +155,8 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
     // Only re-set pc if we dont set it outrselves via an instruction
     if (pc == regs.get_pc()) {
       regs.set_pc(pc + curr_ins.sz);
-      real_ins += curr_ins.sz;
+      real_ins = (inst_data *)((uint64_t)real_ins & ~(uint64_t)(page_size - 1));
+      real_ins += (pc + curr_ins.sz) & (page_size - 1);
     }
 
     curr = (pc + curr_ins.sz) & ~(page_size - 1);
@@ -479,6 +481,7 @@ bool Emulator::handle_add(const Instruction &ins, int sign = 1) {
   // TODO: Extend to include imm
   if ((is_reg(src) || is_imm(src)) && is_reg(dst)) {
 
+    reg_type s_orig;
     reg_type s;
     reg_type cf_maybe = 0;
 
@@ -486,9 +489,11 @@ bool Emulator::handle_add(const Instruction &ins, int sign = 1) {
     if (is_imm(src)) {
       uint8_t sz = get_arg_sz(src) * 8;
       s = *(reg_type *)ins.args;
+      s_orig = s;
       s = s_ext(s, sz);
     } else {
       s = regs.get(src);
+      s_orig = s;
     }
 
     reg_type d = regs.get(dst);
@@ -523,7 +528,7 @@ bool Emulator::handle_add(const Instruction &ins, int sign = 1) {
     psw |= (PswBits::N * cnd);
     // Now, how to do the carry.
     // cnd = (s & CARRY_BIT || d & CARRY_BIT);
-    cnd = (res < d || res < s);
+    cnd = (res < s_orig);
     psw |= (PswBits::C * cnd);
 
     regs.set(ArgKind::PSW, psw);

@@ -304,8 +304,8 @@ void MMU::log_many(virt_addr start, uint32_t num) {
 
     for (int i = 0; i < n; i++) {
       // If we overflow the page boundary mid execution
-      if (i != 0 &&
-          ((start + i * 4) & page_size) > ((start + (i - 1) * 4) & page_size))
+      if (i != 0 && ((start + (i * 4)) & page_size) !=
+                        ((start + ((i - 1) * 4)) & page_size))
         break;
       printf("0x%08llx // 0x%08x : 0x%08x\n", addr + i, start + (i * 4),
              addr[i]);

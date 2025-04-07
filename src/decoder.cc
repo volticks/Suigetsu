@@ -979,7 +979,7 @@ void Decoder::decode_dn_op_F8(const inst_data *data, Instruction &ins) {
     ins.sz = InsSzDn::D1s;
     ins.kinds[0] = regs[dn_idx][(op_nib_low & 0b1100) >> 2];
     ins.kinds[1] = ArgKind::d8;
-    ins.kinds[1] = ArgKind::SP;
+    ins.kinds[2] = ArgKind::SP;
     add_args = true;
     arg_sz = 1;
 

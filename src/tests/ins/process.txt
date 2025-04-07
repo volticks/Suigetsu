@@ -5,8 +5,7 @@ csmith --concise --ptr-size 4 --no-checksum --no-safe-math --output src/tests/in
 
 Something like: 
 ```
-sed "s/csmith.h/my_stdint.h/g;/platform_/d;/print_/d;" out/test.c > out/
-test_processed.c
+sed "s/csmith.h/my_stdint.h/g;/platform_/d;/printf/d;/strcmp/d;s/return 0/return returned/g;" out/test.c > out/test_processed.c
 ```
 
 Then compile normally.
