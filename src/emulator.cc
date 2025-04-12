@@ -685,7 +685,7 @@ bool Emulator::handle_cmp(const Instruction &ins) {
   psw |= (PswBits::N * cnd);
   // Now, how to do the carry - i *think* this is the correct way for this.
   // cnd = (s & CARRY_BIT && !(d & CARRY_BIT));
-  cnd = res > d || res > s;
+  cnd = res > d /* || res > s*/;
   psw |= (PswBits::C * cnd);
 
   regs.set(ArgKind::PSW, psw);

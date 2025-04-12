@@ -64,7 +64,7 @@ asm(".global _start\n"
 // Need to make our own version of transparent_crc for the function
 unsigned int returned = 0;
 int print_hash_value = 0;
-void transparent_crc(uint32_t val, char *vname, int flag) { returned ^= val; }
+void tcrc(uint32_t val) { returned ^= val; }
 void crc32_gentab(void) {
   returned = 0;
   return;
