@@ -1353,6 +1353,10 @@ bool Emulator::handle_rti(const Instruction &ins) {
 // performing a syscall.
 bool Emulator::handle_trap(const Instruction &ins) {
   reg_type pc = regs.get_pc();
+
+  // Dump registers on syscall for debugging.
+  regs.dump_regs();
+
   mmu.write(regs.get(ArgKind::SP), pc + 2);
   // Why this? It was in the manual.
   regs.set_pc(0x40000010);
@@ -1485,14 +1489,6 @@ bool Emulator::execute_insn(const Instruction &ins) {
     handle_rol(ins);
     break;
   // Control flow operations
-  case Bcc:
-    // Handle Bcc instruction
-    handle_bcc(ins);
-    break;
-  case Lcc:
-    // Handle Lcc instruction
-    handle_lcc(ins);
-    break;
   case JMP:
     // Handle JMP instruction
     handle_jmp(ins);
@@ -1576,6 +1572,14 @@ bool Emulator::execute_insn(const Instruction &ins) {
     handle_bcc(ins);
     break;
   // Loop execution instructions
+  case LLS:
+    // Handle LLS instruction
+  case LEQ:
+    // Handle LEQ instruction
+  case LNE:
+    // Handle LNE instruction
+  case LRA:
+    // Handle LRA instruction
   case LLT:
     // Handle LLT instruction
   case LGT:
@@ -1591,18 +1595,6 @@ bool Emulator::execute_insn(const Instruction &ins) {
   case LCC:
     // Handle LCC instruction
     handle_lcc(ins);
-    break;
-  case LLS:
-    // Handle LLS instruction
-    break;
-  case LEQ:
-    // Handle LEQ instruction
-    break;
-  case LNE:
-    // Handle LNE instruction
-    break;
-  case LRA:
-    // Handle LRA instruction
     break;
   case SETLB:
     // Handle SETLB instruction
