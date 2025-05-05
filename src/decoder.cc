@@ -9,8 +9,8 @@
 #include <iostream>
 #include <ostream>
 
-static inline inst_data nib_up(inst_op op) { return (op & 0xf0) >> 4; }
-static inline inst_data nib_low(inst_op op) { return (op & 0xf); }
+static constexpr inst_data nib_up(inst_op op) { return (op & 0xf0) >> 4; }
+static constexpr inst_data nib_low(inst_op op) { return (op & 0xf); }
 // Handler function for Sn ops
 static void handle_sn(inst_data *data, Instruction &ins_out) {}
 
@@ -413,7 +413,7 @@ void Decoder::decode_sn_op(const inst_data *data, Instruction &ins_out) {
   //  data = call_args;
   //  num_args = 3;
   //}
-  if (add_args && arg_sz) {
+  [[unlikely]] if (add_args && arg_sz) {
     data++;
     if (data + arg_sz > this->end && !ok) {
       // Cant decode if we go oob
@@ -1655,7 +1655,7 @@ void Decoder::decode_inst(const inst_data *curr_data, const inst_data *end,
   }
 
   // Cant decode reserved instructions.
-  if (ins.op == InsnType::NONE && opcode == 0xf7) {
+  [[unlikely]] if (ins.op == InsnType::NONE && opcode == 0xf7) {
     ins.sz = 0;
     return;
   } else if (opcode == 0xff) {

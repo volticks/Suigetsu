@@ -130,7 +130,7 @@ struct page_range {
 // emulated code.
 class PageException : public std::exception {
 public:
-  PageException(char *newMsg) : msg(newMsg) {
+  PageException(char *newMsg) /*: msg(newMsg)*/ {
     std::snprintf(msg.get(), 1024, "%s", newMsg);
   }
   PageException(char *newMsg, addr vaddr) {
@@ -266,7 +266,7 @@ public:
 
   void map_range(virt_addr start, uint32_t num, byte rwx);
 
-  void write_many(virt_addr start, byte *data, uint32_t num);
+  void write_many(virt_addr start, const byte *data, uint32_t num);
   // Logs num dwords from start virt addr.
   void log_many(virt_addr start, uint32_t num);
 

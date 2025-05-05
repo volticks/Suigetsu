@@ -55,14 +55,16 @@ PageDirectory::~PageDirectory() {
   }
 }
 
-static uint32_t get_page_index(virt_addr v_page, byte level) {
+constexpr static uint32_t get_page_index(virt_addr v_page, byte level) {
   // Depending on level of index desired, we wanna change the shift
   assert(level <= paging_levels);
   return v_page >> (page_shift + (level * page_idx_sz)) & page_idx_mask;
 }
 
 // Offset into the physical page our virtual addr has.
-static uint32_t get_page_offset(virt_addr v_addr) { return v_addr & 0xfff; }
+constexpr static uint32_t get_page_offset(virt_addr v_addr) {
+  return v_addr & 0xfff;
+}
 
 // Returns page aligned allocation
 phys_addr PageDirectory::alloc_page() {
@@ -269,7 +271,7 @@ void MMU::map_range(virt_addr start, uint32_t num, byte rwx) {
   }
 }
 
-void MMU::write_many(virt_addr start, byte *data, uint32_t num) {
+void MMU::write_many(virt_addr start, const byte *data, uint32_t num) {
   // If not page aligned, throw
   if (start & (page_size - 1))
     throw PageException(

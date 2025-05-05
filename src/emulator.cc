@@ -4,6 +4,7 @@
 #include "registers.h"
 #include <bit>
 #include <cassert>
+#include <chrono>
 #include <cstdint>
 #include <cstring>
 #include <iostream>
@@ -29,6 +30,7 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
   page_entry cached_next_prev;
   reg_type pc = 0, oldpc = 0;
   inst_data *real_ins = (inst_data *)((cached.page_addr << page_shift));
+
   inst_data *real_ins_cpy = real_ins;
 
   inst_data decode_spillover[max_ins * 2] = {0};
@@ -37,15 +39,22 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
   bool bad = false;
   // If we do go oob, need to move to next page specified
   bool use_next = false;
+  std::chrono::milliseconds ms_start;
+  std::chrono::milliseconds ms_end;
+  uint64_t ms_count = 0.0;
 
   regs.set_pc(start);
+
+  // Start timing now
+  ms_start = duration_cast<std::chrono::milliseconds>(
+      std::chrono::system_clock::now().time_since_epoch());
 
   while (true) {
     // TODO: Maybe some kinda page caching to make this less expensive?
     oldpc = pc;
     pc = regs.get_pc();
-    if (pc < curr || pc >> page_shift != oldpc >> page_shift || pc + max_ins > (curr + page_size) /*||
-        (pc & page_mask) != (oldpc & page_mask)*/) {
+    [[unlikely]] if (pc < curr || pc >> page_shift != oldpc >> page_shift || pc + max_ins > (curr + page_size) /*||
+        (pc & page_mask) != (oldpc & page_mask)*/)  {
       // Outside current cached page, need to re-check new page.
       try {
         cached_next = mmu.get_pd().get_pte_from_vaddr(pc + max_ins);
@@ -110,7 +119,7 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
     // decoder.decode_inst(it.base(), end.base(), curr_ins);
     decoder.decode_inst(real_ins, real_ins + max_ins, curr_ins);
 
-    if (curr_ins.op == 0xff) {
+    [[unlikely]] if (curr_ins.op == 0xff) {
       std::cout << "Emulator::emu_loop Found break/trap, leaving" << std::endl;
       break;
     }
@@ -127,7 +136,14 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
     }
 
     //  Instruction decoding would go OOB...
-    if (!bad_next && oob) {
+    [[unlikely]] if (!bad_next && oob || curr_ins.sz == 0) {
+
+      if (!curr_ins.sz) {
+        std::cerr << "Emulator::emu_loop decoding went OOB OR failed, exiting."
+                  << std::endl;
+        break;
+      }
+
       cached = cached_next;
       // Also need to remember to reassign the ptr we r using innit
       uint32_t off = (pc + curr_ins.sz) & (page_size - 1);
@@ -135,15 +151,9 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
       //  curr = (pc + curr_ins.sz) & ~(page_size - 1);
       real_ins = (inst_data *)(cached.page_addr << 12) + off;
     }
-    // ... AND we cant go oob (bad next page)
-    else if (curr_ins.sz == 0 || oob) {
-      std::cerr << "Emulator::emu_loop decoding went OOB OR failed, exiting."
-                << std::endl;
-      break;
-    }
     // Decoding failed due to invalid ins stop execution - disabled for now to
     // enable better deocing testing.
-    if (curr_ins.op == NONE) {
+    [[unlikely]] if (curr_ins.op == NONE) {
       std::cerr << "Emulator::emu_loop invalid instruction, exiting."
                 << std::endl;
       ret = false;
@@ -153,7 +163,7 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
     execute_insn(curr_ins);
 
     // Only re-set pc if we dont set it outrselves via an instruction
-    if (pc == regs.get_pc()) {
+    [[likely]] if (pc == regs.get_pc()) {
       regs.set_pc(pc + curr_ins.sz);
       real_ins = (inst_data *)((uint64_t)real_ins & ~(uint64_t)(page_size - 1));
       real_ins += (pc + curr_ins.sz) & (page_size - 1);
@@ -165,36 +175,29 @@ bool Emulator::emu_loop(const Instructions &insns, virt_addr start) {
     // it += curr_ins.sz;
   }
 
+  ms_end = duration_cast<std::chrono::milliseconds>(
+      std::chrono::system_clock::now().time_since_epoch());
+
+  ms_count = ms_end.count() - ms_start.count();
+
+  std::cout << std::dec
+            << "Emulator::emu_loop, total instructions executed: " << num_insns
+            << std::endl
+            << "\tTime taken (ms): " << ms_count << std::endl
+            << "\tTime taken (s): " << ms_count / 1000 << std::endl;
   return true;
 }
 
-bool is_reg(ArgKind kind) {
+constexpr bool is_reg(ArgKind kind) {
   return kind > ArgKind::NONE && kind <= ArgKind::LAR;
 }
 
-bool is_imm(ArgKind kind) {
+constexpr bool is_imm(ArgKind kind) {
   return kind >= ArgKind::imm8 && kind <= ArgKind::imm48;
 }
 
-// TODO: May have to expand this to consider memory regs aswell.
-bool is_dn(ArgKind kind) { return kind >= ArgKind::D0 && kind <= ArgKind::D3; }
-
-bool is_an(ArgKind kind) { return kind >= ArgKind::A0 && kind <= ArgKind::A3; }
-
-bool is_abs(ArgKind kind) {
-  return kind >= ArgKind::abs16 && kind <= ArgKind::abs32;
-}
-
-bool is_mem_reg(ArgKind kind) {
-  return kind >= ArgKind::MA0 && kind <= ArgKind::MA3;
-}
-
-bool is_disp(ArgKind kind) {
-  return kind >= ArgKind::d8 && kind <= ArgKind::d32;
-}
-
 // Sign extend a number of size nbits
-reg_type s_ext(reg_type i, uint32_t nbits) {
+constexpr reg_type s_ext(reg_type i, uint32_t nbits) {
 
   if (nbits == 32)
     return i;
@@ -1604,5 +1607,6 @@ bool Emulator::execute_insn(const Instruction &ins) {
     // Handle unknown instruction
     break;
   }
+  num_insns++;
   return true;
 }

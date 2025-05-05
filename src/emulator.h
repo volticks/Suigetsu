@@ -19,19 +19,37 @@ enum MovmBits {
 
 typedef std::vector<uint8_t> Instructions;
 
-bool is_reg(ArgKind kind);
+constexpr bool is_reg(ArgKind kind);
 
-bool is_imm(ArgKind kind);
+constexpr bool is_imm(ArgKind kind);
 
-bool is_dn(ArgKind kind);
+constexpr bool is_dn(ArgKind kind);
 
-bool is_abs(ArgKind kind);
-bool is_mem_reg(ArgKind kind);
+constexpr bool is_abs(ArgKind kind);
+constexpr bool is_mem_reg(ArgKind kind);
 
-bool is_disp(ArgKind kind);
+constexpr bool is_disp(ArgKind kind);
+// TODO: May have to expand this to consider memory regs aswell.
+constexpr bool is_dn(ArgKind kind) {
+  return kind >= ArgKind::D0 && kind <= ArgKind::D3;
+}
+
+constexpr bool is_an(ArgKind kind) {
+  return kind >= ArgKind::A0 && kind <= ArgKind::A3;
+}
+
+constexpr bool is_abs(ArgKind kind) {
+  return kind >= ArgKind::abs16 && kind <= ArgKind::abs32;
+}
+constexpr bool is_mem_reg(ArgKind kind) {
+  return kind >= ArgKind::MA0 && kind <= ArgKind::MA3;
+}
+constexpr bool is_disp(ArgKind kind) {
+  return kind >= ArgKind::d8 && kind <= ArgKind::d32;
+}
 
 // Sign extend a number of size nbits
-reg_type s_ext(reg_type i, uint32_t nbits);
+constexpr reg_type s_ext(reg_type i, uint32_t nbits);
 
 class Emulator {
 public:
@@ -102,4 +120,6 @@ private:
   Reg regs;
   Decoder decoder;
   MMU mmu;
+  // For counting number of instructions executed.
+  uint32_t num_insns = 0;
 };
