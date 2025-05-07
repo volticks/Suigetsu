@@ -126,8 +126,6 @@ struct page_range {
   page_range(virt_addr start, uint32_t num_pages, bit_t rwx);
 };
 
-// TODO something special with this. Maybe sending a "signal" of sorts to the
-// emulated code.
 class PageException : public std::exception {
 public:
   PageException(char *newMsg) /*: msg(newMsg)*/ {

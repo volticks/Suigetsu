@@ -1343,7 +1343,6 @@ bool Emulator::handle_ret(const Instruction &ins) {
   return true;
 }
 
-// TODO: Test
 bool Emulator::handle_rti(const Instruction &ins) {
   reg_type sp = regs.get(ArgKind::SP);
   regs.set(ArgKind::PSW, mmu.read<uint16_t>(sp));

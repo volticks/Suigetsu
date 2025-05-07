@@ -27,7 +27,6 @@ std::vector<uint8_t> read_file(const char *fname, virt_addr off) {
 
   // Off when unspecified is 0
   ifs.seekg(off, std::ios::beg);
-  // TODO: This check is really really stupid
   std::unique_ptr<uint8_t[]> file_conts = std::make_unique<uint8_t[]>(sz);
   ifs.read((char *)file_conts.get(), sz);
   std::vector<uint8_t> fconts((char *)file_conts.get(),
@@ -53,7 +52,7 @@ int main(int argc, char **argv) {
            "program."
         << std::endl;
 
-    std::cerr << "\t<text section end>\t\t: Specified end of the text section. "
+    std::cerr << "\t<text section end>\t: Specified end of the text section. "
                  "If specified will add null byte padding to act as BSS "
                  "section coming after text section."
               << std::endl;

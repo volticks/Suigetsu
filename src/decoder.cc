@@ -756,9 +756,6 @@ void Decoder::decode_dn_op_F2(const inst_data *data, Instruction &ins) {
     ins.kinds[1] = kinds[idx];
     use_d = idx >= 1 ? dn_idx : an_idx;
     idx = reg_low;
-    // TODO: Evaluate why this was even here.
-    // if (!use_d)
-    //   idx = reg_high;
     reg = regs[use_d][idx];
     ins.kinds[0] = reg;
     break;
@@ -1585,7 +1582,6 @@ void Decoder::decode_dn_op(const inst_data *data, Instruction &ins_out) {
       ins_out.sz = 0;
       arg_sz = 0;
     }
-    /// TODOOO
     if (num_args > 1) {
       ins_out.copy_data_args(data, arg_sz);
     } else {

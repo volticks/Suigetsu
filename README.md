@@ -10,11 +10,22 @@ Will contain when done:
 To build:
 
 ```sh
+mkdir build
 cd build 
-./build.sh
+cmake ../
+cmake --build .
 ```
 
-Usage information can be obtained by running the binary with no arguments.
+Usage information can be obtained by running the binary with no arguments:
+```
+Usage: ./Suigetsu <filepath>
+Optional: <program map start> <entrypoint> <load offset> <text section end>
+	<program map start>	: Virtual address where program should be loaded.
+	<entrypoint>		: PC entrypoint.
+	<load offset>		: Offset into the file to start loading the program.
+	<text section end>	: Specified end of the text section. If specified will add null byte padding to act as BSS section coming after text section.
+Default for all is 0
+```
 
 Files and folders:
  - insn\_docs:  Old testing
