@@ -27,6 +27,10 @@ Optional: <program map start> <entrypoint> <load offset> <text section end>
 Default for all is 0
 ```
 
+Credits
+- src/tests/ins/c_testsuite_samples are provided by the [c-testsuite](https://github.com/c-testsuite/c-testsuite) project.
+- src/tests/ins/csmith_test were initially generated using [csmith](https://github.com/csmith-project/csmith) and then modified.
+
 Files and folders:
  - insn\_docs:  Old testing
  - src:         Source code and headers
